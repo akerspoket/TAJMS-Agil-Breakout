@@ -9,3 +9,8 @@ int main()
 	cin >> endOfMain;
 	return 0;
 }
+
+void MysteriskMetod()
+{
+	cout << "MYSTERISK LIVES!!";
+}
