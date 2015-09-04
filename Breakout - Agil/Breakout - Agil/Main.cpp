@@ -13,4 +13,5 @@ int main()
 void MysteriskMetod()
 {
 	cout << "MYSTERISK LIVES!!";
+	int he = 0;
 }
