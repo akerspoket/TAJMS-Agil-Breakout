@@ -8,7 +8,7 @@ int main()
 	int endOfMain;
 	cin >> endOfMain;
 	int hej = 1;
-	hej = 2 + 4;
+	hej = 2 + 4 - 3;
 	return 0;
 }
 
