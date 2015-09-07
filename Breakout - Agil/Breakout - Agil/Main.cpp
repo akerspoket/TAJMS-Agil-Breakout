@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello world";
+	cout << "Worst game EU";
 	int endOfMain;
 	cin >> endOfMain;
 	int hej = 1;
