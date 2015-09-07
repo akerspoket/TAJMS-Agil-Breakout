@@ -1,19 +1,18 @@
 #include <iostream>
+#include "Game1.h"
 
 using namespace std;
 
+Game1 gGame;
+
 int main()
 {
-	cout << "Hello world";
-	int endOfMain;
-	cin >> endOfMain;
-	int hej = 1;
-	hej = 2 + 4+5+6;
+	bool t_NoError = gGame = gGame.Initialize();
+
+	if (t_NoError)
+		gGame.Run();
+
+
 	return 0;
 }
 
-void MysteriskMetod()
-{
-	cout << "MYSTERISK LIVES!!";
-	int he = 0;
-}
