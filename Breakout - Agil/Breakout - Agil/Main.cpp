@@ -1,14 +1,13 @@
 #include <iostream>
+#include "WindowCreator.h"
 
 using namespace std;
 
 int main()
 {
-	cout << "Hello world";
-	int endOfMain;
-	cin >> endOfMain;
-	int hej = 1;
-	hej = 2 + 4+5+6;
+	WindowCreator winc = WindowCreator();
+	winc.WinMain(0, 0, 0, 1);
+
 	return 0;
 }
 
