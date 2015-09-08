@@ -3,7 +3,9 @@
 class SystemGrejen
 {
 public:
+	Fysik fysikSyst;
 	SystemGrejen();
 	~SystemGrejen();
+	void SysProg();
 };
 

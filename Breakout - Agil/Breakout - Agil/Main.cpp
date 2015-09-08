@@ -6,7 +6,8 @@ using namespace std;
 int main()
 {
 	SystemGrejen systTest;
-	cout << "Hello world";
+	systTest.SysProg();
+	cout << "Hello world"<< endl;
 	int endOfMain;
 	cin >> endOfMain;
 	int hej = 1;

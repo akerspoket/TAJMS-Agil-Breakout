@@ -122,12 +122,14 @@
     <ClCompile Include="Fysik.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Movement.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="SystemGrejen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entiteter.h" />
     <ClInclude Include="Fysik.h" />
     <ClInclude Include="Movement.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="SystemGrejen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
