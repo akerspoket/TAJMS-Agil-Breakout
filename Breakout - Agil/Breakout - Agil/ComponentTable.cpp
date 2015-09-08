@@ -1,6 +1,17 @@
 #include "ComponentTable.h"
 
 
+ComponentTable* ComponentTable::mSingleton = nullptr;
+
+ComponentTable* ComponentTable::GetInstance()
+{
+	if (mSingleton == nullptr)
+	{
+		mSingleton = new ComponentTable();
+	}
+
+	return nullptr;
+}
 
 ComponentTable::ComponentTable()
 {

@@ -13,6 +13,7 @@ EntityManager* EntityManager::GetInstance()
 
 EntityManager::EntityManager()
 {
+	mNextSlot = 0;
 }
 
 
@@ -20,7 +21,7 @@ EntityManager::~EntityManager()
 {
 }
 
-int EntityManager::AddEntity()
+EntityID EntityManager::AddEntity()
 {
 	EntityID tIDToUse;
 
@@ -35,6 +36,7 @@ int EntityManager::AddEntity()
 		tIDToUse = mNextSlot;
 		mNextSlot++;
 	}
+	return tIDToUse
 }
 
 void EntityManager::RemoveEntity(int pEntityID)

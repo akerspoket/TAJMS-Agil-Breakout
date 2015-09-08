@@ -11,6 +11,7 @@ class PhysicComponent : public Component
 public:
 	PhysicComponent();
 	~PhysicComponent();
+	bool mIsSphere;
 
 
 };

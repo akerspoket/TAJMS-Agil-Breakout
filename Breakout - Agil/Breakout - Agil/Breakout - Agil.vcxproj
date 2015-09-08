@@ -119,21 +119,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComponentTable.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game1.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PhysicComponent.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="StorageShelf.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentTable.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game1.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
+    <ClInclude Include="StorageShelf.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>

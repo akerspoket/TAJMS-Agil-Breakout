@@ -1,7 +1,8 @@
 #pragma once
 #include <list>
+#include "Constants.h"
 
-#define EntityID int
+
 
 
 class EntityManager
@@ -9,7 +10,7 @@ class EntityManager
 public:
 	static EntityManager* GetInstance();
 
-	int AddEntity();
+	EntityID AddEntity();
 	void RemoveEntity(int pEntityID);
 
 private:

@@ -4,16 +4,19 @@
 class ComponentTable
 {
 public:
-	ComponentTable();
-	~ComponentTable();
+	static ComponentTable* GetInstance();
 	
 	bool HasComponent(int pEntityID, ComponentType pCompType);
 	void AddComponent(int pEntityID, ComponentType pCompType);
 	void RemoveComponent(int pEntityID, ComponentType pCompType);
-	void ComponentTable::RemoveEntity(int pEntityID);
+	void RemoveEntity(int pEntityID);
 
 
 private:
+	ComponentTable();
+	~ComponentTable();
+	static ComponentTable* mSingleton;
+
 	short mComponentTable[MAX_NUM_ENTITIES];
 };
 
