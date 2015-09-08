@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentTable.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game1.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -127,6 +128,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentTable.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game1.h" />
     <ClInclude Include="PhysicComponent.h" />
