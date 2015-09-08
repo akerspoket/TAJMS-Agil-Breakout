@@ -1,4 +1,7 @@
 #pragma once
+#include "System.h"
+#include <vector>
+
 class Game1
 {
 public:
@@ -8,5 +11,7 @@ public:
 	void Run();
 	void Destroy();
 
+private:
+	std::vector<System*> mSystems;
 };
 

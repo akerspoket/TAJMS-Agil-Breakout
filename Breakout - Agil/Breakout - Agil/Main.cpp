@@ -7,9 +7,9 @@ Game1 gGame;
 
 int main()
 {
-	bool t_NoError = gGame = gGame.Initialize();
+	bool tNoError = gGame.Initialize();
 
-	if (t_NoError)
+	if (tNoError)
 		gGame.Run();
 
 
