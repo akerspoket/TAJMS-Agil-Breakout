@@ -132,22 +132,22 @@ void GraphicsEngine::InitGraphics()
 	mMatrixBuffer = 0;
 	HRESULT res = dev->CreateBuffer(&mbd, NULL, &mMatrixBuffer);
 
-	//D3D11_BUFFER_DESC mvbd;
-	//ZeroMemory(&mvbd, sizeof(mvbd));
+	D3D11_BUFFER_DESC mvbd;
+	ZeroMemory(&mvbd, sizeof(mvbd));
 
-	//mvbd.Usage = D3D11_USAGE_DYNAMIC;
-	//mvbd.ByteWidth = sizeof(MovementBufferType);
-	//mvbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//mvbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//mvbd.MiscFlags = 0;
-	//mvbd.StructureByteStride = 0;
-	//mMovementBuffer = 0;
-	//res = dev->CreateBuffer(&mvbd,NULL, &mMovementBuffer);
+	mvbd.Usage = D3D11_USAGE_DYNAMIC;
+	mvbd.ByteWidth = sizeof(MovementBufferType);
+	mvbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	mvbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	mvbd.MiscFlags = 0;
+	mvbd.StructureByteStride = 0;
+	mMovementBuffer = 0;
+	res = dev->CreateBuffer(&mvbd,NULL, &mMovementBuffer);
 
-	//if (FAILED(res))
-	//{
-	//	return;
-	//}
+	if (FAILED(res))
+	{
+		return;
+	}
 
 	D3D11_MAPPED_SUBRESOURCE ms;
 	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
@@ -164,7 +164,7 @@ void GraphicsEngine::InitGraphics()
 void GraphicsEngine::RenderFrame(void)
 {
 	
-
+	SetShaderInputs();
 	float color[4];
 	
 	// Setup the color to clear the buffer to.
@@ -216,14 +216,15 @@ void GraphicsEngine::SetShaderInputs()
 
 	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMatrixBuffer);
 
-	//result = devcon->Map(mMovementBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
+	result = devcon->Map(mMovementBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
 
-	//MovementBufferType* dPointer;
-	//dPointer = (MovementBufferType*)mappedResource2.pData;
-	//dPointer->time = time+= 0.001;
+	MovementBufferType* dPointer;
+	time += 0.001;
+	dPointer = (MovementBufferType*)mappedResource2.pData;
+	dPointer->time = time;
 
-	//devcon->Unmap(mMovementBuffer, 0);
-	//bufferNumber = 1;
+	devcon->Unmap(mMovementBuffer, 0);
+	bufferNumber = 1;
 
-	//devcon->VSSetConstantBuffers(bufferNumber, 1, &mMatrixBuffer);
+	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMovementBuffer);
 }

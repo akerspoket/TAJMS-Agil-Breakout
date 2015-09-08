@@ -1,14 +1,15 @@
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 };
 
-//cbuffer MovementBuffer
-//{
-//	float time;
-//};
+cbuffer MovementBuffer : register(b1)
+{
+	float time;
+	float3 filler;
+};
 
 struct VertexInputType
 {
@@ -25,6 +26,7 @@ struct VOut
 VOut VShader( VertexInputType input)
 {
 	VOut output;
+	input.position.y = input.position.y * sin(time);
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
