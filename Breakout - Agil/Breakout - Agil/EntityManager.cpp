@@ -1,0 +1,39 @@
+#include "EntityManager.h"
+
+
+
+EntityManager::EntityManager()
+{
+}
+
+
+EntityManager::~EntityManager()
+{
+}
+
+int EntityManager::AddEntity()
+{
+	EntityID tIDToUse;
+
+	//if any free slots we use them
+	if (mFreeEntitySlots.size() != 0)
+	{
+		tIDToUse = mFreeEntitySlots.back();
+		mFreeEntitySlots.pop_back();
+	}
+	else
+	{
+		tIDToUse = mNextSlot;
+		mNextSlot++;
+	}
+}
+
+void EntityManager::RemoveEntity(int pEntityID)
+{
+	//not sure how we are to define how an entity doesn't exist, if we have a table to show if it exist, or just that
+	//if we have it as no components exist in a table? 
+
+	//TODO: Remove from table
+
+	mFreeEntitySlots.push_back(pEntityID);
+}
