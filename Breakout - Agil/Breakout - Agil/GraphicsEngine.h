@@ -15,7 +15,8 @@
 
 struct Vertex
 {
-	float
+	float x, y, z, w;
+	float color[4];
 };
 
 class GraphicsEngine
