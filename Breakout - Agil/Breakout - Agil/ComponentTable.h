@@ -8,6 +8,9 @@ public:
 	~ComponentTable();
 	
 	bool HasComponent(int pEntityID, ComponentType pCompType);
+	void AddComponent(int pEntityID, ComponentType pCompType);
+	void RemoveComponent(int pEntityID, ComponentType pCompType);
+	void ComponentTable::RemoveEntity(int pEntityID);
 
 
 private:

@@ -1,6 +1,6 @@
 #include "Game1.h"
 #include "PhysicSystem.h"
-
+#include "EntityManager.h"
 
 
 Game1::Game1()
@@ -17,6 +17,12 @@ bool Game1::Initialize()
 	PhysicSystem* tPhysics = new PhysicSystem();
 	tPhysics->Initialize();
 	mSystems.push_back(tPhysics);
+
+	EntityManager* tEntityManager = tEntityManager->GetInstance();
+	tEntityManager->AddEntity();
+	tEntityManager->AddEntity();
+	tEntityManager->AddEntity();
+
 
 }
 

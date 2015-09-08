@@ -7,13 +7,16 @@
 class EntityManager
 {
 public:
-	EntityManager();
-	~EntityManager();
+	static EntityManager* GetInstance();
 
 	int AddEntity();
 	void RemoveEntity(int pEntityID);
 
 private:
+	EntityManager();
+	~EntityManager();
+	static EntityManager* mSingleton;
+
 	std::list<EntityID> mFreeEntitySlots;
 	EntityID mNextSlot;
 

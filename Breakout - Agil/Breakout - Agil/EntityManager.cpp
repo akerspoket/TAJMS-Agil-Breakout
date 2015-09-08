@@ -1,6 +1,15 @@
 #include "EntityManager.h"
 
+EntityManager* EntityManager::mSingleton = nullptr;
 
+EntityManager* EntityManager::GetInstance()
+{
+	if (mSingleton == nullptr)
+	{
+		mSingleton = new EntityManager();
+	}
+	return mSingleton;
+}
 
 EntityManager::EntityManager()
 {
