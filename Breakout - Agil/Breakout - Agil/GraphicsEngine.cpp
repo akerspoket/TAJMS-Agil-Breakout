@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-using namespace DirectX;
+
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -102,11 +102,12 @@ void GraphicsEngine::InitPipeline()
 
 void GraphicsEngine::InitGraphics()
 {
+	time = 0;
 	Vertex OurVertices[] =
 	{
-		{ 0.0f, 0.5f, 0.0f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ 0.45f, -0.5, 0.0f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ -0.45f, -0.5f, 0.0f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ 0.0f, 6.0f, 2.0f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ 6.0f, -6.0, 2.0f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ -6.0f, -6.0f, 2.0f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
 	D3D11_BUFFER_DESC bd;
@@ -115,18 +116,55 @@ void GraphicsEngine::InitGraphics()
 	bd.Usage = D3D11_USAGE_DYNAMIC;
 	bd.ByteWidth = sizeof(Vertex) * 3;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	dev->CreateBuffer(&bd, NULL, &pVBuffer);
+
+	D3D11_BUFFER_DESC mbd;
+	ZeroMemory(&mbd, sizeof(mbd));
+
+	mbd.Usage = D3D11_USAGE_DYNAMIC;
+	mbd.ByteWidth = sizeof(MatrixBufferType);
+	mbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	mbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	mbd.MiscFlags = 0;
+	mbd.StructureByteStride = 0;
+	mMatrixBuffer = 0;
+	HRESULT res = dev->CreateBuffer(&mbd, NULL, &mMatrixBuffer);
+
+	//D3D11_BUFFER_DESC mvbd;
+	//ZeroMemory(&mvbd, sizeof(mvbd));
+
+	//mvbd.Usage = D3D11_USAGE_DYNAMIC;
+	//mvbd.ByteWidth = sizeof(MovementBufferType);
+	//mvbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//mvbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//mvbd.MiscFlags = 0;
+	//mvbd.StructureByteStride = 0;
+	//mMovementBuffer = 0;
+	//res = dev->CreateBuffer(&mvbd,NULL, &mMovementBuffer);
+
+	//if (FAILED(res))
+	//{
+	//	return;
+	//}
 
 	D3D11_MAPPED_SUBRESOURCE ms;
 	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
 	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
 	devcon->Unmap(pVBuffer, NULL);
+
+	world = XMMatrixIdentity();
+	view = XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0)));
+	proj = XMMatrixPerspectiveLH(60.0f, 60.0f, 0, 100);
+
+	SetShaderInputs();
 }
 
 void GraphicsEngine::RenderFrame(void)
 {
+	
+
 	float color[4];
 	
 	// Setup the color to clear the buffer to.
@@ -147,4 +185,45 @@ void GraphicsEngine::RenderFrame(void)
 	
 	// switch the back buffer and the front buffer
 	swapchain->Present(0, 0);
+}
+
+void GraphicsEngine::SetShaderInputs()
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	D3D11_MAPPED_SUBRESOURCE mappedResource2;
+	MatrixBufferType* dataPointer;
+	UINT bufferNumber;
+
+	//Transpose for some reason...
+
+	result = devcon->Map(mMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	if (FAILED(result))
+	{
+		return;
+	}
+
+	dataPointer = (MatrixBufferType*)mappedResource.pData;
+
+	dataPointer->world =XMMatrixTranspose(XMMatrixIdentity());
+	dataPointer->view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
+	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveLH(20.0f, 20.0f, 1, 100));
+
+	devcon->Unmap(mMatrixBuffer, 0);
+
+	bufferNumber = 0;
+
+	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMatrixBuffer);
+
+	//result = devcon->Map(mMovementBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
+
+	//MovementBufferType* dPointer;
+	//dPointer = (MovementBufferType*)mappedResource2.pData;
+	//dPointer->time = time+= 0.001;
+
+	//devcon->Unmap(mMovementBuffer, 0);
+	//bufferNumber = 1;
+
+	//devcon->VSSetConstantBuffers(bufferNumber, 1, &mMatrixBuffer);
 }
