@@ -29,6 +29,7 @@ struct MatrixBufferType
 struct MovementBufferType
 {
 	float time;
+	XMFLOAT3 filler;
 };
 
 class GraphicsEngine
