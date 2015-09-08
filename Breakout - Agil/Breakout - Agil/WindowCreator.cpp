@@ -76,6 +76,8 @@ int WINAPI WindowCreator::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
 	MSG msg = {0};
 	mGraphicsEngine = new GraphicsEngine();
 	mGraphicsEngine->InitD3D(hWnd);
+	mGraphicsEngine->InitPipeline();
+	mGraphicsEngine->InitGraphics();
 	while (true)
 	{
 		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))

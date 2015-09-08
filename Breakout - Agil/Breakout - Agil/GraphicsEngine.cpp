@@ -78,8 +78,8 @@ void GraphicsEngine::InitPipeline()
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 	
-	D3DCompileFromFile(L"vs.hlsl", 0, 0, "VShader", "vs_4_0", shaderFlags, 0, &VS, 0);
-	D3DCompileFromFile(L"ps.hlsl", 0, 0, "PShader", "ps_4_0", shaderFlags, 0, &PS, 0);
+	D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_4_0", shaderFlags, 0, &VS, 0);
+	D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_4_0", shaderFlags, 0, &PS, 0);
 
 	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
 	dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
@@ -87,6 +87,42 @@ void GraphicsEngine::InitPipeline()
 	devcon->VSSetShader(pVS, 0, 0);
 	devcon->PSSetShader(pPS, 0, 0);
 	
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
+	devcon->IASetInputLayout(pLayout);
+
+
+
+}
+
+void GraphicsEngine::InitGraphics()
+{
+	Vertex OurVertices[] =
+	{
+		{ 0.0f, 0.5f, 0.0f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ 0.45f, -0.5, 0.0f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ -0.45f, -0.5f, 0.0f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
+	};
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(Vertex) * 3;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
+
+	dev->CreateBuffer(&bd, NULL, &pVBuffer);
+
+	D3D11_MAPPED_SUBRESOURCE ms;
+	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
+	devcon->Unmap(pVBuffer, NULL);
 }
 
 void GraphicsEngine::RenderFrame(void)
@@ -101,6 +137,12 @@ void GraphicsEngine::RenderFrame(void)
 	// clear the back buffer to a deep blue
 	devcon->ClearRenderTargetView(backbuffer, color);
 
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devcon->Draw(3, 0);
 	// do 3D rendering on the back buffer here
 	
 	// switch the back buffer and the front buffer
