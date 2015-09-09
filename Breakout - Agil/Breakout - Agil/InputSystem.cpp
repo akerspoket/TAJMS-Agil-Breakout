@@ -22,7 +22,7 @@ void InputSystem::Start()
 {
 
 }
-void InputSystem::Update()
+void InputSystem::Update(double pDeltaTime)
 {
 	cout << "running input system";
 	EventManager::Payload tPayload;

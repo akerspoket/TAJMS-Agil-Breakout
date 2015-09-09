@@ -37,7 +37,7 @@ void Game1::Run()
 	{
 		for each (System* sys in mSystems)
 		{
-			sys->Update();
+			sys->Update(tDeltaTimeMilli);
 		}
 	}
 }

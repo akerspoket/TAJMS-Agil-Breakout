@@ -22,7 +22,7 @@ void PhysicSystem::Start()
 
 }
 
-void PhysicSystem::Update()
+void PhysicSystem::Update(double pDeltaTime)
 {
 
 }

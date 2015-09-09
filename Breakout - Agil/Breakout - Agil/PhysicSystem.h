@@ -9,7 +9,7 @@ public:
 
 	void Initialize();
 	void Start();
-	void Update();
+	void Update(double pDeltaTime);
 	void Pause();
 	void Stop();
 	void OnEvent(Event* pEvent);

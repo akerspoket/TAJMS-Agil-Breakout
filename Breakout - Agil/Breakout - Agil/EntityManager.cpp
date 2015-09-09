@@ -1,4 +1,5 @@
 #include "EntityManager.h"
+#include "ComponentTable.h"
 
 EntityManager* EntityManager::mSingleton = nullptr;
 
@@ -41,10 +42,9 @@ EntityID EntityManager::AddEntity()
 
 void EntityManager::RemoveEntity(int pEntityID)
 {
-	//not sure how we are to define how an entity doesn't exist, if we have a table to show if it exist, or just that
-	//if we have it as no components exist in a table? 
-
-	//TODO: Remove from table
+	//Remove from table
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	tCompTable->RemoveEntity(pEntityID);
 
 	mFreeEntitySlots.push_back(pEntityID);
 }
