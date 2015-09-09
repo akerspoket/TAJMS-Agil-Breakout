@@ -2,6 +2,7 @@
 #include "PhysicSystem.h"
 #include "EntityManager.h"
 #include "PhysicComponent.h"
+#include "InputSystem.h"
 
 
 Game1::Game1()
@@ -15,9 +16,15 @@ Game1::~Game1()
 
 bool Game1::Initialize()
 {
+	InputSystem* tInput = new InputSystem();
+	tInput->Initialize();
+	mSystems.push_back(tInput);
+	
 	PhysicSystem* tPhysics = new PhysicSystem();
 	tPhysics->Initialize();
 	mSystems.push_back(tPhysics);
+
+	
 	
 	return true;
 }

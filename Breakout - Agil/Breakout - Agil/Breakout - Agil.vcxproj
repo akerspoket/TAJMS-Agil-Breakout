@@ -129,6 +129,7 @@
     <ClCompile Include="PhysicComponent.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="StorageShelf.cpp" />
+    <ClCompile Include="System.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>

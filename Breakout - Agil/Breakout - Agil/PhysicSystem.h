@@ -12,5 +12,6 @@ public:
 	void Update();
 	void Pause();
 	void Stop();
+	void OnEvent(Event* pEvent);
 };
 

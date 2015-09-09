@@ -6,12 +6,12 @@ public:
 	InputSystem();
 	~InputSystem();
 
-	virtual void Initialize();
-	virtual void Start();
-	virtual void Update();
-	virtual void Pause();
-	virtual void Stop();
-
+	void Initialize();
+	void Start();
+	void Update();
+	void Pause();
+	void Stop();
+	void OnEvent(Event* pEvent);
 
 };
 
