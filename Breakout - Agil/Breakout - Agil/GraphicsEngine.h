@@ -32,6 +32,7 @@ struct MovementBufferType
 	XMFLOAT3 filler;
 };
 
+
 class GraphicsEngine
 {
 public:
@@ -49,10 +50,15 @@ public:
 	ID3D11InputLayout *pLayout;    // global
 	ID3D11Buffer *mMatrixBuffer;
 	ID3D11Buffer *mMovementBuffer;
+	ID3D11Buffer *mIndexBuffer;
+	ID3D11Texture2D *mDepthBuffer;
+	ID3D11DepthStencilView *mDepthView;
 
 	XMMATRIX world;
 	XMMATRIX view;
 	XMMATRIX proj;
+	ID3D11Buffer *mTransBuffer;
+	XMMATRIX mTranslationMatrices[5];
 	float time;
 
 	void InitD3D(HWND hWnd);     // sets 

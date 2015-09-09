@@ -45,7 +45,37 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
 	pBackBuffer->Release();
-	devcon->OMSetRenderTargets(1, &backbuffer, NULL);
+	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
+
+
+	//DepthBuffer THINGIES
+	D3D11_TEXTURE2D_DESC dbdesc;
+	ZeroMemory(&dbdesc, sizeof(dbdesc));
+	dbdesc.Width = 800;
+	dbdesc.Height = 600;
+	dbdesc.MipLevels = 1;
+	dbdesc.ArraySize = 1;
+	dbdesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dbdesc.SampleDesc.Count = 4;
+	dbdesc.SampleDesc.Quality = 0;
+	dbdesc.Usage = D3D11_USAGE_DEFAULT;
+	dbdesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	dbdesc.CPUAccessFlags = 0;
+	dbdesc.MiscFlags = 0;
+
+	HRESULT res = dev->CreateTexture2D(&dbdesc, NULL, &mDepthBuffer);
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+	ZeroMemory(&descDSV, sizeof(descDSV));
+
+	descDSV.Format = dbdesc.Format;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	descDSV.Texture2D.MipSlice = 0;
+
+
+	res = dev->CreateDepthStencilView(mDepthBuffer, &descDSV, &mDepthView);
+	devcon->OMSetRenderTargets(1, &backbuffer, mDepthView);
+
 
 	// Set the viewport
 	D3D11_VIEWPORT viewport;
@@ -55,6 +85,8 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 	viewport.TopLeftY = 0;
 	viewport.Width = 800;
 	viewport.Height = 600;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
 
 	devcon->RSSetViewports(1, &viewport);
 }
@@ -64,6 +96,12 @@ void GraphicsEngine::CleanD3D()
 	// close and release all existing COM objects
 	pVS->Release();
 	pPS->Release();
+	mDepthBuffer->Release();
+	mDepthView->Release();
+	mIndexBuffer->Release();
+	mMatrixBuffer->Release();
+	mTransBuffer->Release();
+	mMovementBuffer->Release();
 	swapchain->Release();
 	backbuffer->Release();
 	dev->Release();
@@ -78,8 +116,8 @@ void GraphicsEngine::InitPipeline()
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 	
-	D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_4_0", shaderFlags, 0, &VS, 0);
-	D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_4_0", shaderFlags, 0, &PS, 0);
+	D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_5_0", shaderFlags, 0, &VS, 0);
+	D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_5_0", shaderFlags, 0, &PS, 0);
 
 	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
 	dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
@@ -105,20 +143,46 @@ void GraphicsEngine::InitGraphics()
 	time = 0;
 	Vertex OurVertices[] =
 	{
-		{ 0.0f, 6.0f, 2.0f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ 6.0f, -6.0, 2.0f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ -6.0f, -6.0f, 2.0f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ -0.5f, 0.5f, -0.5f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ -0.5f, -0.5, -0.5f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ 0.5f, -0.5f, -0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ 0.5f, 0.5f, -0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ -0.5f, 0.5f, 0.5f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ -0.5f, -0.5, 0.5f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ 0.5f, -0.5f, 0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ 0.5f, 0.5f, 0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
+	};
+
+	int OurIndices[] =
+	{
+		2,1,0,
+		2,0,3,
+		4,5,6,
+		4,6,7,
+		4,0,3,
+		4,3,7,
+		5,1,2,
+		5,2,6,
+		0,1,5,
+		0,5,4,
+		6,2,3,
+		6,3,7
 	};
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
 	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(Vertex) * 3;
+	bd.ByteWidth = sizeof(OurVertices);
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	dev->CreateBuffer(&bd, NULL, &pVBuffer);
+
+	D3D11_MAPPED_SUBRESOURCE ms;
+	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
+	devcon->Unmap(pVBuffer, NULL);
 
 	D3D11_BUFFER_DESC mbd;
 	ZeroMemory(&mbd, sizeof(mbd));
@@ -149,10 +213,45 @@ void GraphicsEngine::InitGraphics()
 		return;
 	}
 
-	D3D11_MAPPED_SUBRESOURCE ms;
-	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
-	devcon->Unmap(pVBuffer, NULL);
+	D3D11_BUFFER_DESC ibd;
+	ZeroMemory(&ibd, sizeof(ibd));
+
+	ibd.Usage = D3D11_USAGE_DYNAMIC;
+	ibd.ByteWidth = sizeof(OurIndices);
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	ibd.MiscFlags = 0;
+
+	res = dev->CreateBuffer(&ibd, NULL, &mIndexBuffer);
+
+	D3D11_MAPPED_SUBRESOURCE subres;
+	devcon->Map(mIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subres);
+	memcpy(subres.pData, OurIndices, sizeof(OurIndices));
+	devcon->Unmap(mIndexBuffer, NULL);
+
+
+	for (int i = 0; i < 5; i++)
+	{
+		mTranslationMatrices[i] = XMMatrixTranspose(XMMatrixTranslation(1*(i-2), 4, 5));
+	}
+	D3D11_BUFFER_DESC transbd;
+	ZeroMemory(&transbd, sizeof(transbd));
+
+	transbd.Usage = D3D11_USAGE_DYNAMIC;
+	transbd.ByteWidth = sizeof(mTranslationMatrices);
+	transbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	transbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	transbd.MiscFlags = 0;
+	transbd.StructureByteStride = 0;
+
+	D3D11_MAPPED_SUBRESOURCE subtransres;
+	res = dev->CreateBuffer(&transbd, NULL, &mTransBuffer);
+	int derp = sizeof(mTranslationMatrices);
+	devcon->Map(mTransBuffer, NULL, D3D11_MAP_WRITE_DISCARD,NULL, &subtransres);
+	memcpy(subtransres.pData, mTranslationMatrices, sizeof(mTranslationMatrices));
+	devcon->Unmap(mTransBuffer, NULL);
+	devcon->VSSetConstantBuffers(2, 1, &mTransBuffer);
+
 
 	world = XMMatrixIdentity();
 	view = XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0)));
@@ -174,16 +273,19 @@ void GraphicsEngine::RenderFrame(void)
 	color[3] = 1.0f;
 	// clear the back buffer to a deep blue
 	devcon->ClearRenderTargetView(backbuffer, color);
-
+	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+	devcon->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devcon->Draw(3, 0);
+	//devcon->DrawIndexed(8*3, 0, 0);
+	devcon->DrawIndexedInstanced(12 * 3, 5, 0, 0, 0);
 	// do 3D rendering on the back buffer here
 	
 	// switch the back buffer and the front buffer
+
 	swapchain->Present(0, 0);
 }
 
@@ -208,8 +310,8 @@ void GraphicsEngine::SetShaderInputs()
 
 	dataPointer->world =XMMatrixTranspose(XMMatrixIdentity());
 	dataPointer->view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveLH(20.0f, 20.0f, 1, 100));
-
+	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(90.0f, 600.0f/800.0f, 1, 100));
+	
 	devcon->Unmap(mMatrixBuffer, 0);
 
 	bufferNumber = 0;
@@ -223,7 +325,15 @@ void GraphicsEngine::SetShaderInputs()
 	dPointer = (MovementBufferType*)mappedResource2.pData;
 	dPointer->time = time;
 
+	/*MovementBufferType *dPointer = new MovementBufferType;
+
+	time += 0.001;
+	dPointer->time = time;
+
+	memcpy(mappedResource2.pData, dPointer, sizeof(MovementBufferType));*/
 	devcon->Unmap(mMovementBuffer, 0);
+
+
 	bufferNumber = 1;
 
 	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMovementBuffer);
