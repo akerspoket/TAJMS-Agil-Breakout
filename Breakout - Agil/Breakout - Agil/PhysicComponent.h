@@ -1,18 +1,11 @@
 #pragma once
-#include "Component.h"
 
-union PhysicShape
-{
 
-};
 
-class PhysicComponent : public Component
+struct PhysicComponent
 {
 public:
-	PhysicComponent();
-	~PhysicComponent();
 	bool mIsSphere;
-
 
 };
 

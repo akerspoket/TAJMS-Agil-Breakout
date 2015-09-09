@@ -1,11 +1,9 @@
 #pragma once
-#include "Component.h"
-class TransformComponent : public Component
+
+
+struct TransformComponent
 {
 public:
-	TransformComponent();
-	~TransformComponent();
-
 	float mPosition[3];
 	float mRotation[3];
 };

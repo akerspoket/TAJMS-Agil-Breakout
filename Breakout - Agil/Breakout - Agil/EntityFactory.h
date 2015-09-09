@@ -3,7 +3,6 @@
 #include <map>
 #include "Constants.h"
 #include <vector>
-#include "Component.h"
 
 class EntityFactory
 {
