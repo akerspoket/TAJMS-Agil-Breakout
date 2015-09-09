@@ -36,7 +36,7 @@ EntityID EntityManager::AddEntity()
 		tIDToUse = mNextSlot;
 		mNextSlot++;
 	}
-	return tIDToUse
+	return tIDToUse;
 }
 
 void EntityManager::RemoveEntity(int pEntityID)

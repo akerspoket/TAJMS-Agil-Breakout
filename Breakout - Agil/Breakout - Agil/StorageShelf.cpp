@@ -33,5 +33,5 @@ void StorageShelf::RemoveItem()
 
 Component* StorageShelf::GetComponent(int pEntityID, ComponentType)
 {
-
+	return nullptr;
 }

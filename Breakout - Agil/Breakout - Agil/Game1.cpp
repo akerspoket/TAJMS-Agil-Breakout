@@ -19,6 +19,7 @@ bool Game1::Initialize()
 	tPhysics->Initialize();
 	mSystems.push_back(tPhysics);
 	
+	return true;
 }
 
 void Game1::Run()

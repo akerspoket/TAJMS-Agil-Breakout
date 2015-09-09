@@ -20,8 +20,8 @@ private:
 	~EntityFactory();
 	static EntityFactory* mSingleton;
 
-	typedef std::map<std::string, std::vector<Component*>> EntityMap;
-	EntityMap mMap;
+	/*typedef std::map<std::string, std::vector<Component*>> EntityMap;
+	EntityMap mMap;*/
 
 };
 

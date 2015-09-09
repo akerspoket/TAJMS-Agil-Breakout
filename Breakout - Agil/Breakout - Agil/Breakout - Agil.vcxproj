@@ -121,7 +121,10 @@
     <ClCompile Include="ComponentTable.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game1.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PhysicComponent.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
@@ -134,7 +137,10 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="Game1.h" />
+    <ClInclude Include="InputSystem.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
     <ClInclude Include="StorageShelf.h" />

@@ -20,7 +20,7 @@ public:
 private:
 
 
-	std::map<Component[], ComponentType> mComponentMap;
+	//std::map<Component[], ComponentType> mComponentMap;
 
 };
 
