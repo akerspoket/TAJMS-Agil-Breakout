@@ -4,12 +4,15 @@
 #include "Constants.h"
 #include <vector>
 
+using namespace std;
+
 class EntityFactory
 {
 public:
 	static EntityFactory* GetInstance();
 
 	void Initialize();
+	void RegisterEntityTemplate(map<string, vector<string>> pEntityString);
 	EntityID CreateEntity(std::string pTemplateName);
 
 
@@ -19,8 +22,8 @@ private:
 	~EntityFactory();
 	static EntityFactory* mSingleton;
 
-	/*typedef std::map<std::string, std::vector<Component*>> EntityMap;
-	EntityMap mMap;*/
+	typedef std::map<ComponentType, void*> EntityBlueprint;
 
+	std::map<string, EntityBlueprint*> mEntityBlueprints;
 };
 

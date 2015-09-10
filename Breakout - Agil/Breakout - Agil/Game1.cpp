@@ -2,6 +2,8 @@
 #include "PhysicSystem.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
+#include "StorageShelf.h"
+#include "PhysicComponent.h"
 
 Game1::Game1()
 {
