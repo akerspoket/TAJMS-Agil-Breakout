@@ -17,3 +17,15 @@ void MysteriskMetod()
 	cout << "MYSTERISK LIVES!!";
 	int he = 0;
 }
+
+void RealMethod()
+{
+	int something = 4;
+	cout << something;
+}
+
+void DebugMethod()
+{
+	int debug = 5;
+	cout << debug;
+}
