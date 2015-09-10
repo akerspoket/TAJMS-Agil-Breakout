@@ -116,24 +116,14 @@ void GraphicsEngine::InitPipeline()
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-	D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_5_0", shaderFlags, 0, &VS, 0);
-	D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_5_0", shaderFlags, 0, &PS, 0);
-
-	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
-	dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
+	CreateShader(VertexShader, &pVS, L"VertexShader.hlsl", "VShader");
+	CreateShader(PixelShader, &pPS, L"PixelShader.hlsl", "PShader");
 
 	devcon->VSSetShader(pVS, 0, 0);
 	devcon->PSSetShader(pPS, 0, 0);
-	
-	D3D11_INPUT_ELEMENT_DESC ied[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
 	devcon->IASetInputLayout(pLayout);
 
+	
 
 
 }
@@ -351,14 +341,26 @@ bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 	ID3DBlob *tShader;
+
 	switch (pType)
 	{
 	case GraphicsEngine::VertexShader:
+	{
 		D3DCompileFromFile(pShaderFileName, 0, 0, pEntryPoint, "vs_5_0", shaderFlags, 0, &tShader, 0);
-		//dev->CreateVertexShader(tShader->GetBufferPointer(), tShader->GetBufferSize(),NULL, (ID3D11VertexShader*)oShaderHandle)
-		break;
+		dev->CreateVertexShader(tShader->GetBufferPointer(), tShader->GetBufferSize(), NULL, (ID3D11VertexShader**)oShaderHandle);
+		D3D11_INPUT_ELEMENT_DESC ied[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		dev->CreateInputLayout(ied, 2, tShader->GetBufferPointer(), tShader->GetBufferSize(), &pLayout);
+
+	}break;
 	case GraphicsEngine::PixelShader:
-		break;
+	{
+		D3DCompileFromFile(pShaderFileName, 0, 0, pEntryPoint, "ps_5_0", shaderFlags, 0, &tShader, 0);
+		dev->CreatePixelShader(tShader->GetBufferPointer(), tShader->GetBufferSize(), NULL, (ID3D11PixelShader**)oShaderHandle);
+	}break;
 	default:
 		break;
 	}

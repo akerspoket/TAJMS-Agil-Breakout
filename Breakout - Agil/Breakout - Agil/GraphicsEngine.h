@@ -41,8 +41,16 @@ struct InstanceBufferType
 };
 
 
+
+
 class GraphicsEngine
 {
+private:
+	struct VertexShaderComponents
+	{
+		ID3D11VertexShader* ShaderHandle;
+		ID3D11InputLayout * InputLayout;
+	};
 public:
 	GraphicsEngine();
 	~GraphicsEngine();
@@ -80,5 +88,6 @@ public:
 private:
 	enum ShaderType { VertexShader, PixelShader };
 	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint);
+	//bool SetActiveShader(ShaderType pType, )
 };
 
