@@ -115,7 +115,7 @@ void GraphicsEngine::InitPipeline()
 #if defined( DEBUG ) || defined(_DEBUG)
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-	
+
 	D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_5_0", shaderFlags, 0, &VS, 0);
 	D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_5_0", shaderFlags, 0, &PS, 0);
 
@@ -342,4 +342,25 @@ void GraphicsEngine::SetShaderInputs()
 	bufferNumber = 1;
 
 	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMovementBuffer);
+}
+
+bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint)
+{
+	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined(_DEBUG)
+	shaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+	ID3DBlob *tShader;
+	switch (pType)
+	{
+	case GraphicsEngine::VertexShader:
+		D3DCompileFromFile(pShaderFileName, 0, 0, pEntryPoint, "vs_5_0", shaderFlags, 0, &tShader, 0);
+		//dev->CreateVertexShader(tShader->GetBufferPointer(), tShader->GetBufferSize(),NULL, (ID3D11VertexShader*)oShaderHandle)
+		break;
+	case GraphicsEngine::PixelShader:
+		break;
+	default:
+		break;
+	}
+	return true;
 }

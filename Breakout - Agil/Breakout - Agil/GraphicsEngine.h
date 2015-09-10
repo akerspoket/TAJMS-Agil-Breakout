@@ -76,5 +76,9 @@ public:
 	void RenderFrame(void);
 	void InitGraphics();
 	void SetShaderInputs();
+
+private:
+	enum ShaderType { VertexShader, PixelShader };
+	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint);
 };
 

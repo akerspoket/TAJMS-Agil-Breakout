@@ -9,13 +9,13 @@ Game1 gGame;
 int main()
 {
 	bool tNoError = gGame.Initialize();
-
+	WindowCreator winc = WindowCreator();
+	winc.WinMain(0, 0, 0, 1);
 	if (tNoError)
 		gGame.Run();
 
 
-	WindowCreator winc = WindowCreator();
-	winc.WinMain(0, 0, 0, 1);
+
 
 	return 0;
 }
