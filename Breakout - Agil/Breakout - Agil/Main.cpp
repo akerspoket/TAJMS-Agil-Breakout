@@ -1,12 +1,18 @@
 #include <iostream>
+#include "Game1.h"
 
 using namespace std;
 
+Game1 gGame;
+
 int main()
 {
-	cout << "Hello world"<< endl;
-	int endOfMain;
-	cin >> endOfMain;
+	bool tNoError = gGame.Initialize();
+
+	if (tNoError)
+		gGame.Run();
+
 
 	return 0;
 }
+
