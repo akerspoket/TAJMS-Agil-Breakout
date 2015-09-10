@@ -1,7 +1,5 @@
 #include "Game1.h"
 #include "PhysicSystem.h"
-#include "EntityManager.h"
-#include "PhysicComponent.h"
 #include "InputSystem.h"
 
 
