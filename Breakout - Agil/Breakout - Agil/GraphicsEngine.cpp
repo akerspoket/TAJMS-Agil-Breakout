@@ -143,14 +143,14 @@ void GraphicsEngine::InitGraphics()
 	time = 0;
 	Vertex OurVertices[] =
 	{
-		{ -0.5f, 0.5f, -0.5f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ -0.5f, -0.5, -0.5f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ 0.5f, -0.5f, -0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ 0.5f, 0.5f, -0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ -0.5f, 0.5f, 0.5f,{ 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ -0.5f, -0.5, 0.5f,{ 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ 0.5f, -0.5f, 0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ 0.5f, 0.5f, 0.5f,{ 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ -0.5f, 0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ -0.5f, -0.5, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ 0.5f, -0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ 0.5f, 0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ -0.5f, 0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ -0.5f, -0.5, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ 0.5f, -0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ 0.5f, 0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } }
 	};
 
 	int OurIndices[] =
@@ -229,16 +229,21 @@ void GraphicsEngine::InitGraphics()
 	memcpy(subres.pData, OurIndices, sizeof(OurIndices));
 	devcon->Unmap(mIndexBuffer, NULL);
 
-
+	InstanceBufferType temp;
 	for (int i = 0; i < 5; i++)
 	{
-		mTranslationMatrices[i] = XMMatrixTranspose(XMMatrixTranslation(1*(i-2), 4, 5));
+		temp.translationMatrices= (XMMatrixTranspose(XMMatrixTranslation(1*(i-2), 4, 8)));
+		temp.color[0] = (float)i / 5.0f;
+		temp.color[1] = (float)i / 5.0f;
+		temp.color[2] = (float)i / 5.0f;
+		temp.color[3] = 1;
+		mInstanceBuffer.push_back(temp);
 	}
 	D3D11_BUFFER_DESC transbd;
 	ZeroMemory(&transbd, sizeof(transbd));
 
 	transbd.Usage = D3D11_USAGE_DYNAMIC;
-	transbd.ByteWidth = sizeof(mTranslationMatrices);
+	transbd.ByteWidth = sizeof(InstanceBufferType) * mInstanceBuffer.size();
 	transbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	transbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	transbd.MiscFlags = 0;
@@ -246,9 +251,9 @@ void GraphicsEngine::InitGraphics()
 
 	D3D11_MAPPED_SUBRESOURCE subtransres;
 	res = dev->CreateBuffer(&transbd, NULL, &mTransBuffer);
-	int derp = sizeof(mTranslationMatrices);
+
 	devcon->Map(mTransBuffer, NULL, D3D11_MAP_WRITE_DISCARD,NULL, &subtransres);
-	memcpy(subtransres.pData, mTranslationMatrices, sizeof(mTranslationMatrices));
+	memcpy(subtransres.pData, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
 	devcon->Unmap(mTransBuffer, NULL);
 	devcon->VSSetConstantBuffers(2, 1, &mTransBuffer);
 
@@ -310,8 +315,8 @@ void GraphicsEngine::SetShaderInputs()
 
 	dataPointer->world =XMMatrixTranspose(XMMatrixIdentity());
 	dataPointer->view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(90.0f, 600.0f/800.0f, 1, 100));
-	
+	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(45.0f, 600.0f/800.0f, 0.1f, 100));
+	//dataPointer->projection = XMMatrixTranspose(XMMatrixIdentity());
 	devcon->Unmap(mMatrixBuffer, 0);
 
 	bufferNumber = 0;

@@ -10,8 +10,10 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
+#include <vector>
 
 using namespace DirectX;
+using namespace std;
 
 struct Vertex
 {
@@ -30,6 +32,12 @@ struct MovementBufferType
 {
 	float time;
 	XMFLOAT3 filler;
+};
+
+struct InstanceBufferType
+{
+	 XMMATRIX translationMatrices;
+	 float color[4];
 };
 
 
@@ -59,6 +67,7 @@ public:
 	XMMATRIX proj;
 	ID3D11Buffer *mTransBuffer;
 	XMMATRIX mTranslationMatrices[5];
+	vector <InstanceBufferType> mInstanceBuffer;
 	float time;
 
 	void InitD3D(HWND hWnd);     // sets 
