@@ -11,9 +11,15 @@ cbuffer MovementBuffer : register(b1)
 	float3 filler;
 };
 
+struct InstanceLayout
+{
+	matrix translationMatrix;
+	float4 colorInstance;
+};
+
 cbuffer InstanceMatrices : register(b2)
 {
-	matrix translationMatrices[5];
+	InstanceLayout instances[5];
 };
 
 struct VertexInputType
@@ -34,10 +40,11 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 
 	
 	//input.position.y += input.position.y * sin(time);
-	input.position = mul(input.position, translationMatrices[instanceID]);
+	input.position = mul(input.position, instances[instanceID].translationMatrix);
+	output.color = input.color * instances[instanceID].colorInstance;
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-	output.color = input.color;
+
 	return output;
 }
