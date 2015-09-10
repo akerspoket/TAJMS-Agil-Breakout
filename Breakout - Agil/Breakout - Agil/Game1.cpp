@@ -1,7 +1,7 @@
 #include "Game1.h"
 #include "PhysicSystem.h"
 #include "InputSystem.h"
-
+#include "RenderSystem.h"
 
 Game1::Game1()
 {
@@ -22,7 +22,10 @@ bool Game1::Initialize()
 	tPhysics->Initialize();
 	mSystems.push_back(tPhysics);
 
-	
+	RenderSystem* tRender = new RenderSystem();
+	tRender->Initialize();
+	mSystems.push_back(tRender);
+
 	
 	return true;
 }
@@ -30,6 +33,8 @@ bool Game1::Initialize()
 void Game1::Run()
 {
 	double tDeltaTimeMilli = 17; //global? or sent in func
+
+	
 
 	while (true)
 	{
