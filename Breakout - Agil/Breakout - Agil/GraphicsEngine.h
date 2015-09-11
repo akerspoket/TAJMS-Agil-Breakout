@@ -87,7 +87,8 @@ public:
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
-	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint);
+	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[]);
+	VertexShaderComponents* mVertexShader = new VertexShaderComponents;
 	//bool SetActiveShader(ShaderType pType, )
 };
 

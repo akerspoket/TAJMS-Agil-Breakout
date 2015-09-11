@@ -115,13 +115,17 @@ void GraphicsEngine::InitPipeline()
 #if defined( DEBUG ) || defined(_DEBUG)
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	CreateShader(VertexShader, &mVertexShader->ShaderHandle, L"VertexShader.hlsl", "VShader", &mVertexShader->InputLayout, ied);
+	CreateShader(PixelShader, &pPS, L"PixelShader.hlsl", "PShader", nullptr,NULL);
 
-	CreateShader(VertexShader, &pVS, L"VertexShader.hlsl", "VShader");
-	CreateShader(PixelShader, &pPS, L"PixelShader.hlsl", "PShader");
-
-	devcon->VSSetShader(pVS, 0, 0);
+	devcon->VSSetShader(mVertexShader->ShaderHandle, 0, 0);
 	devcon->PSSetShader(pPS, 0, 0);
-	devcon->IASetInputLayout(pLayout);
+	devcon->IASetInputLayout(mVertexShader->InputLayout);
 
 	
 
@@ -334,7 +338,7 @@ void GraphicsEngine::SetShaderInputs()
 	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMovementBuffer);
 }
 
-bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint)
+bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[])
 {
 	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined(_DEBUG)
@@ -347,14 +351,10 @@ bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR
 	case GraphicsEngine::VertexShader:
 	{
 		D3DCompileFromFile(pShaderFileName, 0, 0, pEntryPoint, "vs_5_0", shaderFlags, 0, &tShader, 0);
-		dev->CreateVertexShader(tShader->GetBufferPointer(), tShader->GetBufferSize(), NULL, (ID3D11VertexShader**)oShaderHandle);
-		D3D11_INPUT_ELEMENT_DESC ied[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-		dev->CreateInputLayout(ied, 2, tShader->GetBufferPointer(), tShader->GetBufferSize(), &pLayout);
+		HRESULT res = dev->CreateVertexShader(tShader->GetBufferPointer(), tShader->GetBufferSize(), NULL, (ID3D11VertexShader**)oShaderHandle);
 
+		res = dev->CreateInputLayout(pInputDescription, 2, tShader->GetBufferPointer(), tShader->GetBufferSize(), oInputLayout);
+		int a = 1;
 	}break;
 	case GraphicsEngine::PixelShader:
 	{
