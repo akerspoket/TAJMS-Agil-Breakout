@@ -317,7 +317,10 @@ void GraphicsEngine::InitGraphics()
 	texSamDesc.BorderColor[2] = 1.0f;
 	texSamDesc.BorderColor[3] = 1.0f;
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
-	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX		hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
+	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
+	
+
+	hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
 	{
 		return;
