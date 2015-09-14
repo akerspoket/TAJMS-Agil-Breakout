@@ -82,7 +82,7 @@ private:
 	enum ShaderType { VertexShader, PixelShader };
 	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint);
 
-	ID3D11ShaderResourceView* CubesTexture;
-	ID3D11SamplerState* CubesTexSamplerState;
+	ID3D11ShaderResourceView* mCubesTexture;
+	ID3D11SamplerState* mCubesTexSamplerState;
 };
 

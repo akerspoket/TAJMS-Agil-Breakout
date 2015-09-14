@@ -101,6 +101,7 @@ void GraphicsEngine::CleanD3D()
 	mIndexBuffer->Release();
 	mMatrixBuffer->Release();
 	mTransBuffer->Release();
+	mCubesTexture->Release();
 	mMovementBuffer->Release();
 	swapchain->Release();
 	backbuffer->Release();
@@ -297,8 +298,8 @@ void GraphicsEngine::InitGraphics()
 	
 	////Ladda In texture
 	HRESULT hr;
-	CubesTexture = 0;
-	hr = CreateDDSTextureFromFile(dev, L"davai.dds", nullptr, &CubesTexture);
+	mCubesTexture = 0;
+	hr = CreateDDSTextureFromFile(dev, L"davai.dds", nullptr, &mCubesTexture);
 	if (FAILED(hr))
 	{
 		return;
@@ -316,14 +317,14 @@ void GraphicsEngine::InitGraphics()
 	texSamDesc.BorderColor[2] = 1.0f;
 	texSamDesc.BorderColor[3] = 1.0f;
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
-	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX	hr = dev->CreateSamplerState(&texSamDesc, &CubesTexSamplerState);
+	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX		hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
 	{
 		return;
 	}
 
-	devcon->PSSetShaderResources(0, 1, &CubesTexture);
-	devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
+	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
+	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
 
 
 	world = XMMatrixIdentity();
