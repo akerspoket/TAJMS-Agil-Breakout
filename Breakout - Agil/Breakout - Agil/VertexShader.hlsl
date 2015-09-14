@@ -5,12 +5,6 @@ cbuffer MatrixBuffer : register(b0)
 	matrix projectionMatrix;
 };
 
-cbuffer MovementBuffer : register(b1)
-{
-	float time;
-	float3 filler;
-};
-
 struct InstanceLayout
 {
 	matrix translationMatrix;
