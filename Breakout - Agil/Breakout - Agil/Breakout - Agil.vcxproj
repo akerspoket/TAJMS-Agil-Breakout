@@ -76,6 +76,10 @@
     <IncludePath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Agil Stuff\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Agil Stuff\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -136,6 +140,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game1.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -157,6 +162,27 @@
     <ClInclude Include="StorageShelf.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TransformComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphicsEngine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PShader</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VShader</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

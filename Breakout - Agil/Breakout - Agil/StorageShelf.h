@@ -1,6 +1,11 @@
 #pragma once
 #include "Constants.h"
 
+struct componentA
+{
+	int a;
+};
+
 template<class T>
 class StorageShelf
 {

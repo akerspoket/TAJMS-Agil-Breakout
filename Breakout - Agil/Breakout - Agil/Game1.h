@@ -1,6 +1,10 @@
 #pragma once
 #include "System.h"
 #include <vector>
+#include "GraphicsEngine.h"
+#include <SDL2\SDL.h>
+
+using namespace std;
 
 class Game1
 {
@@ -15,5 +19,8 @@ public:
 
 private:
 	std::vector<System*> mSystems;
+	GraphicsEngine *mGraphicsEngine;
+
+
 };
 
