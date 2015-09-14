@@ -36,9 +36,7 @@ void PhysicSystem::Update(double pDeltaTime)
 	{
 		if (tCompTable->HasComponent(i, ComponentType::PhysicType))
 		{
-			PhysicComponent* tPhys = GetComponent<PhysicComponent>(i);
-			tPhys->mIsSphere = !tPhys->mIsSphere;
-			cout << tPhys->mIsSphere << endl;
+
 		}
 	}
 }
@@ -55,11 +53,5 @@ void PhysicSystem::Stop()
 
 void PhysicSystem::OnEvent(Event* pEvent)
 {
-	//if (pEvent->mID == "DebugTest")
-	//{
-	//	cout << "Recieved event. Data: ";
-	//	int tData = 0;
-	//	memcpy(&tData, pEvent->mPayload["Debugdata"], 4);
-	//	cout << tData;
-	//}
+
 }
