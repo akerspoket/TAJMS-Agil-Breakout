@@ -4,6 +4,8 @@
 
 GraphicsEngine::GraphicsEngine()
 {
+	mWVPBufferID.reg = 0;
+	mInstanceBufferID.reg = 2;
 }
 
 
@@ -94,14 +96,11 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 void GraphicsEngine::CleanD3D()
 {
 	// close and release all existing COM objects
-	pVS->Release();
-	pPS->Release();
+	mVertexShader->ShaderHandle->Release();
+	mPixelShader->Release();
 	mDepthBuffer->Release();
 	mDepthView->Release();
-	mIndexBuffer->Release();
-	mMatrixBuffer->Release();
-	mTransBuffer->Release();
-	mMovementBuffer->Release();
+
 	swapchain->Release();
 	backbuffer->Release();
 	dev->Release();
@@ -121,15 +120,10 @@ void GraphicsEngine::InitPipeline()
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	CreateShader(VertexShader, &mVertexShader->ShaderHandle, L"VertexShader.hlsl", "VShader", &mVertexShader->InputLayout, ied);
-	CreateShader(PixelShader, &pPS, L"PixelShader.hlsl", "PShader", nullptr,NULL);
+	CreateShader(PixelShader, &mPixelShader, L"PixelShader.hlsl", "PShader", nullptr,NULL);
 
-	devcon->VSSetShader(mVertexShader->ShaderHandle, 0, 0);
-	devcon->PSSetShader(pPS, 0, 0);
-	devcon->IASetInputLayout(mVertexShader->InputLayout);
-
-	
-
-
+	SetActiveShader(VertexShader,mVertexShader);
+	SetActiveShader(PixelShader, mPixelShader);
 }
 
 void GraphicsEngine::InitGraphics()
@@ -170,42 +164,31 @@ void GraphicsEngine::InitGraphics()
 	bd.ByteWidth = sizeof(OurVertices);
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	mVertexBufferID = CreateBuffer(bd);
+	//dev->CreateBuffer(&bd, NULL, &pVBuffer);
 
-	dev->CreateBuffer(&bd, NULL, &pVBuffer);
-
-	D3D11_MAPPED_SUBRESOURCE ms;
-	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
-	devcon->Unmap(pVBuffer, NULL);
+	//D3D11_MAPPED_SUBRESOURCE ms;
+	//devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	//memcpy(ms.pData, OurVertices, sizeof(OurVertices));
+	//devcon->Unmap(pVBuffer, NULL);
+	PushToDevice(mVertexBufferID, &OurVertices, sizeof(OurVertices));
 
 	D3D11_BUFFER_DESC mbd;
 	ZeroMemory(&mbd, sizeof(mbd));
-
+	
 	mbd.Usage = D3D11_USAGE_DYNAMIC;
 	mbd.ByteWidth = sizeof(MatrixBufferType);
 	mbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	mbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	mbd.MiscFlags = 0;
 	mbd.StructureByteStride = 0;
-	mMatrixBuffer = 0;
-	HRESULT res = dev->CreateBuffer(&mbd, NULL, &mMatrixBuffer);
-
-	D3D11_BUFFER_DESC mvbd;
-	ZeroMemory(&mvbd, sizeof(mvbd));
-
-	mvbd.Usage = D3D11_USAGE_DYNAMIC;
-	mvbd.ByteWidth = sizeof(MovementBufferType);
-	mvbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	mvbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	mvbd.MiscFlags = 0;
-	mvbd.StructureByteStride = 0;
-	mMovementBuffer = 0;
-	res = dev->CreateBuffer(&mvbd,NULL, &mMovementBuffer);
-
-	if (FAILED(res))
-	{
-		return;
-	}
+	mWVPBufferID.bufferID = CreateBuffer(mbd);
+	
+	tBufferInfo.world = XMMatrixTranspose(XMMatrixIdentity());
+	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
+	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
+	PushToDevice(mWVPBufferID.bufferID, &tBufferInfo, sizeof(tBufferInfo), mWVPBufferID.reg,VertexShader);
+	HRESULT res;
 
 	D3D11_BUFFER_DESC ibd;
 	ZeroMemory(&ibd, sizeof(ibd));
@@ -215,13 +198,9 @@ void GraphicsEngine::InitGraphics()
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	ibd.MiscFlags = 0;
+	mIndexBufferID = CreateBuffer(ibd);
+	PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
 
-	res = dev->CreateBuffer(&ibd, NULL, &mIndexBuffer);
-
-	D3D11_MAPPED_SUBRESOURCE subres;
-	devcon->Map(mIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subres);
-	memcpy(subres.pData, OurIndices, sizeof(OurIndices));
-	devcon->Unmap(mIndexBuffer, NULL);
 
 	InstanceBufferType temp;
 	for (int i = 0; i < 5; i++)
@@ -242,42 +221,24 @@ void GraphicsEngine::InitGraphics()
 	transbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	transbd.MiscFlags = 0;
 	transbd.StructureByteStride = 0;
+	mInstanceBufferID.bufferID = CreateBuffer(transbd);
 
-	D3D11_MAPPED_SUBRESOURCE subtransres;
-	res = dev->CreateBuffer(&transbd, NULL, &mTransBuffer);
-
-	devcon->Map(mTransBuffer, NULL, D3D11_MAP_WRITE_DISCARD,NULL, &subtransres);
-	memcpy(subtransres.pData, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
-	devcon->Unmap(mTransBuffer, NULL);
-	devcon->VSSetConstantBuffers(2, 1, &mTransBuffer);
-
-
-	world = XMMatrixIdentity();
-	view = XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0)));
-	proj = XMMatrixPerspectiveLH(60.0f, 60.0f, 0, 100);
-
-	SetShaderInputs();
+	PushToDevice(mInstanceBufferID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
 }
 
 void GraphicsEngine::RenderFrame(void)
 {
-	
-	SetShaderInputs();
-	float color[4];
-	
-	// Setup the color to clear the buffer to.
-	color[0] = 0.0f;
-	color[1] = 0.2f;
-	color[2] = 0.4f;
-	color[3] = 1.0f;
+	float color[] = {0.0f,0.2f,0.4f,1.0f};
+
+
 	// clear the back buffer to a deep blue
 	devcon->ClearRenderTargetView(backbuffer, color);
 	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
-	devcon->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	devcon->IASetVertexBuffers(0, 1, &mBuffers.at(mVertexBufferID), &stride, &offset);
+	devcon->IASetIndexBuffer(mBuffers.at(mIndexBufferID), DXGI_FORMAT_R32_UINT, 0);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//devcon->DrawIndexed(8*3, 0, 0);
 	devcon->DrawIndexedInstanced(12 * 3, 5, 0, 0, 0);
@@ -286,56 +247,6 @@ void GraphicsEngine::RenderFrame(void)
 	// switch the back buffer and the front buffer
 
 	swapchain->Present(0, 0);
-}
-
-void GraphicsEngine::SetShaderInputs()
-{
-	HRESULT result;
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	D3D11_MAPPED_SUBRESOURCE mappedResource2;
-	MatrixBufferType* dataPointer;
-	UINT bufferNumber;
-
-	//Transpose for some reason...
-
-	result = devcon->Map(mMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-	if (FAILED(result))
-	{
-		return;
-	}
-
-	dataPointer = (MatrixBufferType*)mappedResource.pData;
-
-	dataPointer->world =XMMatrixTranspose(XMMatrixIdentity());
-	dataPointer->view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	dataPointer->projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(45.0f, 600.0f/800.0f, 0.1f, 100));
-	//dataPointer->projection = XMMatrixTranspose(XMMatrixIdentity());
-	devcon->Unmap(mMatrixBuffer, 0);
-
-	bufferNumber = 0;
-
-	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMatrixBuffer);
-
-	result = devcon->Map(mMovementBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
-
-	MovementBufferType* dPointer;
-	time += 0.001;
-	dPointer = (MovementBufferType*)mappedResource2.pData;
-	dPointer->time = time;
-
-	/*MovementBufferType *dPointer = new MovementBufferType;
-
-	time += 0.001;
-	dPointer->time = time;
-
-	memcpy(mappedResource2.pData, dPointer, sizeof(MovementBufferType));*/
-	devcon->Unmap(mMovementBuffer, 0);
-
-
-	bufferNumber = 1;
-
-	devcon->VSSetConstantBuffers(bufferNumber, 1, &mMovementBuffer);
 }
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[])
@@ -365,4 +276,81 @@ bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR
 		break;
 	}
 	return true;
+}
+
+bool GraphicsEngine::SetActiveShader(ShaderType pType, void* oShaderHandle)
+{
+	switch (pType)
+	{
+	case GraphicsEngine::VertexShader:
+	{
+		VertexShaderComponents* tVS = (VertexShaderComponents*)oShaderHandle;
+		devcon->VSSetShader(tVS->ShaderHandle, 0, 0);
+		devcon->IASetInputLayout(mVertexShader->InputLayout);
+	}break;
+	case GraphicsEngine::PixelShader:
+	{
+		devcon->PSSetShader((ID3D11PixelShader*)oShaderHandle, 0, 0);
+	}break;
+	default:
+		break;
+	}
+	return true;
+}
+
+int GraphicsEngine::CreateBuffer(D3D11_BUFFER_DESC pBufferDescription)
+{
+	ID3D11Buffer* tHolder;
+	HRESULT res = dev->CreateBuffer(&pBufferDescription, NULL, &tHolder);
+	if (res != S_OK)
+	{
+		return -1;
+	}
+	mBuffers.push_back(tHolder);
+	int retvalue = mBuffers.size() - 1;
+	return retvalue;
+}
+
+bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize)
+{
+	D3D11_MAPPED_SUBRESOURCE tMS;
+	if (pBufferID > mBuffers.size() - 1 || pBufferID < 0)
+	{
+#ifdef DEBUG
+		cout << "Buffer ID is outside the buffer array";
+#endif // DEBUG
+		return false;
+	}
+	ID3D11Buffer* tBufferHandle = mBuffers.at(pBufferID);
+
+	devcon->Map(tBufferHandle, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &tMS);
+	memcpy(tMS.pData, pDataStart, pSize);
+	devcon->Unmap(tBufferHandle, NULL);
+
+	return true;
+}
+
+
+bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType)
+{
+	bool res = PushToDevice(pBufferID, pDataStart, pSize);
+	if (res != true)
+	{
+		return false;
+	}
+	switch (pType)
+	{
+	case GraphicsEngine::VertexShader:
+	{
+		devcon->VSSetConstantBuffers(pRegister, 1, &mBuffers.at(pBufferID));
+	}
+		break;
+	case GraphicsEngine::PixelShader:
+	{
+		devcon->PSSetConstantBuffers(pRegister, 1, &mBuffers.at(pBufferID));
+	}
+		break;
+	default:
+		break;
+	}
 }

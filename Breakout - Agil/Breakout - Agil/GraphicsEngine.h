@@ -11,6 +11,13 @@
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
 #include <vector>
+#include <map>
+
+#ifdef DEBUG
+	#include <iostream>
+#endif // DEBUG
+
+
 
 using namespace DirectX;
 using namespace std;
@@ -59,21 +66,11 @@ public:
 	IDXGISwapChain *swapchain;           
 	ID3D11Device *dev;                   
 	ID3D11DeviceContext *devcon;         
-	ID3D11RenderTargetView *backbuffer;  
-	ID3D11VertexShader *pVS;    // the vertex shader
-	ID3D11PixelShader *pPS;     // the pixel shader			
-	ID3D11Buffer *pVBuffer;    // global
-	ID3D11InputLayout *pLayout;    // global
-	ID3D11Buffer *mMatrixBuffer;
-	ID3D11Buffer *mMovementBuffer;
-	ID3D11Buffer *mIndexBuffer;
+	ID3D11RenderTargetView *backbuffer;  	
 	ID3D11Texture2D *mDepthBuffer;
 	ID3D11DepthStencilView *mDepthView;
 
-	XMMATRIX world;
-	XMMATRIX view;
-	XMMATRIX proj;
-	ID3D11Buffer *mTransBuffer;
+
 	XMMATRIX mTranslationMatrices[5];
 	vector <InstanceBufferType> mInstanceBuffer;
 	float time;
@@ -83,12 +80,30 @@ public:
 	void CleanD3D(void);         // close
 	void RenderFrame(void);
 	void InitGraphics();
-	void SetShaderInputs();
+
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
 	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[]);
+	bool SetActiveShader(ShaderType pType, void* oShaderHandle);
+	int CreateBuffer(D3D11_BUFFER_DESC pBufferDescription);
+	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize);
+	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType);
+
+	//Variables
+	ID3D11PixelShader* mPixelShader;
 	VertexShaderComponents* mVertexShader = new VertexShaderComponents;
-	//bool SetActiveShader(ShaderType pType, )
+	vector< ID3D11Buffer*> mBuffers; //int id
+	MatrixBufferType tBufferInfo;
+	int mVertexBufferID;
+	int mIndexBufferID;
+	struct ConstantBufferType
+	{
+		int bufferID;
+		int reg;
+	};
+	ConstantBufferType mWVPBufferID;
+	ConstantBufferType mInstanceBufferID;
+
 };
 
