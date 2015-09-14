@@ -7,6 +7,8 @@ class StorageShelf
 public:
 	static StorageShelf<T>* GetInstance();
 	T mItems[MAX_NUM_ENTITIES];
+	
+	
 
 private:
 	StorageShelf();
@@ -32,12 +34,12 @@ StorageShelf<T>* StorageShelf<T>::GetInstance()
 
 
 template<class T>
-StorageShelf<T>::StorageShelf<T>()
+StorageShelf<T>::StorageShelf()
 {
 }
 
 template<class T>
-StorageShelf<T>::~StorageShelf<T>()
+StorageShelf<T>::~StorageShelf()
 {
 }
 

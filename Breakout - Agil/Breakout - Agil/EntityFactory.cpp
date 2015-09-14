@@ -1,9 +1,22 @@
 #include "EntityFactory.h"
 #include "EntityManager.h"
 #include "ComponentTable.h"
+#include "StorageShelf.h"
 #include "PhysicComponent.h"
 #include "TransformComponent.h"
 
+
+
+EntityFactory* EntityFactory::mSingleton = nullptr;
+
+EntityFactory* EntityFactory::GetInstance()
+{
+	if (mSingleton == nullptr)
+	{
+		mSingleton = new EntityFactory();
+	}
+	return mSingleton;
+}
 
 EntityFactory::EntityFactory()
 {
@@ -17,36 +30,39 @@ EntityFactory::~EntityFactory()
 
 void EntityFactory::Initialize()
 {
-	//EntityManager* tEntityManager = tEntityManager->GetInstance();
-	//ComponentTable* tComponentTable = tComponentTable->GetInstance();
-
-	//EntityID tNewID = tEntityManager->AddEntity();
-
-	////we want to add physic compnent
-	//PhysicComponent* tPhysicComp = new PhysicComponent();
-	//tPhysicComp->mIsSphere = true;
-
-	//TransformComponent* tTransComp = new TransformComponent();
-	//
-	//tTransComp->mPosition[0] = 0.0f;
-	//tTransComp->mPosition[1] = 0.0f;
-	//tTransComp->mPosition[2] = 0.0f;
-
-	//tTransComp->mRotation[0] = 0.0f;
-	//tTransComp->mRotation[1] = 0.0f;
-	//tTransComp->mRotation[2] = 0.0f;
-
-	//std::vector<Component*> tCompArray;
-	//tCompArray.resize(NUM_OF_COMOPNENTS);
-
-	//tCompArray[PhysicType] = tPhysicComp;
-	//tCompArray[TransformType] = tTransComp;
-
-	//mMap["Boll"] = tCompArray;
 	
+}
+
+void EntityFactory::RegisterEntityTemplate(string pName, EntityBlueprint pComponents)
+{
+	string tName = pName;
+
+	mEntityBlueprints[pName] = pComponents;
 }
 
 EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 {
-	return 0;
+	EntityBlueprint tComponentMap = mEntityBlueprints[pTemplateName];
+	EntityManager* tEntityManager = tEntityManager->GetInstance();
+	ComponentTable* tComponentTable = tComponentTable->GetInstance();
+
+	//create a new ID
+	EntityID tNewEntityID = tEntityManager->AddEntity();
+
+	//copy components
+	for (EntityBlueprint::iterator iter = tComponentMap.begin(); iter != tComponentMap.end(); ++iter)
+	{
+		tComponentTable->AddComponent(tNewEntityID, iter->first);
+
+		if (iter->first == ComponentType::PhysicType)
+		{
+			memcpy(GetComponent<PhysicComponent>(tNewEntityID), iter->second, sizeof(PhysicComponent));
+		}
+		else if (iter->first == ComponentType::TransformType)
+		{
+			memcpy(GetComponent<TransformComponent>(tNewEntityID), iter->second, sizeof(TransformComponent));
+		}
+	}
+
+	return tNewEntityID;
 }

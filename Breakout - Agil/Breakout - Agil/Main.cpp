@@ -13,7 +13,7 @@ int main(int argc, char* args[])
 	if (tNoError)
 		gGame.Run();
 
-	
+
 	return 0;
 }
 

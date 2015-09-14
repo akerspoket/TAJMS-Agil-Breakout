@@ -12,6 +12,7 @@ public:
 
 	EntityID AddEntity();
 	void RemoveEntity(int pEntityID);
+	const int GetLastEntity() { return mNextSlot; }
 
 private:
 	EntityManager();
