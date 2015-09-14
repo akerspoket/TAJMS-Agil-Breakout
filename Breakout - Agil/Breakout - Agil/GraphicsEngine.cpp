@@ -94,18 +94,18 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 void GraphicsEngine::CleanD3D()
 {
 	// close and release all existing COM objects
-	pVS->Release();
-	pPS->Release();
-	mDepthBuffer->Release();
-	mDepthView->Release();
-	mIndexBuffer->Release();
-	mMatrixBuffer->Release();
-	mTransBuffer->Release();
-	mMovementBuffer->Release();
-	swapchain->Release();
-	backbuffer->Release();
-	dev->Release();
-	devcon->Release();
+	//pVS->Release();
+	//pPS->Release();
+	//mDepthBuffer->Release();
+	//mDepthView->Release();
+	//mIndexBuffer->Release();
+	//mMatrixBuffer->Release();
+	//mTransBuffer->Release();
+	//mMovementBuffer->Release();
+	//swapchain->Release();
+	//backbuffer->Release();
+	//dev->Release();
+	//devcon->Release();
 }
 
 void GraphicsEngine::InitPipeline()
