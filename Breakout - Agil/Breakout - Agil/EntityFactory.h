@@ -9,10 +9,12 @@ using namespace std;
 class EntityFactory
 {
 public:
+	typedef std::map<ComponentType, void*> EntityBlueprint;
+
 	static EntityFactory* GetInstance();
 
 	void Initialize();
-	void RegisterEntityTemplate(map<string, vector<string>> pEntityString);
+	void RegisterEntityTemplate(string pName, EntityBlueprint pComponents);
 	EntityID CreateEntity(std::string pTemplateName);
 
 
@@ -22,8 +24,8 @@ private:
 	~EntityFactory();
 	static EntityFactory* mSingleton;
 
-	typedef std::map<ComponentType, void*> EntityBlueprint;
+	
 
-	std::map<string, EntityBlueprint*> mEntityBlueprints;
+	std::map<string, EntityBlueprint> mEntityBlueprints;
 };
 

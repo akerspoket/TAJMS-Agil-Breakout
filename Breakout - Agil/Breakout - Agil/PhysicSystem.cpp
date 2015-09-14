@@ -1,5 +1,9 @@
 #include "PhysicSystem.h"
 #include "EventManager.h"
+#include "EntityManager.h"
+#include "ComponentTable.h"
+#include "StorageShelf.h"
+#include "PhysicComponent.h"
 
 PhysicSystem::PhysicSystem()
 {
@@ -24,7 +28,19 @@ void PhysicSystem::Start()
 
 void PhysicSystem::Update(double pDeltaTime)
 {
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
 
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, ComponentType::PhysicType))
+		{
+			PhysicComponent* tPhys = GetComponent<PhysicComponent>(i);
+			tPhys->mIsSphere = !tPhys->mIsSphere;
+			cout << tPhys->mIsSphere << endl;
+		}
+	}
 }
 
 void PhysicSystem::Pause()
