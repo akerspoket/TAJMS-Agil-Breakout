@@ -11,6 +11,7 @@
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
 #include <vector>
+#include "DDSTextureLoader.h"
 
 using namespace DirectX;
 using namespace std;
@@ -80,5 +81,8 @@ public:
 private:
 	enum ShaderType { VertexShader, PixelShader };
 	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint);
+
+	ID3D11ShaderResourceView* CubesTexture;
+	ID3D11SamplerState* CubesTexSamplerState;
 };
 

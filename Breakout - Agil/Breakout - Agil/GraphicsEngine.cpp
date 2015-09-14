@@ -128,7 +128,7 @@ void GraphicsEngine::InitPipeline()
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
@@ -143,30 +143,67 @@ void GraphicsEngine::InitGraphics()
 	time = 0;
 	Vertex OurVertices[] =
 	{
-		{ -0.5f, 0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ -0.5f, -0.5, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ 0.5f, -0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ 0.5f, 0.5f, -0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ -0.5f, 0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ -0.5f, -0.5, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ 0.5f, -0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ 0.5f, 0.5f, 0.5f,{ 1.0f, 1.0f, 1.0f, 1.0f } }
+		{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f},
+		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f}, //Framsidan
+		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f},
+		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f},
+
+		{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
+		{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
+		{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
+		{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
+
+
+		{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f},  //ovanpå 8
+		{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f},   //// 9
+		{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f},   ////10
+		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
+
+		{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f},  //under 12
+		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
+		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
+		{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
+
+		{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f},  //vänster 16
+		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
+		{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
+		{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
+
+		{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
+		{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
+		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
+		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
 	};
 
 	int OurIndices[] =
 	{
 		2,1,0,
 		2,0,3,
+
 		4,5,6,
 		4,6,7,
-		4,0,3,
+
+		8,9,10,
+		8,10,11,
+
+		12,13,14,
+		12,14,15,
+
+		16,17,18,
+		16,18,19,
+
+		20,21,22,
+		20,22,23,
+
+
+		/*4,0,3,
 		4,3,7,
 		5,1,2,
 		5,2,6,
 		0,1,5,
 		0,5,4,
 		6,2,3,
-		6,3,7
+		6,3,7*/
 	};
 
 	D3D11_BUFFER_DESC bd;
@@ -256,6 +293,37 @@ void GraphicsEngine::InitGraphics()
 	memcpy(subtransres.pData, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
 	devcon->Unmap(mTransBuffer, NULL);
 	devcon->VSSetConstantBuffers(2, 1, &mTransBuffer);
+
+	
+	////Ladda In texture
+	HRESULT hr;
+	CubesTexture = 0;
+	hr = CreateDDSTextureFromFile(dev, L"davai.dds", nullptr, &CubesTexture);
+	if (FAILED(hr))
+	{
+		return;
+	}
+	D3D11_SAMPLER_DESC texSamDesc;
+	texSamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	texSamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	texSamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	texSamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	texSamDesc.MipLODBias = 0;
+	texSamDesc.MaxAnisotropy = 1;
+	texSamDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	texSamDesc.BorderColor[0] = 1.0f;
+	texSamDesc.BorderColor[1] = 1.0f;
+	texSamDesc.BorderColor[2] = 1.0f;
+	texSamDesc.BorderColor[3] = 1.0f;
+	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
+	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX	hr = dev->CreateSamplerState(&texSamDesc, &CubesTexSamplerState);
+	if (FAILED(hr))
+	{
+		return;
+	}
+
+	devcon->PSSetShaderResources(0, 1, &CubesTexture);
+	devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
 
 
 	world = XMMatrixIdentity();
