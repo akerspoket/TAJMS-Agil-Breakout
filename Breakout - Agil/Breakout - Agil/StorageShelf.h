@@ -1,11 +1,7 @@
 #pragma once
 #include "Constants.h"
 
-struct componentA
-{
-	int a;
-};
-
+//where we store the actual components/data
 template<class T>
 class StorageShelf
 {
