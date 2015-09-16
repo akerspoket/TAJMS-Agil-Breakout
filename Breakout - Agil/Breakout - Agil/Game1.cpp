@@ -2,6 +2,7 @@
 #include "PhysicSystem.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
+#include "TriggerSystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 
@@ -18,10 +19,6 @@ Game1::~Game1()
 
 bool Game1::Initialize()
 {
-
-
-
-
 	InputSystem* tInput = new InputSystem();
 	tInput->Initialize();
 	mSystems.push_back(tInput);
@@ -34,7 +31,9 @@ bool Game1::Initialize()
 	tRender->Initialize();
 	mSystems.push_back(tRender);
 
-
+	TriggerSystem* tTrigger = new TriggerSystem();
+	tTrigger->Initialize();
+	mSystems.push_back(tTrigger);
 
 
 	mGraphicsEngine = new GraphicsEngine();
@@ -67,6 +66,7 @@ void Game1::Run()
 		{
 			sys->Update(tDeltaTimeMilli);
 		}
+
 	}
 }
 

@@ -32,7 +32,7 @@ void EventManager::BroadcastEvent(string pID, Payload pPayload)
 	//if event exist in map send it to subscribed systems
 	if (tIter != mEventMap.end())
 	{
-		for (int i = 0; i < tIter->second.size(); i++)
+		for (unsigned int i = 0; i < tIter->second.size(); i++)
 		{
 			tIter->second[i]->OnEvent(&tEvent);
 		}

@@ -2,14 +2,16 @@
 #include "Constants.h"
 #include <string>
 
+//bit lines for each entity
+//1 if have component, 0 if not
 class ComponentTable
 {
 public:
 	static ComponentTable* GetInstance();
 	
-	bool HasComponent(int pEntityID, ComponentType pCompType);
-	void AddComponent(int pEntityID, ComponentType pCompType);
-	void RemoveComponent(int pEntityID, ComponentType pCompType);
+	bool HasComponent(int pEntityID, short pMask);
+	void AddComponent(int pEntityID, short pMask);
+	void RemoveComponent(int pEntityID, short pMask);
 	void RemoveEntity(int pEntityID);
 
 
