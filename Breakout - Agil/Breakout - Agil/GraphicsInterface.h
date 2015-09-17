@@ -8,7 +8,7 @@ public:
 	GraphicsInterface();
 	~GraphicsInterface();
 	int CreateObject(const char* pMeshGroup);
-	void DrawObjects(int pMeshType, int pTextureGroup[], TransformComponent pTransform[], int pNumberOfIntances);
+	void DrawObjects(int pMeshGroup, int pTextureGroup[], TransformComponent pTransform[], int pNumberOfMeshes);
 	
 
 

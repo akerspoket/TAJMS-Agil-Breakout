@@ -17,7 +17,7 @@
 	#include <iostream>
 #endif // DEBUG
 
-
+#define MAX_INSTANCES 100
 
 using namespace DirectX;
 using namespace std;
@@ -53,8 +53,8 @@ struct ObjectBufferType
 };
 struct InstanceBufferType
 {
-	 XMMATRIX translationMatrices;
-	 float color[4];
+	 XMFLOAT4X4 translationMatrices;
+	 unsigned int test;
 };
 
 
@@ -80,7 +80,7 @@ public:
 
 
 	XMMATRIX mTranslationMatrices[5];
-	vector <InstanceBufferType> mInstanceBuffer;
+	
 	float time;
 
 	void InitD3D(HWND hWnd);     // sets 
@@ -90,11 +90,11 @@ public:
 	void InitGraphics();
 	int CreateObject(const char* pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
-	void DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances);
+
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
-	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[]);
+	bool CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize);
 	bool SetActiveShader(ShaderType pType, void* oShaderHandle);
 	int CreateBuffer(D3D11_BUFFER_DESC pBufferDescription);
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize);
@@ -111,14 +111,14 @@ private:
 	int mVertexBufferID;
 	int mIndexBufferID;
 	vector <int> mTextureInstanceBuffer;
+	int mInstanceBufferID;
 	struct ConstantBufferType
 	{
 		int bufferID;
 		int reg;
 	};
 	ConstantBufferType mWVPBufferID;
-	ConstantBufferType mInstanceBufferID;
-	ConstantBufferType mBlockTransMatrixID;
+	vector <InstanceBufferType> mInstanceBuffer;
 
 	ID3D11ShaderResourceView* mCubesTexture;
 	ID3D11SamplerState* mCubesTexSamplerState;
