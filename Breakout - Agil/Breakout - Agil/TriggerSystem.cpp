@@ -17,6 +17,8 @@ void TriggerSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
+//	LevelManager* tLevelManager = tLevelManager->GetInstance();
+	tLevelManager->GenerateWorld("FirstWorld");
 }
 
 void TriggerSystem::Start()
@@ -28,14 +30,11 @@ void TriggerSystem::Update(double pDeltaTime)
 {
 
 	//done with level ->remove everything then load new map
-	if (false)
-	{
+
 		//remove everything
 
 		//load new world
-		LevelManager* tLevelManager = tLevelManager->GetInstance();
-		tLevelManager->GenerateWorld("FirstWorld");
-	}
+
 }
 
 void TriggerSystem::Pause()

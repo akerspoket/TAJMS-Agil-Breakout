@@ -2,7 +2,7 @@
 #include "EventManager.h"
 #include "StorageShelf.h"
 #include "LabelComponent.h"
-#include "EntityManager.h"
+
 #include "ComponentTable.h"
 #include "StorageShelf.h"
 
@@ -61,38 +61,59 @@ void InputSystem::CheckKeyboard()
 	}
 }
 
-void InputSystem::MoveRight()
+void InputSystem::MoveRight(EntityID pEntityID)
 {
-	cout << "-->";
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, ComponentType::VelocityType))
+		{
+			cout << "jag är the shit";
+		}
+	}
 }
 
-void InputSystem::MoveLeft()
+void InputSystem::MoveLeft(EntityID pEntityID)
 {
-	
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, ComponentType::VelocityType))
+		{
+			cout << "jag är the shit";
+		}
+	}
+
 }
-void InputSystem::HandleInput()
+void InputSystem::HandleInput(EntityID pEntityID)
 {
 	int tVectorInput = gUserCmd.mKeysPressed.size();
 	if (gUserCmd.mLeftArrowPressed == true)
 	{
-		MoveLeft();
+		MoveLeft(pEntityID);
 		//cout << "<--";
 	}
 	if (gUserCmd.mRightArrowPressed == true)
 	{
-		MoveRight();
+		MoveRight(pEntityID);
 		//cout << "-->";
 	}
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
 		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
 		{
-			MoveLeft();
+			MoveLeft(pEntityID);
 			//cout << "A";//Move to the left CODE PLEASE!
 		}
 		if (gUserCmd.mKeysPressed[i] == 'd' && gUserCmd.mRightArrowPressed == false)
 		{
-			MoveRight();
+			MoveRight(pEntityID);
 			//cout << "D";//Déplacer vers la droite CODE S'IL VOUS PLAÎT !
 		}
 	}
@@ -102,7 +123,7 @@ void InputSystem::Update(double pDeltaTime)
 {
 	mKeyState = SDL_GetKeyboardState(NULL);
 	CheckKeyboard();
-	HandleInput();
+	//HandleInput();
 
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -116,7 +137,8 @@ void InputSystem::Update(double pDeltaTime)
 
 			if (tLabel->mLabel == Label::Pad)
 			{
-
+				//find input we want to check for TODO:: maybe fix input into bit array?
+				HandleInput(i);
 			}
 		}
 	}
