@@ -332,24 +332,24 @@ void GraphicsEngine::RenderFrame(void)
 
 void GraphicsEngine::DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances)
 {
-	switch(pMeshType)
-		case 1 :
-			D3D11_BUFFER_DESC transbdesc;
-			
-			ZeroMemory(&transbdesc, sizeof(transbdesc));
+	//switch(pMeshType)
+	//	case 1 :
+	//		D3D11_BUFFER_DESC transbdesc;
+	//		
+	//		ZeroMemory(&transbdesc, sizeof(transbdesc));
 
-			transbdesc.Usage = D3D11_USAGE_DYNAMIC;
-			transbdesc.ByteWidth = sizeof(XMMATRIX) * pRotTransMatrices.size();
-			transbdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			transbdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			transbdesc.MiscFlags = 0;
-			transbdesc.StructureByteStride = 0;
-			mBlockTransMatrixID.bufferID = CreateBuffer(transbdesc);
-			PushToDevice(mBlockTransMatrixID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
+	//		transbdesc.Usage = D3D11_USAGE_DYNAMIC;
+	//		transbdesc.ByteWidth = sizeof(XMMATRIX) * pRotTransMatrices.size();
+	//		transbdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//		transbdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//		transbdesc.MiscFlags = 0;
+	//		transbdesc.StructureByteStride = 0;
+	//		mBlockTransMatrixID.bufferID = CreateBuffer(transbdesc);
+	//		PushToDevice(mBlockTransMatrixID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
 
-		//case 2 :
+	//	//case 2 :
 
-		//case 3 :
+	//	//case 3 :
 
 
 
