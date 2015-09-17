@@ -5,7 +5,7 @@
 GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
-	mInstanceBufferID.reg = 2;
+	mInstanceBufferID.reg = 1;
 }
 
 
@@ -33,7 +33,7 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 	D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
+		D3D11_CREATE_DEVICE_DEBUG,
 		NULL,
 		NULL,
 		D3D11_SDK_VERSION,
@@ -260,11 +260,26 @@ void GraphicsEngine::InitGraphics()
 	transbd.StructureByteStride = 0;
 	mInstanceBufferID.bufferID = CreateBuffer(transbd);
 	PushToDevice(mInstanceBufferID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
+	
+	D3D11_BUFFER_DESC squareBuffer;
+
+	float squareArray[] = {1.0f ,1.0f, 1.0f ,1.0f ,1.0f, 1.0f, 1.0f ,1.0f, 0.0f,0.0f,0.0f,0.0f};
+
+	ZeroMemory(&squareBuffer, sizeof(squareBuffer));
+	squareBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	squareBuffer.ByteWidth = sizeof(squareArray);
+	squareBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	squareBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	squareBuffer.MiscFlags = 0;
+	squareBuffer.StructureByteStride = 0;
+	int tempsquare = CreateBuffer(squareBuffer);
+	PushToDevice(tempsquare, squareArray, sizeof(squareArray), 0, PixelShader);
+
 
 	////Ladda In texture
 	HRESULT hr;
 	mCubesTexture = 0;
-	hr = CreateDDSTextureFromFile(dev, L"davai.dds", nullptr, &mCubesTexture);
+	hr = CreateDDSTextureFromFile(dev, L"test2in1pic.dds", nullptr, &mCubesTexture);
 	if (FAILED(hr))
 	{
 		return;
@@ -283,7 +298,7 @@ void GraphicsEngine::InitGraphics()
 	texSamDesc.BorderColor[3] = 1.0f;
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
 	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
-
+	
 
 	hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
@@ -422,5 +437,187 @@ bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int 
 		break;
 	default:
 		break;
+	}
+}
+
+
+int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription)
+{
+	ID3D11Buffer* tVertexHolder;
+	ID3D11Buffer* tIndexHolder;
+	HRESULT res = dev->CreateBuffer(&pVertexBufferDescription, NULL, &tVertexHolder);
+	if (res != S_OK)
+	{
+		return -1;
+	}
+	res = dev->CreateBuffer(&pIndexBufferDescription, NULL, &tIndexHolder);
+	if (res != S_OK)
+	{
+		return -1;
+	}
+	mObjectBuffers.push_back(ObjectBufferType(tVertexHolder, tIndexHolder));
+	return mObjectBuffers.size() - 1;
+
+}
+
+void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, int& pTextureID) //vet inte om detta stämmer
+{
+	if (pTextureName == "Placeholder")
+	{
+		pTextureGroup = 0;
+		pTextureID = 1;
+	}
+}
+
+int GraphicsEngine::CreateObject(const char* pMeshName)
+{
+
+	if (pMeshName == "Box")
+	{
+		Vertex OurVertices[] =
+		{
+			{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f },
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f }, //Framsidan
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },
+
+			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
+			{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
+			{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
+			{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
+
+
+			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //ovanpå 8
+			{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f },   //// 9
+			{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f },   ////10
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
+
+			{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f },  //under 12
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
+			{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
+
+			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //vänster 16
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
+			{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
+			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
+
+			{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
+			{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
+		};
+
+		int OurIndices[] =
+		{
+			2,1,0,
+			2,0,3,
+
+			4,5,6,
+			4,6,7,
+
+			8,9,10,
+			8,10,11,
+
+			12,13,14,
+			12,14,15,
+
+			16,17,18,
+			16,18,19,
+
+			20,21,22,
+			20,22,23,
+		};
+
+		int rIndex;
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.ByteWidth = sizeof(OurVertices);
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		D3D11_BUFFER_DESC ibd;
+		ZeroMemory(&ibd, sizeof(ibd));
+
+		ibd.Usage = D3D11_USAGE_DYNAMIC;
+		ibd.ByteWidth = sizeof(OurIndices);
+		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		ibd.MiscFlags = 0;
+
+		rIndex = CreateObjectBuffer(bd, ibd);
+
+		PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
+
+
+
+		PushToDevice(mVertexBufferID, &OurVertices, sizeof(OurVertices));
+
+		return rIndex;
+	}
+	else if (pMeshName == "Sphere")
+	{
+		//objloader
+
+	}
+	else if (pMeshName == "Pad")
+	{
+		Vertex OurVertices[] =
+		{
+			{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f },
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f }, //Framsidan
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },
+
+			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
+			{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
+			{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
+			{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
+
+
+			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //ovanpå 8
+			{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f },   //// 9
+			{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f },   ////10
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
+
+			{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f },  //under 12
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
+			{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
+
+			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //vänster 16
+			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
+			{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
+			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
+
+			{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
+			{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
+			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
+			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
+		};
+
+		int OurIndices[] =
+		{
+			2,1,0,
+			2,0,3,
+
+			4,5,6,
+			4,6,7,
+
+			8,9,10,
+			8,10,11,
+
+			12,13,14,
+			12,14,15,
+
+			16,17,18,
+			16,18,19,
+
+			20,21,22,
+			20,22,23,
+		};
+
 	}
 }
