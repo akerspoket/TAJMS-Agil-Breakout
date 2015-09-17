@@ -1,6 +1,10 @@
 #include "InputSystem.h"
 #include "EventManager.h"
 #include "StorageShelf.h"
+#include "LabelComponent.h"
+#include "EntityManager.h"
+#include "ComponentTable.h"
+#include "StorageShelf.h"
 
 using namespace std;
 
@@ -56,13 +60,15 @@ void InputSystem::CheckKeyboard()
 		cout << "Stäng av programmet";
 	}
 }
+
 void InputSystem::MoveRight()
 {
 	cout << "-->";
 }
+
 void InputSystem::MoveLeft()
 {
-	cout << "<--";
+	
 }
 void InputSystem::HandleInput()
 {
@@ -94,11 +100,26 @@ void InputSystem::HandleInput()
 }
 void InputSystem::Update(double pDeltaTime)
 {
-	char tButton = 'w';//wat?
-	
 	mKeyState = SDL_GetKeyboardState(NULL);
 	CheckKeyboard();
 	HandleInput();
+
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, ComponentType::PhysicType))
+		{
+			LabelComponent* tLabel = GetComponent<LabelComponent>(i);
+
+			if (tLabel->mLabel == Label::Pad)
+			{
+
+			}
+		}
+	}
 
 
 	//cout << "running input system";
