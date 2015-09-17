@@ -145,6 +145,9 @@
     <ClInclude Include="InputSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="StorageShelf.h">
       <Filter>Header Files</Filter>
     </ClInclude>

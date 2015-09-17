@@ -2,8 +2,12 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD;
+	uint instanceID : SV_InstanceID;
+};
 
-	uint texturePart : TEXTUREPART;
+cbuffer TextureSquare : register(b0)
+{
+	float square[12];
 };
 
 Texture2D ObjTexture : register(t0);
@@ -11,6 +15,16 @@ SamplerState ObjSamplerState : register(s0);
 
 float4 PShader(PixelInputType input) : SV_TARGET
 {
-	return float4((float)input.texturePart / 5.0f,0,0,1);
-	//return ObjTexture.Sample( ObjSamplerState, input.texCoord);
+	return float4((float)square[2],(float)square[2],(float)square[2],1);
+
+	/*if (input.instanceID == 2)
+	{
+		
+	}
+	else
+	{
+		return ObjTexture.Sample(ObjSamplerState, float2(((float)square[input.instanceID] / 2.0f) + (input.texCoord.x / 2.0f),input.texCoord.y));
+	}*/
+	
+
 }
