@@ -327,7 +327,7 @@ void GraphicsEngine::RenderFrame(void)
 	swapchain->Present(0, 0);
 	if (mInstanceBuffer.size()>0)
 	{
-		mInstanceBuffer.pop_back();
+		//mInstanceBuffer.pop_back();
 	}
 	
 }

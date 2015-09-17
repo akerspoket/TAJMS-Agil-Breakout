@@ -5,17 +5,6 @@ cbuffer MatrixBuffer : register(b0)
 	matrix projectionMatrix;
 };
 
-struct InstanceLayout
-{
-	matrix matris;
-	float4 texturePart;
-};
-
-cbuffer InstanceMatrices : register(b2)
-{
-	InstanceLayout instances[5];
-};
-
 struct VertexInputType
 {
 	float4 position : POSITION;
