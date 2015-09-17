@@ -54,7 +54,7 @@ struct ObjectBufferType
 struct InstanceBufferType
 {
 	 XMFLOAT4X4 translationMatrices;
-	 unsigned int test;
+	 unsigned int texturePart;
 };
 
 
@@ -90,7 +90,7 @@ public:
 	void InitGraphics();
 	int CreateObject(const char* pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
-	void DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances);
+	void DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfInstances);
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
@@ -119,7 +119,6 @@ private:
 	};
 	ConstantBufferType mWVPBufferID;
 	vector <InstanceBufferType> mInstanceBuffer;
-	ConstantBufferType mInstanceBufferID;
 	ConstantBufferType mBlockTransMatrixID;
 
 	ID3D11ShaderResourceView* mCubesTexture;

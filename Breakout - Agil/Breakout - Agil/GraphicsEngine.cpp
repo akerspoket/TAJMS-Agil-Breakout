@@ -214,7 +214,12 @@ void GraphicsEngine::InitGraphics()
 	for (int i = 0; i < 5; i++)
 	{
 		XMStoreFloat4x4(&temp.translationMatrices, XMMatrixTranspose(XMMatrixTranslation(1 * (i - 2), 4, 8)));
-		temp.test = i;
+		temp.texturePart = 0;
+		if (i ==4 )
+		{
+			temp.texturePart = 1;
+		}
+		
 		mInstanceBuffer.push_back(temp);
 	}
 
@@ -293,7 +298,7 @@ void GraphicsEngine::InitGraphics()
 
 void GraphicsEngine::RenderFrame(void)
 {
-	float color[] = {0.0f,0.2f,0.4f,1.0f};
+	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
@@ -321,13 +326,14 @@ void GraphicsEngine::RenderFrame(void)
 	cout << "Linux kernel noticed";
 #endif
 	// do 3D rendering on the back buffer here
-	
+
 	// switch the back buffer and the front buffer
 
 	swapchain->Present(0, 0);
-	if (mInstanceBuffer.size()>0)
+	if (mInstanceBuffer.size() > 0)
 	{
 		//mInstanceBuffer.pop_back();
+	}
 }
 
 void GraphicsEngine::DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances)
@@ -353,10 +359,6 @@ void GraphicsEngine::DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMA
 
 
 
-
-}
-
-bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[])
 }
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize)
