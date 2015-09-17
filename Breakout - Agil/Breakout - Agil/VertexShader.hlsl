@@ -11,7 +11,7 @@ struct InstanceLayout
 	float4 colorInstance;
 };
 
-cbuffer InstanceMatrices : register(b2)
+cbuffer InstanceMatrices : register(b1)
 {
 	InstanceLayout instances[5];
 };
@@ -28,6 +28,7 @@ struct VOut
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD;
+	uint instanceID : SV_InstanceID;
 };
 
 VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
@@ -41,6 +42,6 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-
+	output.instanceID = instanceID;
 	return output;
 }
