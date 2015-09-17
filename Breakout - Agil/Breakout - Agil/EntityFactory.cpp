@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "LabelComponent.h"
+#include "VelocityComponent.h"
 
 
 
@@ -71,6 +72,10 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::LabelType)
 		{
 			memcpy(GetComponent<LabelComponent>(tNewEntityID), iter->second, sizeof(LabelComponent));
+		}
+		else if (iter->first == ComponentType::VelocityType)
+		{
+			memcpy(GetComponent<VelocityComponent>(tNewEntityID), iter->second, sizeof(VelocityComponent));
 		}
 	}
 

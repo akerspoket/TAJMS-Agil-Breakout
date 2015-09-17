@@ -52,32 +52,32 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("Padda", tBlueprint);
 
 	//add block to blueprint
-	EntityFactory::EntityBlueprint tBlueprint;
+	EntityFactory::EntityBlueprint tBlockBlueprint;
 
 	//Component values might be silly and have to be altered later
-	TransformComponent* tTrans = new TransformComponent();
-	MeshComponent* tMesh = new MeshComponent();
-	tBlueprint[TransformType] = tTrans;
-	tBlueprint[MeshType] = tMesh;
+	tTrans = new TransformComponent();
+	tMesh = new MeshComponent();
+	tBlockBlueprint[TransformType] = tTrans;
+	tBlockBlueprint[MeshType] = tMesh;
 
-	mEntityFactory->RegisterEntityTemplate("Block", tBlueprint);
+	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
 	//add ball to blueprint
-	EntityFactory::EntityBlueprint tBlueprint;
+	EntityFactory::EntityBlueprint tBallBlueprint;
 
 	//Component values might be silly and have to be altered later
-	TransformComponent* tTrans = new TransformComponent();
-	MeshComponent* tMesh = new MeshComponent();
-	LabelComponent* tLabel = new LabelComponent();
+	tTrans = new TransformComponent();
+	tMesh = new MeshComponent();
+	tLabel = new LabelComponent();
 
 	//We set the label here since it never changes
 	tLabel->mLabel = Label::Ball;
 
-	tBlueprint[TransformType] = tTrans;
-	tBlueprint[MeshType] = tMesh;
-	tBlueprint[LabelType] = tLabel;
+	tBallBlueprint[TransformType] = tTrans;
+	tBallBlueprint[MeshType] = tMesh;
+	tBallBlueprint[LabelType] = tLabel;
 
-	mEntityFactory->RegisterEntityTemplate("Ball", tBlueprint);
+	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 
 }
 
@@ -100,8 +100,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	for (int i = 0; i > blockX; i++)
 		for (int j = 0; j < blockY; j++)
 		{
-			EntityID tNewID = mEntityFactory->CreateEntity("Block");
-			TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+			tNewID = mEntityFactory->CreateEntity("Block");
+			tTrans = GetComponent<TransformComponent>(tNewID);
 			tTrans->mPosition[0] = margin*i;
 			tTrans->mPosition[1] = margin*j;
 		}
@@ -110,8 +110,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	float tStartPositionX = 0;
 	float tStartPositionY = 0;
 
-	EntityID tNewID = mEntityFactory->CreateEntity("Ball");
-	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	tNewID = mEntityFactory->CreateEntity("Ball");
+	tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition[0] = tStartPositionX;
 	tTrans->mPosition[1] = tStartPositionY;
 
