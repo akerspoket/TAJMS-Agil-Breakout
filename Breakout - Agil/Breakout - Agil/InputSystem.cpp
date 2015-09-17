@@ -2,7 +2,7 @@
 #include "EventManager.h"
 #include "StorageShelf.h"
 #include "LabelComponent.h"
-
+#include "VelocityComponent.h"
 #include "ComponentTable.h"
 #include "StorageShelf.h"
 
@@ -63,33 +63,26 @@ void InputSystem::CheckKeyboard()
 
 void InputSystem::MoveRight(EntityID pEntityID)
 {
-	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
-	int tMaxEnt = tEntManager->GetLastEntity();
 
-	for (int i = 0; i < tMaxEnt; i++)
-	{
-		if (tCompTable->HasComponent(i, ComponentType::VelocityType))
-		{
-			cout << "jag är the shit";
-		}
-	}
+	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
+
+	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
+	tVel->mDirection[0] = 1.0f;
+	tVel->mDirection[1] = 0.0f;
+	tVel->mDirection[2] = 0.0f;
 }
 
 void InputSystem::MoveLeft(EntityID pEntityID)
 {
-	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
-	int tMaxEnt = tEntManager->GetLastEntity();
-
-	for (int i = 0; i < tMaxEnt; i++)
-	{
-		if (tCompTable->HasComponent(i, ComponentType::VelocityType))
-		{
-			cout << "jag är the shit";
-		}
-	}
-
+	
+	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
+	
+	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
+	tVel->mDirection[0] = -1.0f;
+	tVel->mDirection[1] = 0.0f;
+	tVel->mDirection[2] = 0.0f;
 }
 void InputSystem::HandleInput(EntityID pEntityID)
 {
@@ -104,6 +97,7 @@ void InputSystem::HandleInput(EntityID pEntityID)
 		MoveRight(pEntityID);
 		//cout << "-->";
 	}
+
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
 		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
@@ -131,7 +125,7 @@ void InputSystem::Update(double pDeltaTime)
 
 	for (int i = 0; i < tMaxEnt; i++)
 	{
-		if (tCompTable->HasComponent(i, ComponentType::PhysicType))
+		if (tCompTable->HasComponent(i, ComponentType::LabelType))
 		{
 			LabelComponent* tLabel = GetComponent<LabelComponent>(i);
 
