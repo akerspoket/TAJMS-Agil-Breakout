@@ -72,6 +72,9 @@
     <ClCompile Include="DDSTextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowCreator.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,6 +143,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="davai.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="test2in1pic.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="test2in1pic.dds">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

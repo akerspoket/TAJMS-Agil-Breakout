@@ -41,6 +41,16 @@ struct MovementBufferType
 	XMFLOAT3 filler;
 };
 
+struct ObjectBufferType
+{
+	ID3D11Buffer* vertexDescription;
+	ID3D11Buffer* indexDescription;
+	ObjectBufferType(ID3D11Buffer* _vertex, ID3D11Buffer* _index)
+	{
+		vertexDescription = _vertex;
+		indexDescription = _index;
+	}
+};
 struct InstanceBufferType
 {
 	 XMMATRIX translationMatrices;
@@ -78,6 +88,8 @@ public:
 	void CleanD3D(void);         // close
 	void RenderFrame(void);
 	void InitGraphics();
+	int CreateObject(const char* pMeshName);
+	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
 
 
 private:
@@ -87,14 +99,18 @@ private:
 	int CreateBuffer(D3D11_BUFFER_DESC pBufferDescription);
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize);
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType);
+	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription);
+	void CreateTextures(const wchar_t *pFileName);
 
 	//Variables
 	ID3D11PixelShader* mPixelShader;
 	VertexShaderComponents* mVertexShader = new VertexShaderComponents;
 	vector< ID3D11Buffer*> mBuffers; //int id
+	vector< ObjectBufferType> mObjectBuffers;
 	MatrixBufferType tBufferInfo;
 	int mVertexBufferID;
 	int mIndexBufferID;
+	vector <int> mTextureInstanceBuffer;
 	struct ConstantBufferType
 	{
 		int bufferID;
