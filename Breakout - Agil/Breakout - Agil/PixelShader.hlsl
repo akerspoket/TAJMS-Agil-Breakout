@@ -15,16 +15,10 @@ SamplerState ObjSamplerState : register(s0);
 
 float4 PShader(PixelInputType input) : SV_TARGET
 {
-	return float4((float)square[2],(float)square[2],(float)square[2],1);
+	//return float4(0,1,1,1);
 
-	/*if (input.instanceID == 2)
-	{
-		
-	}
-	else
-	{
-		return ObjTexture.Sample(ObjSamplerState, float2(((float)square[input.instanceID] / 2.0f) + (input.texCoord.x / 2.0f),input.texCoord.y));
-	}*/
+	return ObjTexture.Sample(ObjSamplerState, float2(((float)input.texturePart / 2.0f) + (input.texCoord.x / 2.0f),input.texCoord.y));
+	
 	
 
 }
