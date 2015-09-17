@@ -1,6 +1,7 @@
 #pragma once
 #include "System.h"
 #include <SDL2\SDL.h>
+#include "EntityManager.h"
 
 
 class InputSystem :	public System
@@ -18,10 +19,10 @@ public:
 	const Uint8* mKeyState;
 private:
 	void CheckKeyboard();
-	void HandleInput();
+	void HandleInput(EntityID pEntityID);
 	
 	SDL_Event mSDLEvent;
-	void MoveRight();
-	void MoveLeft();
+	void MoveRight(EntityID pEntityID);
+	void MoveLeft(EntityID pEntityID);
 };
 

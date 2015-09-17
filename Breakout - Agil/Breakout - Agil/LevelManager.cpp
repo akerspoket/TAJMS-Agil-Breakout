@@ -3,6 +3,8 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "LabelComponent.h"
+#include "PhysicComponent.h"
+#include "VelocityComponent.h"
 
 
 
@@ -37,6 +39,8 @@ void LevelManager::Initialize()
 	TransformComponent* tTrans = new TransformComponent();
 	MeshComponent* tMesh = new MeshComponent();
 	LabelComponent* tLabel = new LabelComponent();
+	PhysicComponent* tPhysic = new PhysicComponent();
+	VelocityComponent* tVelocity = new VelocityComponent();
 
 	//set component values
 	//we ignore this and use the initialization values for test
@@ -57,8 +61,11 @@ void LevelManager::Initialize()
 	//Component values might be silly and have to be altered later
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
+	tVelocity = new VelocityComponent();
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
+	tBlockBlueprint[VelocityType] = tVelocity;
+
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
