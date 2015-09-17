@@ -255,7 +255,7 @@ void GraphicsEngine::InitGraphics()
 	PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
 
 
-	
+
 	////Ladda In texture
 	HRESULT hr;
 	mCubesTexture = 0;
@@ -278,7 +278,7 @@ void GraphicsEngine::InitGraphics()
 	texSamDesc.BorderColor[3] = 1.0f;
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
 	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
-	
+
 
 	hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
@@ -328,8 +328,35 @@ void GraphicsEngine::RenderFrame(void)
 	if (mInstanceBuffer.size()>0)
 	{
 		//mInstanceBuffer.pop_back();
-	}
-	
+}
+
+void GraphicsEngine::DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances)
+{
+	switch(pMeshType)
+		case 1 :
+			D3D11_BUFFER_DESC transbdesc;
+			
+			ZeroMemory(&transbdesc, sizeof(transbdesc));
+
+			transbdesc.Usage = D3D11_USAGE_DYNAMIC;
+			transbdesc.ByteWidth = sizeof(XMMATRIX) * pRotTransMatrices.size();
+			transbdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			transbdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			transbdesc.MiscFlags = 0;
+			transbdesc.StructureByteStride = 0;
+			mBlockTransMatrixID.bufferID = CreateBuffer(transbdesc);
+			PushToDevice(mBlockTransMatrixID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
+
+		//case 2 :
+
+		//case 3 :
+
+
+
+
+}
+
+bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[])
 }
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize)

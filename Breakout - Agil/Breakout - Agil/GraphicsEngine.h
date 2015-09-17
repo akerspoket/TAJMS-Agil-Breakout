@@ -90,7 +90,7 @@ public:
 	void InitGraphics();
 	int CreateObject(const char* pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
-
+	void DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances);
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
@@ -119,6 +119,8 @@ private:
 	};
 	ConstantBufferType mWVPBufferID;
 	vector <InstanceBufferType> mInstanceBuffer;
+	ConstantBufferType mInstanceBufferID;
+	ConstantBufferType mBlockTransMatrixID;
 
 	ID3D11ShaderResourceView* mCubesTexture;
 	ID3D11SamplerState* mCubesTexSamplerState;
