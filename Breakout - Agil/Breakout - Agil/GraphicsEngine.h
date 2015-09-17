@@ -17,7 +17,7 @@
 	#include <iostream>
 #endif // DEBUG
 
-
+#define MAX_INSTANCES 100
 
 using namespace DirectX;
 using namespace std;
