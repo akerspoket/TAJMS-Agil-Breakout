@@ -94,7 +94,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 
 	tTrans->mPosition[0] = 1.0f;
-
+	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
+	
 	//Create blocks
 	//10x5 grid of blocks
 	int blockX = 10;
