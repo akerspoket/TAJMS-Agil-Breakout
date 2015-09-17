@@ -23,12 +23,11 @@ ComponentTable::~ComponentTable()
 {
 }
 
-bool ComponentTable::HasComponent(int pEntityID, ComponentType pCompType)
+bool ComponentTable::HasComponent(int pEntityID, short pMask)
 {
 	short tLineToCheck = mComponentTable[pEntityID];
-	short tMaskToUse = (1 << pCompType); //00000001 to 00000100
 
-	if ((tLineToCheck & tMaskToUse) != 0) //then there is an component
+	if ((tLineToCheck & pMask) != 0) //then there are the components from mask
 	{
 		return true;
 	}
@@ -39,15 +38,14 @@ bool ComponentTable::HasComponent(int pEntityID, ComponentType pCompType)
 	
 }
 
-void ComponentTable::AddComponent(int pEntityID, ComponentType pCompType)
+void ComponentTable::AddComponent(int pEntityID, short pMask)
 {
 	short tLineToAddTo = mComponentTable[pEntityID];
-	short tMaskToUse = (1 << pCompType);
 
 	
-	if ((tLineToAddTo & tMaskToUse) == 0)
+	if ((tLineToAddTo & pMask) == 0)
 	{
-		tLineToAddTo = tLineToAddTo | tMaskToUse;
+		tLineToAddTo = tLineToAddTo | pMask;
 		mComponentTable[pEntityID] = tLineToAddTo;
 	}
 	else
@@ -56,7 +54,7 @@ void ComponentTable::AddComponent(int pEntityID, ComponentType pCompType)
 	}
 }
 
-void ComponentTable::RemoveComponent(int pEntityID, ComponentType pCompType)
+void ComponentTable::RemoveComponent(int pEntityID, short pMask)
 {
 
 }

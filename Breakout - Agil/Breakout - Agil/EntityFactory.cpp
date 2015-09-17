@@ -4,6 +4,9 @@
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 #include "TransformComponent.h"
+#include "MeshComponent.h"
+#include "LabelComponent.h"
+#include "VelocityComponent.h"
 
 
 
@@ -61,6 +64,18 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::TransformType)
 		{
 			memcpy(GetComponent<TransformComponent>(tNewEntityID), iter->second, sizeof(TransformComponent));
+		}
+		else if (iter->first == ComponentType::MeshType)
+		{
+			memcpy(GetComponent<MeshComponent>(tNewEntityID), iter->second, sizeof(MeshComponent));
+		}
+		else if (iter->first == ComponentType::LabelType)
+		{
+			memcpy(GetComponent<LabelComponent>(tNewEntityID), iter->second, sizeof(LabelComponent));
+		}
+		else if (iter->first == ComponentType::VelocityType)
+		{
+			memcpy(GetComponent<VelocityComponent>(tNewEntityID), iter->second, sizeof(VelocityComponent));
 		}
 	}
 

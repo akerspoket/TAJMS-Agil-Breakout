@@ -1,5 +1,10 @@
 #include "InputSystem.h"
 #include "EventManager.h"
+#include "StorageShelf.h"
+#include "LabelComponent.h"
+#include "VelocityComponent.h"
+#include "ComponentTable.h"
+#include "StorageShelf.h"
 
 using namespace std;
 
@@ -25,67 +30,84 @@ void InputSystem::Start()
 void InputSystem::CheckKeyboard()
 {
 	
-	mUserCmd.mKeysPressed.clear();
+	gUserCmd.mKeysPressed.clear();
 	if (mKeyState[SDL_SCANCODE_LEFT])
 	{
-		mUserCmd.mLeftArrowPressed = true;
+		gUserCmd.mLeftArrowPressed = true;
 	}
 	else
 	{
-		mUserCmd.mLeftArrowPressed = false;
+		gUserCmd.mLeftArrowPressed = false;
 	}
 	if (mKeyState[SDL_SCANCODE_RIGHT])
 	{
-		mUserCmd.mRightArrowPressed = true;
+		gUserCmd.mRightArrowPressed = true;
 	}
 	else
 	{
-		mUserCmd.mRightArrowPressed = false;
+		gUserCmd.mRightArrowPressed = false;
 	}
 	if (mKeyState[SDL_SCANCODE_A])
 	{
-		mUserCmd.mKeysPressed.push_back('a');
+		gUserCmd.mKeysPressed.push_back('a');
 	}
 	if (mKeyState[SDL_SCANCODE_D])
 	{
-		mUserCmd.mKeysPressed.push_back('d');
+		gUserCmd.mKeysPressed.push_back('d');
 	}
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
 		cout << "Stäng av programmet";
 	}
 }
-void InputSystem::MoveRight()
+
+void InputSystem::MoveRight(EntityID pEntityID)
 {
-	cout << "-->";
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+
+	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
+
+	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
+	tVel->mDirection[0] = 1.0f;
+	tVel->mDirection[1] = 0.0f;
+	tVel->mDirection[2] = 0.0f;
 }
-void InputSystem::MoveLeft()
+
+void InputSystem::MoveLeft(EntityID pEntityID)
 {
-	cout << "<--";
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	
+	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
+	
+	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
+	tVel->mDirection[0] = -1.0f;
+	tVel->mDirection[1] = 0.0f;
+	tVel->mDirection[2] = 0.0f;
 }
-void InputSystem::HandleInput()
+void InputSystem::HandleInput(EntityID pEntityID)
 {
-	int tVectorInput = mUserCmd.mKeysPressed.size();
-	if (mUserCmd.mLeftArrowPressed == true)
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	if (gUserCmd.mLeftArrowPressed == true)
 	{
-		MoveLeft();
+		MoveLeft(pEntityID);
 		//cout << "<--";
 	}
-	if (mUserCmd.mRightArrowPressed == true)
+	if (gUserCmd.mRightArrowPressed == true)
 	{
-		MoveRight();
+		MoveRight(pEntityID);
 		//cout << "-->";
 	}
+
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
-		if (mUserCmd.mKeysPressed[i] == 'a' && mUserCmd.mLeftArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
 		{
-			MoveLeft();
+			MoveLeft(pEntityID);
 			//cout << "A";//Move to the left CODE PLEASE!
 		}
-		if (mUserCmd.mKeysPressed[i] == 'd' && mUserCmd.mRightArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'd' && gUserCmd.mRightArrowPressed == false)
 		{
-			MoveRight();
+			MoveRight(pEntityID);
 			//cout << "D";//Déplacer vers la droite CODE S'IL VOUS PLAÎT !
 		}
 	}
@@ -93,11 +115,27 @@ void InputSystem::HandleInput()
 }
 void InputSystem::Update(double pDeltaTime)
 {
-	char tButton = 'w';//wat?
-	
 	mKeyState = SDL_GetKeyboardState(NULL);
 	CheckKeyboard();
-	HandleInput();
+	//HandleInput();
+
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, ComponentType::LabelType))
+		{
+			LabelComponent* tLabel = GetComponent<LabelComponent>(i);
+
+			if (tLabel->mLabel == Label::Pad)
+			{
+				//find input we want to check for TODO:: maybe fix input into bit array?
+				HandleInput(i);
+			}
+		}
+	}
 
 
 	//cout << "running input system";

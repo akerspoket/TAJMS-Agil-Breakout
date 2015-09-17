@@ -1,6 +1,7 @@
 #pragma once
 #include "System.h"
 #include <SDL2\SDL.h>
+#include "EntityManager.h"
 
 
 class InputSystem :	public System
@@ -8,17 +9,7 @@ class InputSystem :	public System
 public:
 	InputSystem();
 	~InputSystem();
-	static struct UserCmd
-	{
-		vector<char>mKeysPressed;
-		float mXMove;//for the mouse
-		float mYMove;//for the mouse
-		bool mRightArrowPressed;
-		bool mLeftArrowPressed;
-		bool mUpArrowPressed;
-		bool mDownArrowPressed;
-
-	};
+	
 	void Initialize();
 	void Start();
 	void Update(double pDeltaTime);
@@ -28,10 +19,10 @@ public:
 	const Uint8* mKeyState;
 private:
 	void CheckKeyboard();
-	void HandleInput();
-	UserCmd mUserCmd;
+	void HandleInput(EntityID pEntityID);
+	
 	SDL_Event mSDLEvent;
-	void MoveRight();
-	void MoveLeft();
+	void MoveRight(EntityID pEntityID);
+	void MoveLeft(EntityID pEntityID);
 };
 

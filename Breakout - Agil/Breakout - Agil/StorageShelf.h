@@ -1,11 +1,10 @@
 #pragma once
 #include "Constants.h"
+#include <vector>
 
-struct componentA
-{
-	int a;
-};
+using namespace std;
 
+//where we store the actual components/data
 template<class T>
 class StorageShelf
 {
@@ -22,6 +21,8 @@ private:
 	static StorageShelf<T>* mSingleton;
 	
 };
+
+
 
 template<class T>
 StorageShelf<T>* StorageShelf<T>::mSingleton = nullptr;
@@ -58,3 +59,19 @@ static T* GetComponent(EntityID pEntityID)
 
 	return &tNeededShelf->mItems[pEntityID];
 }
+
+
+static struct UserCmd
+{
+	vector<char>mKeysPressed;
+	float mXMove;//for the mouse
+	float mYMove;//for the mouse
+	bool mRightArrowPressed;
+	bool mLeftArrowPressed;
+	bool mUpArrowPressed;
+	bool mDownArrowPressed;
+
+};
+
+static UserCmd gUserCmd;
+
