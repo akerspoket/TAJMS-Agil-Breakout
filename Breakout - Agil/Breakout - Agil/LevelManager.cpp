@@ -50,6 +50,18 @@ void LevelManager::Initialize()
 	tBlueprint[LabelType] = tLabel;
 
 	mEntityFactory->RegisterEntityTemplate("Padda", tBlueprint);
+
+	//add block to blueprint
+	EntityFactory::EntityBlueprint tBlueprint;
+
+	//Component values might be silly and have to be altered later
+	TransformComponent* tTrans = new TransformComponent();
+	MeshComponent* tMesh = new MeshComponent();
+	tBlueprint[TransformType] = tTrans;
+	tBlueprint[MeshType] = tMesh;
+
+	mEntityFactory->RegisterEntityTemplate("Block", tBlueprint);
+
 }
 
 void LevelManager::GenerateWorld(string pWorldName)
@@ -58,4 +70,23 @@ void LevelManager::GenerateWorld(string pWorldName)
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 
 	tTrans->mPosition[0] = 1.0f;
+
+	//Create blocks
+	//10x5 grid of blocks
+	int blockX = 10;
+	int blockY = 5;
+
+	//Space between blocks. Should probably be expanded to account for block sizes
+	//Hard-coded until we can read from proper level file
+	float margin = 2;
+	
+	for (int i = 0; i > blockX; i++)
+		for (int j = 0; j < blockY; j++)
+		{
+			EntityID tNewID = mEntityFactory->CreateEntity("Block");
+			TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+			tTrans->mPosition[0] = margin*i;
+			tTrans->mPosition[1] = margin*j;
+		}
+
 }
