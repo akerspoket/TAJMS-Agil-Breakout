@@ -4,6 +4,8 @@
 #include "ComponentTable.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
+#include "TransformComponent.h"
+#include "VelocityComponent.h"
 
 PhysicSystem::PhysicSystem()
 {
@@ -32,11 +34,24 @@ void PhysicSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
+
+
+
+
+	//Update position with velocity
 	for (int i = 0; i < tMaxEnt; i++)
 	{
-		if (tCompTable->HasComponent(i, ComponentType::PhysicType))
+		
+		//Ensure that relevant components exist
+		short tFlags = VelocityType | TransformType;
+		if (tCompTable->HasComponent(i, tFlags))
 		{
+			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+			VelocityComponent* tVel= GetComponent<VelocityComponent>(i);
 
+			tTrans->mPosition[0] += tVel->mDirection[0] + tVel->mSpeed;
+			tTrans->mPosition[1] += tVel->mDirection[1] + tVel->mSpeed;
+			tTrans->mPosition[2] += tVel->mDirection[2] + tVel->mSpeed;
 		}
 	}
 }
