@@ -128,6 +128,9 @@
     <ClInclude Include="VelocityComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="VelocityComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
     <ClInclude Include="GraphicsInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
