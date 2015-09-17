@@ -123,8 +123,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition[1] = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 1;
-	float tStartDirection[3] = { 1,1,1 };
+	tVel->mSpeed = 0.001f;
+	float tStartDirection[3] = { 1,1,0 };
 	tVel->mDirection[0] = tStartDirection[0];
 	tVel->mDirection[1] = tStartDirection[1];
 	tVel->mDirection[2] = tStartDirection[2];

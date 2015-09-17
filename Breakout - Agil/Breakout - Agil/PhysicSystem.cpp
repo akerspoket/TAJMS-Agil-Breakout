@@ -6,6 +6,7 @@
 #include "PhysicComponent.h"
 #include "TransformComponent.h"
 #include "VelocityComponent.h"
+#include "LabelComponent.h"
 
 PhysicSystem::PhysicSystem()
 {
@@ -41,17 +42,29 @@ void PhysicSystem::Update(double pDeltaTime)
 	//Update position with velocity
 	for (int i = 0; i < tMaxEnt; i++)
 	{
-		
+
 		//Ensure that relevant components exist
 		short tFlags = VelocityType | TransformType;
 		if (tCompTable->HasComponent(i, tFlags))
 		{
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-			VelocityComponent* tVel= GetComponent<VelocityComponent>(i);
+			VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
 
-			tTrans->mPosition[0] += tVel->mDirection[0] + tVel->mSpeed;
-			tTrans->mPosition[1] += tVel->mDirection[1] + tVel->mSpeed;
-			tTrans->mPosition[2] += tVel->mDirection[2] + tVel->mSpeed;
+			tTrans->mPosition[0] += tVel->mDirection[0] * tVel->mSpeed*pDeltaTime;
+			tTrans->mPosition[1] += tVel->mDirection[1] * tVel->mSpeed*pDeltaTime;
+			tTrans->mPosition[2] += tVel->mDirection[2] * tVel->mSpeed*pDeltaTime;
+
+			//DEBUG
+			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+				cout << "Position for pad is: " << tTrans->mPosition[0] << " " << tTrans->mPosition[1] << endl;
+			//END DEBUG
+
+			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+			{
+				GetComponent<VelocityComponent>(i)->mDirection[0] = 0;
+				GetComponent<VelocityComponent>(i)->mDirection[1] = 0;
+				GetComponent<VelocityComponent>(i)->mDirection[2] = 0;
+			}
 		}
 	}
 }
