@@ -103,7 +103,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//Space between blocks. Should probably be expanded to account for block sizes
 	//Hard-coded until we can read from proper level file
 	float margin = 2;
-	
+
 	for (int i = 0; i > blockX; i++)
 		for (int j = 0; j < blockY; j++)
 		{
@@ -121,6 +121,14 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition[0] = tStartPositionX;
 	tTrans->mPosition[1] = tStartPositionY;
+
+	float tStartDirection[] = { 1,1,1,0 };
+	tTrans->mQuatRotation[0] = tStartDirection[0];
+	tTrans->mQuatRotation[1] = tStartDirection[1];
+	tTrans->mQuatRotation[2] = tStartDirection[2];
+	tTrans->mQuatRotation[3] = tStartDirection[3];
+
+	
 
 
 }
