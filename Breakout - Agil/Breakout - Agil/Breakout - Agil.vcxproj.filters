@@ -78,6 +78,9 @@
     <ClCompile Include="GraphicsInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsEngine.h">
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="VelocityComponent.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsInterface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsInterface.h">
       <Filter>Header Files</Filter>
