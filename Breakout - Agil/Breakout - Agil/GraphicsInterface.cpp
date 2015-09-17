@@ -39,7 +39,7 @@ void GraphicsInterface::DrawObjects(int pMeshType, int pTextureGroup[], Transfor
 			XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
 			tMatrixVector.push_back(XMMatrixTranspose(rot*trans)); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
 		}
-		mGraphicsEngine->DrawObjects(pMeshType, pTextureGroup, tMatrixVector, pNumberOfInstances);
+		mGraphicsEngine->DrawObjects(pMeshType,pTextureGroup, tMatrixVector, pNumberOfInstances)
 	}
 	
 	//mGraphicsEngine->DrawBatch(pMeshGroup, pTextureGroup, pWorldMatrix, pNumberOfMeshes);
