@@ -220,11 +220,11 @@ void GraphicsEngine::InitGraphics()
 
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(InstanceBufferType) * mInstanceBuffer.size();
+	bd.ByteWidth = sizeof(InstanceBufferType) * MAX_INSTANCES;//mInstanceBuffer.size();
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	mInstanceBufferID = CreateBuffer(bd);
-	PushToDevice(mInstanceBufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
+
 
 
 	ZeroMemory(&bd, sizeof(bd));
@@ -297,7 +297,7 @@ void GraphicsEngine::RenderFrame(void)
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
-	
+	PushToDevice(mInstanceBufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
 	// clear the back buffer to a deep blue
 	devcon->ClearRenderTargetView(backbuffer, color);
 	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -316,7 +316,7 @@ void GraphicsEngine::RenderFrame(void)
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//devcon->DrawIndexed(8*3, 0, 0);
 #ifdef _WIN32
-	devcon->DrawIndexedInstanced(12 * 3, 5, 0, 0, 0);
+	devcon->DrawIndexedInstanced(12 * 3, mInstanceBuffer.size(), 0, 0, 0);
 #elif __linux__
 	cout << "Linux kernel noticed";
 #endif
@@ -325,6 +325,11 @@ void GraphicsEngine::RenderFrame(void)
 	// switch the back buffer and the front buffer
 
 	swapchain->Present(0, 0);
+	if (mInstanceBuffer.size()>0)
+	{
+		mInstanceBuffer.pop_back();
+	}
+	
 }
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize)
