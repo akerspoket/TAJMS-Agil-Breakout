@@ -8,17 +8,7 @@ class InputSystem :	public System
 public:
 	InputSystem();
 	~InputSystem();
-	static struct UserCmd
-	{
-		vector<char>mKeysPressed;
-		float mXMove;//for the mouse
-		float mYMove;//for the mouse
-		bool mRightArrowPressed;
-		bool mLeftArrowPressed;
-		bool mUpArrowPressed;
-		bool mDownArrowPressed;
-
-	};
+	
 	void Initialize();
 	void Start();
 	void Update(double pDeltaTime);
@@ -29,7 +19,7 @@ public:
 private:
 	void CheckKeyboard();
 	void HandleInput();
-	UserCmd mUserCmd;
+	
 	SDL_Event mSDLEvent;
 	void MoveRight();
 	void MoveLeft();

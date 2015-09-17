@@ -1,5 +1,6 @@
 #include "InputSystem.h"
 #include "EventManager.h"
+#include "StorageShelf.h"
 
 using namespace std;
 
@@ -25,30 +26,30 @@ void InputSystem::Start()
 void InputSystem::CheckKeyboard()
 {
 	
-	mUserCmd.mKeysPressed.clear();
+	gUserCmd.mKeysPressed.clear();
 	if (mKeyState[SDL_SCANCODE_LEFT])
 	{
-		mUserCmd.mLeftArrowPressed = true;
+		gUserCmd.mLeftArrowPressed = true;
 	}
 	else
 	{
-		mUserCmd.mLeftArrowPressed = false;
+		gUserCmd.mLeftArrowPressed = false;
 	}
 	if (mKeyState[SDL_SCANCODE_RIGHT])
 	{
-		mUserCmd.mRightArrowPressed = true;
+		gUserCmd.mRightArrowPressed = true;
 	}
 	else
 	{
-		mUserCmd.mRightArrowPressed = false;
+		gUserCmd.mRightArrowPressed = false;
 	}
 	if (mKeyState[SDL_SCANCODE_A])
 	{
-		mUserCmd.mKeysPressed.push_back('a');
+		gUserCmd.mKeysPressed.push_back('a');
 	}
 	if (mKeyState[SDL_SCANCODE_D])
 	{
-		mUserCmd.mKeysPressed.push_back('d');
+		gUserCmd.mKeysPressed.push_back('d');
 	}
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
@@ -65,25 +66,25 @@ void InputSystem::MoveLeft()
 }
 void InputSystem::HandleInput()
 {
-	int tVectorInput = mUserCmd.mKeysPressed.size();
-	if (mUserCmd.mLeftArrowPressed == true)
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	if (gUserCmd.mLeftArrowPressed == true)
 	{
 		MoveLeft();
 		//cout << "<--";
 	}
-	if (mUserCmd.mRightArrowPressed == true)
+	if (gUserCmd.mRightArrowPressed == true)
 	{
 		MoveRight();
 		//cout << "-->";
 	}
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
-		if (mUserCmd.mKeysPressed[i] == 'a' && mUserCmd.mLeftArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
 		{
 			MoveLeft();
 			//cout << "A";//Move to the left CODE PLEASE!
 		}
-		if (mUserCmd.mKeysPressed[i] == 'd' && mUserCmd.mRightArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'd' && gUserCmd.mRightArrowPressed == false)
 		{
 			MoveRight();
 			//cout << "D";//Déplacer vers la droite CODE S'IL VOUS PLAÎT !

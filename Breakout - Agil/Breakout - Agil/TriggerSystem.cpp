@@ -28,7 +28,7 @@ void TriggerSystem::Update(double pDeltaTime)
 {
 
 	//done with level ->remove everything then load new map
-	if (true)
+	if (false)
 	{
 		//remove everything
 
