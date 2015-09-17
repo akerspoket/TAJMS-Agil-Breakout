@@ -122,11 +122,12 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition[0] = tStartPositionX;
 	tTrans->mPosition[1] = tStartPositionY;
 
-	float tStartDirection[] = { 1,1,1,0 };
-	tTrans->mQuatRotation[0] = tStartDirection[0];
-	tTrans->mQuatRotation[1] = tStartDirection[1];
-	tTrans->mQuatRotation[2] = tStartDirection[2];
-	tTrans->mQuatRotation[3] = tStartDirection[3];
+	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
+	tVel->mSpeed = 1;
+	float tStartDirection[3] = { 1,1,1 };
+	tVel->mDirection[0] = tStartDirection[0];
+	tVel->mDirection[1] = tStartDirection[1];
+	tVel->mDirection[2] = tStartDirection[2];
 
 	
 
