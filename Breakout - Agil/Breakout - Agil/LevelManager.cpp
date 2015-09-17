@@ -62,6 +62,23 @@ void LevelManager::Initialize()
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlueprint);
 
+	//add ball to blueprint
+	EntityFactory::EntityBlueprint tBlueprint;
+
+	//Component values might be silly and have to be altered later
+	TransformComponent* tTrans = new TransformComponent();
+	MeshComponent* tMesh = new MeshComponent();
+	LabelComponent* tLabel = new LabelComponent();
+
+	//We set the label here since it never changes
+	tLabel->mLabel = Label::Ball;
+
+	tBlueprint[TransformType] = tTrans;
+	tBlueprint[MeshType] = tMesh;
+	tBlueprint[LabelType] = tLabel;
+
+	mEntityFactory->RegisterEntityTemplate("Ball", tBlueprint);
+
 }
 
 void LevelManager::GenerateWorld(string pWorldName)
@@ -88,5 +105,15 @@ void LevelManager::GenerateWorld(string pWorldName)
 			tTrans->mPosition[0] = margin*i;
 			tTrans->mPosition[1] = margin*j;
 		}
+
+	//Create the ball
+	float tStartPositionX = 0;
+	float tStartPositionY = 0;
+
+	EntityID tNewID = mEntityFactory->CreateEntity("Ball");
+	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition[0] = tStartPositionX;
+	tTrans->mPosition[1] = tStartPositionY;
+
 
 }
