@@ -170,30 +170,6 @@ void PhysicSystem::Update(double pDeltaTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
-	
-	tEntManager->RemoveEntity(0);
-	tEntManager->RemoveEntity(1);
-
-	//TESTS JAWS TESTING WARNING TEST TEST TEST
-	EntityID tID = tEntManager->AddEntity();
-	tCompTable->AddComponent(tID, CollisionType | TransformType);
-	TransformComponent* tTrans = GetComponent<TransformComponent>(tID);
-	CollisionComponent* tColl = GetComponent<CollisionComponent>(tID);
-	tTrans->mPosition = vec3();
-	tColl->mType = CollisionGeo::AABB;
-	tColl->X = 0.5f;
-	tColl->Y = 0.5f;
-	tTrans->mPosition = vec3(0.0f, 0.0f, 0);
-
-	tID = tEntManager->AddEntity();
-	tCompTable->AddComponent(tID, CollisionType | TransformType);
-	tTrans = GetComponent<TransformComponent>(tID);
-	tColl = GetComponent<CollisionComponent>(tID);
-	tColl->mType = CollisionGeo::AABB;
-	tColl->X = 0.5f;
-	tColl->Y = 0.5f;
-	tTrans->mPosition = vec3(0.0f, 1.1f, 0);
-
 	int tMaxEnt = tEntManager->GetLastEntity();
 
 
