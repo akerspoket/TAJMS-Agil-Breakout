@@ -162,6 +162,7 @@
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LabelComponent.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
