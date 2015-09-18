@@ -149,6 +149,7 @@
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="StorageShelf.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TextFileReader.cpp" />
     <ClCompile Include="TriggerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +173,7 @@
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="StorageShelf.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TextFileReader.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriggerSystem.h" />
     <ClInclude Include="VelocityComponent.h" />

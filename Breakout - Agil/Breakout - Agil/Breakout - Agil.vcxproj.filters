@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Systems">
       <UniqueIdentifier>{9abc3ff5-2ce9-434e-aeaf-f8164b16e0c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FileReaders/Writers">
+      <UniqueIdentifier>{89778b04-a116-40c0-8590-78c94b171f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileReaders/Writers">
+      <UniqueIdentifier>{6e9a902f-cbb0-4ee1-968a-49fd093e9c66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -63,9 +69,6 @@
     <ClCompile Include="GraphicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
@@ -87,12 +90,15 @@
     <ClCompile Include="TriggerSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Source Files\FileReaders/Writers</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFileReader.cpp">
+      <Filter>Source Files\FileReaders/Writers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MeshComponent.h">
@@ -139,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="CollisionComponent.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header Files\FileReaders/Writers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFileReader.h">
+      <Filter>Header Files\FileReaders/Writers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ void TriggerSystem::Initialize()
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
 //	LevelManager* tLevelManager = tLevelManager->GetInstance();
-	tLevelManager->GenerateWorld("FirstWorld");
+	tLevelManager->GenerateWorld("Levels/Level1.txt");
 }
 
 void TriggerSystem::Start()

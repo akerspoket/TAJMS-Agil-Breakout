@@ -5,7 +5,10 @@
 #include "LabelComponent.h"
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
+#include "TextFileReader.h"
 #include "ComponentTable.h"
+#include <iostream>
+using namespace std;
 
 
 
@@ -90,14 +93,21 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
+	
+	/////Creating a Pad for the game
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
-
-	tTrans->mPosition.x = 1.0f;
+	tTrans->mPosition[0] = 1.0f;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
 	
+	//Reading The level from textfile
+	vector<string> mLevelTextVector;
+	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
+
+
 	//Create blocks
-	//10x5 grid of blocks
+
+	
 	int blockX = 10;
 	int blockY = 5;
 
