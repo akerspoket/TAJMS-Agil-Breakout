@@ -5,6 +5,7 @@
 GraphicsInterface::GraphicsInterface()
 {
 	mGraphicsEngine = new GraphicsEngine();
+
 }
 
 
@@ -14,20 +15,28 @@ GraphicsInterface::~GraphicsInterface()
 
 
 
+void GraphicsInterface::Initialize()
+{
+	mGraphicsEngine->InitD3D(GetActiveWindow());
+	mGraphicsEngine->InitPipeline();
+	mGraphicsEngine->InitGraphics();
+}
+
 int GraphicsInterface::CreateObject(const char* pMeshGroup)
 {
-	if(/*Windows*/true)
+	int retValue;
+#ifdef _WIN32
+	if (mLoadedObjects.find(pMeshGroup) != mLoadedObjects.end())
 	{
-		if (mLoadedObjects.find(pMeshGroup) != mLoadedObjects.end())
-		{
-			return mLoadedObjects[pMeshGroup];
-		}
-		return mGraphicsEngine->CreateObject(pMeshGroup);
+		return mLoadedObjects[pMeshGroup];
 	}
-	else
-	{
-		return 0;//mOpenGLengine->CreateMesh();
-	}
+	retValue = mGraphicsEngine->CreateObject(pMeshGroup);
+#elif __linux__
+	//Linux Code
+
+#endif
+	mLoadedObjects[pMeshGroup] = retValue;
+	return retValue;
 }
 
 int GraphicsInterface::CreateTexture(const wchar_t* pTextureName)

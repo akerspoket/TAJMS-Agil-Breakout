@@ -61,7 +61,7 @@ void Game1::Run()
 			}
 		}
 
-		mGraphicsEngine->RenderFrame();
+		//mGraphicsEngine->RenderFrame();
 		for each (System* sys in mSystems)
 		{
 			sys->Update(tDeltaTimeMilli);
