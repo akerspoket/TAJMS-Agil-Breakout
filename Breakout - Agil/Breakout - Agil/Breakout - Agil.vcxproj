@@ -140,6 +140,7 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game1.cpp" />
+    <ClCompile Include="GraphicsInterface.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="LevelManager.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Game1.h" />
+    <ClInclude Include="GraphicsInterface.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LabelComponent.h" />
     <ClInclude Include="LevelManager.h" />
@@ -201,6 +203,8 @@
   <ItemGroup>
     <Image Include="davai.dds" />
     <Image Include="davai.png" />
+    <Image Include="test2in1pic.dds" />
+    <Image Include="test2in1pic.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
