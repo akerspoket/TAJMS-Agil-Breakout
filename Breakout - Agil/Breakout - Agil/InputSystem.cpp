@@ -1,10 +1,5 @@
 #include "InputSystem.h"
 #include "EventManager.h"
-#include "StorageShelf.h"
-#include "LabelComponent.h"
-#include "VelocityComponent.h"
-#include "ComponentTable.h"
-#include "StorageShelf.h"
 
 using namespace std;
 
