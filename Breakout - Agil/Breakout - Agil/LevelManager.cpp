@@ -130,7 +130,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tVel->mDirection[1] = tStartDirection[1];
 	tVel->mDirection[2] = tStartDirection[2];
 
-	
+	//Create the goal block
 
 
 }
