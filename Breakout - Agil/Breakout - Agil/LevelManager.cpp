@@ -97,7 +97,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	/////Creating a Pad for the game
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition[0] = 1.0f;
+	tTrans->mPosition.x = 1.0f;
+	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
 	
 	//Reading The level from textfile
