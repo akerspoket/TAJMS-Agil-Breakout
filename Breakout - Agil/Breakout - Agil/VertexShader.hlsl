@@ -5,21 +5,13 @@ cbuffer MatrixBuffer : register(b0)
 	matrix projectionMatrix;
 };
 
-struct InstanceLayout
-{
-	matrix translationMatrix;
-	float4 colorInstance;
-};
-
-cbuffer InstanceMatrices : register(b1)
-{
-	InstanceLayout instances[5];
-};
-
 struct VertexInputType
 {
 	float4 position : POSITION;
 	float2 texCoord : TEXCOORD;
+
+	matrix matris : INSTANCEMATRIX;
+	uint texturePart: TEXTUREPART;
 };
 
 
@@ -28,7 +20,7 @@ struct VOut
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD;
-	uint instanceID : SV_InstanceID;
+	uint texturePart: TEXTUREPART;
 };
 
 VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
@@ -37,11 +29,11 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 
 	output.texCoord = input.texCoord;
 	//input.position.y += input.position.y * sin(time);
-	input.position = mul(input.position, instances[instanceID].translationMatrix);
+	input.position = mul(input.position, input.matris);
 	//output.color = input.color * instances[instanceID].colorInstance;
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-	output.instanceID = instanceID;
+	output.texturePart = input.texturePart;
 	return output;
 }

@@ -2,13 +2,9 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD;
-	uint instanceID : SV_InstanceID;
+	uint texturePart: TEXTUREPART;
 };
 
-cbuffer TextureSquare : register(b0)
-{
-	float square[12];
-};
 
 Texture2D ObjTexture : register(t0);
 SamplerState ObjSamplerState : register(s0);

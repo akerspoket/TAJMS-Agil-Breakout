@@ -119,7 +119,7 @@ private:
 	};
 	ConstantBufferType mWVPBufferID;
 	vector <InstanceBufferType> mInstanceBuffer;
-	ConstantBufferType mBlockTransMatrixID;
+
 
 	ID3D11ShaderResourceView* mCubesTexture;
 	ID3D11SamplerState* mCubesTexSamplerState;
