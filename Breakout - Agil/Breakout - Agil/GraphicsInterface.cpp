@@ -54,9 +54,9 @@ void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned in
 	{
 		InstanceBufferType tFinished;
 		XMMATRIX trans;
-		trans = XMMatrixTranslation(pTransformMatrices[i].mPosition[0], pTransformMatrices[i].mPosition[1], pTransformMatrices[i].mPosition[2]);
+		trans = XMMatrixTranslation(pTransformMatrices[i].mPosition.x, pTransformMatrices[i].mPosition.y, pTransformMatrices[i].mPosition.z);
 		XMVECTOR orientation;
-		orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation[0], pTransformMatrices[i].mQuatRotation[1], pTransformMatrices[i].mQuatRotation[2], pTransformMatrices[i].mQuatRotation[3]));
+		orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w));
 
 		XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
 		XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot*trans));
