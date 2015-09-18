@@ -1,7 +1,7 @@
 #include "GraphicsEngine.h"
 
 
-
+//MASTER
 GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
