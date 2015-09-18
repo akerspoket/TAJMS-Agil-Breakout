@@ -1,21 +1,15 @@
 #pragma once
-
+#include "Math.h"
 
 struct TransformComponent
 {
 public:
 	TransformComponent()
 	{
-		mPosition[0] = 0;
-		mPosition[1] = 0;
-		mPosition[2] = 0;
-
-		mQuatRotation[0] = 0;
-		mQuatRotation[1] = 0;
-		mQuatRotation[2] = 0;
-		mQuatRotation[3] = 0;
+		mPosition = vec3(0.0f, 0.0f, 0.0f);
+		mQuatRotation = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
-	float mPosition[3];
-	float mQuatRotation[4];
+	vec3 mPosition;
+	vec4 mQuatRotation;
 };
 

@@ -93,7 +93,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 
-	tTrans->mPosition[0] = 1.0f;
+	tTrans->mPosition.x = 1.0f;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
 	
 	//Create blocks
@@ -110,8 +110,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 		{
 			tNewID = mEntityFactory->CreateEntity("Block");
 			tTrans = GetComponent<TransformComponent>(tNewID);
-			tTrans->mPosition[0] = margin*i;
-			tTrans->mPosition[1] = margin*j;
+			tTrans->mPosition.x = margin*i;
+			tTrans->mPosition.y = margin*j;
 		}
 
 	//Create the ball
@@ -120,15 +120,15 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition[0] = tStartPositionX;
-	tTrans->mPosition[1] = tStartPositionY;
+	tTrans->mPosition.x = tStartPositionX;
+	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
 	tVel->mSpeed = 0.001f;
-	float tStartDirection[3] = { 1,1,0 };
-	tVel->mDirection[0] = tStartDirection[0];
-	tVel->mDirection[1] = tStartDirection[1];
-	tVel->mDirection[2] = tStartDirection[2];
+	vec3 tStartDirection = vec3(1.0f, 1.0f, 0.0f);
+	tVel->mDirection.x = tStartDirection.x;
+	tVel->mDirection.y = tStartDirection.y;
+	tVel->mDirection.z = tStartDirection.z;
 
 	//Create the goal block
 	tNewID = mEntityFactory->CreateEntity("Block");

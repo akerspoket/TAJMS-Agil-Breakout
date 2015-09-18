@@ -15,6 +15,7 @@ enum ComponentType
 	MeshType		= 0x04,
 	LabelType		= 0x08,
 	VelocityType	= 0x10,
+	CollisionType	= 0x20,
 };
 
 // 0x01 ==   1 == "00000001"
