@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 struct vec2
 {
 	//Member Variables
@@ -31,17 +33,15 @@ struct vec2
 	{
 		return x*v.x + y*v.y;
 	}
-
-	//Methods
-	vec3 toVec3()
+	float Abs()
 	{
-		return vec3(x, y, 0);
+		return sqrt(x*x + y*y);
 	}
-	vec4 toVec4()
+	vec2 Normalize()
 	{
-		return vec4(x, y, 0, 0);
+		float length = Abs();
+		return vec2(x / length, y / length);
 	}
-
 };
 
 
@@ -78,15 +78,14 @@ struct vec3
 	{
 		return x*v.x + y*v.y + z*v.x;
 	}
-
-	//Methods
-	vec2 toVec2()
+	float Abs()
 	{
-		return vec2(x, y);
+		return sqrt(x*x + y*y + z*z);
 	}
-	vec4 tovec4()
+	vec3 Normalize()
 	{
-		return vec4(x, y, z, 0);
+		float length = Abs();
+		return vec3(x / length, y / length, z / length);
 	}
 };
 
@@ -124,14 +123,44 @@ struct vec4
 	{
 		return x*v.x + y*v.y + z*v.x + w*v.w;
 	}
-
-	//Methods
-	vec2 toVec2()
+	float Abs()
 	{
-		return vec2(x, y);
+		return sqrt(x*x + y*y + z*z + w*w);
 	}
-	vec3 toVec3()
+	vec4 Normalize()
 	{
-		return vec3(x, y, z);
+		float length = Abs();
+		return vec4(x / length, y / length, z / length, w / length);
 	}
 };
+
+
+static vec3 vec2toVec3(vec2 pVec2)
+{
+	return vec3(pVec2.x, pVec2.y, 0);
+}
+
+static vec4 vec2toVec4(vec2 pVec2)
+{
+	return vec4(pVec2.x, pVec2.y, 0, 0);
+}
+
+static vec2 vec3toVec2(vec3 pVec3)
+{
+	return vec2(pVec3.x, pVec3.y);
+}
+
+static vec4 vec3toVec4(vec3 pVec3)
+{
+	return vec4(pVec3.x, pVec3.y, pVec3.z, 0);
+}
+
+static vec2 vec4toVec2(vec4 pVec4)
+{
+	return vec2(pVec4.x, pVec4.y);
+}
+static vec3 vec4toVec3(vec4 pVec4)
+{
+	return vec3(pVec4.x, pVec4.y, pVec4.z);
+}
+

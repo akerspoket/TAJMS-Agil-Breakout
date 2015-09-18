@@ -27,7 +27,7 @@ bool ComponentTable::HasComponent(int pEntityID, short pMask)
 {
 	short tLineToCheck = mComponentTable[pEntityID];
 
-	if ((tLineToCheck & pMask) != 0) //then there are the components from mask
+	if ((tLineToCheck ^ pMask) == 0) //then there are the components from mask
 	{
 		return true;
 	}
@@ -43,15 +43,9 @@ void ComponentTable::AddComponent(int pEntityID, short pMask)
 	short tLineToAddTo = mComponentTable[pEntityID];
 
 	
-	if ((tLineToAddTo & pMask) == 0)
-	{
-		tLineToAddTo = tLineToAddTo | pMask;
-		mComponentTable[pEntityID] = tLineToAddTo;
-	}
-	else
-	{
-		//TODO:: Set Error if we already have component
-	}
+	tLineToAddTo = tLineToAddTo | pMask;
+	mComponentTable[pEntityID] = tLineToAddTo;
+
 }
 
 void ComponentTable::RemoveComponent(int pEntityID, short pMask)
@@ -61,5 +55,5 @@ void ComponentTable::RemoveComponent(int pEntityID, short pMask)
 
 void ComponentTable::RemoveEntity(int pEntityID)
 {
-
+	mComponentTable[pEntityID] = 0;
 }

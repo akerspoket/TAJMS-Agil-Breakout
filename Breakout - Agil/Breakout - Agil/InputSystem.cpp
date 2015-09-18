@@ -68,9 +68,7 @@ void InputSystem::MoveRight(EntityID pEntityID)
 	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
-	tVel->mDirection[0] = 1.0f;
-	tVel->mDirection[1] = 0.0f;
-	tVel->mDirection[2] = 0.0f;
+	tVel->mDirection = vec3(1.0f, 0.0f, 0.0f);
 }
 
 void InputSystem::MoveLeft(EntityID pEntityID)
@@ -80,9 +78,7 @@ void InputSystem::MoveLeft(EntityID pEntityID)
 	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
 	
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
-	tVel->mDirection[0] = -1.0f;
-	tVel->mDirection[1] = 0.0f;
-	tVel->mDirection[2] = 0.0f;
+	tVel->mDirection = vec3(-1.0f, 0.0f, 0.0f);
 }
 void InputSystem::HandleInput(EntityID pEntityID)
 {
