@@ -106,6 +106,21 @@ void GraphicsEngine::CleanD3D()
 	devcon->Release();
 }
 
+int GraphicsEngine::CreateTexture(const wchar_t *pFileName)
+{
+	HRESULT hr;
+	ID3D11ShaderResourceView* tCubesTexture = 0;
+	hr = CreateDDSTextureFromFile(dev, pFileName, nullptr, &tCubesTexture);
+	if (FAILED(hr))
+	{
+		cout << "Something went wrong while creating texture";
+		return -1;
+	}
+	mTextureBuffers.push_back(tCubesTexture);
+	return mTextureBuffers.size() - 1;
+}
+
+
 void GraphicsEngine::InitPipeline()
 {
 	ID3DBlob *VS, *PS;
@@ -121,8 +136,7 @@ void GraphicsEngine::InitPipeline()
 		{ "INSTANCEMATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{ "INSTANCEMATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "INSTANCEMATRIX", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCEMATRIX", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTUREPART", 0, DXGI_FORMAT_R32_UINT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+		{ "INSTANCEMATRIX", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 	CreateShader(VertexShader, &mVertexShader->ShaderHandle, L"VertexShader.hlsl", "VShader", &mVertexShader->InputLayout, ied, ARRAYSIZE(ied));
 	CreateShader(PixelShader, &mPixelShader, L"PixelShader.hlsl", "PShader", nullptr,NULL,0);
@@ -186,7 +200,7 @@ void GraphicsEngine::InitGraphics()
 		16,18,19,
 
 		20,21,22,
-		20,22,23,
+		20,22,23
 
 
 		/*4,0,3,
@@ -214,12 +228,6 @@ void GraphicsEngine::InitGraphics()
 	for (int i = 0; i < 5; i++)
 	{
 		XMStoreFloat4x4(&temp.translationMatrices, XMMatrixTranspose(XMMatrixTranslation(1 * (i - 2), 4, 8)));
-		temp.texturePart = 0;
-		if (i ==4 )
-		{
-			temp.texturePart = 1;
-		}
-		
 		mInstanceBuffer.push_back(temp);
 	}
 
@@ -336,30 +344,53 @@ void GraphicsEngine::RenderFrame(void)
 	}
 }
 
-void GraphicsEngine::DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfIntances)
+void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
-	//switch(pMeshType)
-	//	case 1 :
-	//		D3D11_BUFFER_DESC transbdesc;
-	//		
-	//		ZeroMemory(&transbdesc, sizeof(transbdesc));
 
-	//		transbdesc.Usage = D3D11_USAGE_DYNAMIC;
-	//		transbdesc.ByteWidth = sizeof(XMMATRIX) * pRotTransMatrices.size();
-	//		transbdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//		transbdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//		transbdesc.MiscFlags = 0;
-	//		transbdesc.StructureByteStride = 0;
-	//		mBlockTransMatrixID.bufferID = CreateBuffer(transbdesc);
-	//		PushToDevice(mBlockTransMatrixID.bufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size(), mInstanceBufferID.reg, VertexShader);
-
-	//	//case 2 :
-
-	//	//case 3 :
+	switch (pMeshType)
+	{
+	case 0:
+	{
+		mInstanceBuffer = pInstanceBufferData;
+		mVertexBufferID = 0;
+		devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
 
 
+	} break;
+	//case 2 :
+	}
+		//case 3 :
+
+	unsigned int strides[2];
+	unsigned int offsets[2];
+	ID3D11Buffer* bufferPointers[2];
+	PushToDevice(mInstanceBufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
+	// clear the back buffer to a deep blue
+
+	strides[0] = sizeof(Vertex);
+	strides[1] = sizeof(InstanceBufferType);
+
+	offsets[0] = 0;
+	offsets[1] = 0;
+
+	bufferPointers[0] = mObjectBuffers[pMeshType].vertexDescription;
+	bufferPointers[1] = mBuffers.at(mInstanceBufferID);
+
+	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	devcon->IASetIndexBuffer(mObjectBuffers[pMeshType].indexDescription, DXGI_FORMAT_R32_UINT, 0);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
+	devcon->DrawIndexedInstanced(12 * 3, mInstanceBuffer.size(), 0, 0, 0);
 
 }
+void GraphicsEngine::EndDraw()
+{
+	swapchain->Present(0, 0);
+	float color[] = { 0.0f,0.2f,0.4f,1.0f };
+	devcon->ClearRenderTargetView(backbuffer, color);
+	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize)
 {
@@ -442,7 +473,6 @@ bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int 
 	return true;
 }
 
-
 bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType)
 {
 	bool res = PushToDevice(pBufferID, pDataStart, pSize);
@@ -467,8 +497,20 @@ bool GraphicsEngine::PushToDevice(int pBufferID, void* pDataStart, unsigned int 
 	}
 }
 
+bool GraphicsEngine::PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsigned int pSize)
+{
+	D3D11_MAPPED_SUBRESOURCE tMS;
 
-int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription)
+
+	devcon->Map(pBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &tMS);
+	memcpy(tMS.pData, pDataStart, pSize);
+	devcon->Unmap(pBuffer, NULL);
+
+	return true;
+
+}
+
+int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription, unsigned int pNumberOfIndices)
 {
 	ID3D11Buffer* tVertexHolder;
 	ID3D11Buffer* tIndexHolder;
@@ -482,7 +524,7 @@ int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescriptio
 	{
 		return -1;
 	}
-	mObjectBuffers.push_back(ObjectBufferType(tVertexHolder, tIndexHolder));
+	mObjectBuffers.push_back(ObjectBufferType(tVertexHolder, tIndexHolder, pNumberOfIndices));
 	return mObjectBuffers.size() - 1;
 
 }
@@ -574,13 +616,11 @@ int GraphicsEngine::CreateObject(const char* pMeshName)
 		ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ibd.MiscFlags = 0;
 
-		rIndex = CreateObjectBuffer(bd, ibd);
+		rIndex = CreateObjectBuffer(bd, ibd, ARRAYSIZE(OurIndices));
 
-		PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
+		PushToDevice(mObjectBuffers[rIndex].indexDescription, &OurIndices, sizeof(OurIndices));
 
-
-
-		PushToDevice(mVertexBufferID, &OurVertices, sizeof(OurVertices));
+		PushToDevice(mObjectBuffers[rIndex].vertexDescription, &OurVertices, sizeof(OurVertices));
 
 		return rIndex;
 	}

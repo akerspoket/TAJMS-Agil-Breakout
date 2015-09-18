@@ -11,7 +11,6 @@ struct VertexInputType
 	float2 texCoord : TEXCOORD;
 
 	matrix matris : INSTANCEMATRIX;
-	uint texturePart: TEXTUREPART;
 };
 
 
@@ -20,7 +19,6 @@ struct VOut
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD;
-	uint texturePart: TEXTUREPART;
 };
 
 VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
@@ -34,6 +32,5 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-	output.texturePart = input.texturePart;
 	return output;
 }

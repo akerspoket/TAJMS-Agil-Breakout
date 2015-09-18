@@ -12,6 +12,7 @@
 #include <d3dcompiler.h>
 #include <vector>
 #include "DDSTextureLoader.h"
+#include <iostream>
 
 #ifdef DEBUG
 	#include <iostream>
@@ -45,16 +46,18 @@ struct ObjectBufferType
 {
 	ID3D11Buffer* vertexDescription;
 	ID3D11Buffer* indexDescription;
-	ObjectBufferType(ID3D11Buffer* _vertex, ID3D11Buffer* _index)
+	unsigned int numberOfIndices;
+	ObjectBufferType(ID3D11Buffer* _vertex, ID3D11Buffer* _index, unsigned int _numberOfIndices)
 	{
 		vertexDescription = _vertex;
 		indexDescription = _index;
+		numberOfIndices = _numberOfIndices;
+		
 	}
 };
 struct InstanceBufferType
 {
 	 XMFLOAT4X4 translationMatrices;
-	 unsigned int texturePart;
 };
 
 
@@ -90,7 +93,9 @@ public:
 	void InitGraphics();
 	int CreateObject(const char* pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
-	void DrawObjects(int pMeshType, int pTextureGroup[], vector<XMMATRIX> pRotTransMatrices, int pNumberOfInstances);
+	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
+	int CreateTexture(const wchar_t *pFileName);
+	void EndDraw();
 
 private:
 	enum ShaderType { VertexShader, PixelShader };
@@ -99,8 +104,8 @@ private:
 	int CreateBuffer(D3D11_BUFFER_DESC pBufferDescription);
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize);
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType);
-	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription);
-	void CreateTextures(const wchar_t *pFileName);
+	bool PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsigned int pSize);
+	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription, unsigned int pNumberOfIndices);
 
 	//Variables
 	ID3D11PixelShader* mPixelShader;
@@ -110,7 +115,6 @@ private:
 	MatrixBufferType tBufferInfo;
 	int mVertexBufferID;
 	int mIndexBufferID;
-	vector <int> mTextureInstanceBuffer;
 	int mInstanceBufferID;
 	struct ConstantBufferType
 	{
@@ -120,7 +124,7 @@ private:
 	ConstantBufferType mWVPBufferID;
 	vector <InstanceBufferType> mInstanceBuffer;
 
-
+	vector<ID3D11ShaderResourceView*> mTextureBuffers;
 	ID3D11ShaderResourceView* mCubesTexture;
 	ID3D11SamplerState* mCubesTexSamplerState;
 };
