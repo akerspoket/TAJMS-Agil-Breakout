@@ -7,6 +7,7 @@
 #include "MeshComponent.h"
 #include "LabelComponent.h"
 #include "VelocityComponent.h"
+#include "CollisionComponent.h"
 
 
 
@@ -76,6 +77,10 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::VelocityType)
 		{
 			memcpy(GetComponent<VelocityComponent>(tNewEntityID), iter->second, sizeof(VelocityComponent));
+		}
+		else if (iter->first == ComponentType::CollisionType)
+		{
+			memcpy(GetComponent<CollisionComponent>(tNewEntityID), iter->second, sizeof(CollisionComponent));
 		}
 	}
 
