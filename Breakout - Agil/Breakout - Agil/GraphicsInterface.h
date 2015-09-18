@@ -14,18 +14,18 @@ public:
 		BRICK,
 		ELEPHANT
 	};
-
 	GraphicsInterface();
 	~GraphicsInterface();
+
 	int CreateObject(const char* pMeshGroup);
 	void DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances); //Draws pNumberofInstances of pMeshType
 	int GetTextureID(TextureNames pName);
 	int CreateTexture(const wchar_t* pTextureName);
 	void EndDraw(); //Call this at the end of drawing multiple objects
-
+	void Initialize();
 
 private: 
-	
+
 
 	GraphicsEngine* mGraphicsEngine;
 	vector<MaterialStruct> mMaterials;
