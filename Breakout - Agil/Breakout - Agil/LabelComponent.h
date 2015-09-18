@@ -6,6 +6,7 @@ enum Label
 	Pad,
 	Box,
 	Ball,
+	Goal,
 };
 
 struct LabelComponent

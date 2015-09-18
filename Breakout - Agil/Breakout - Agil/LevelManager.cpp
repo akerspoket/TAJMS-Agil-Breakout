@@ -5,7 +5,7 @@
 #include "LabelComponent.h"
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
-
+#include "ComponentTable.h"
 
 
 
@@ -131,6 +131,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tVel->mDirection[2] = tStartDirection[2];
 
 	//Create the goal block
+	tNewID = mEntityFactory->CreateEntity("Block");
+	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
+	GetComponent<LabelComponent>(tNewID)->mLabel = Label::Goal;
 
 
 }
