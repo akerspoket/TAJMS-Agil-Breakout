@@ -32,15 +32,15 @@ void PhysicSystem::Start()
 bool PhysicSystem::AABBvsAABB(CollisionComponent* pColl1, TransformComponent* pTrans1, CollisionComponent* pColl2, TransformComponent* pTrans2)
 {
 	//check if distance between their positions is greater then their both half widths
-	if ((pTrans1->mPosition.x - pTrans2->mPosition.x) > (pColl1->X + pColl2->X))
+	if (abs(pTrans1->mPosition.x - pTrans2->mPosition.x) > (pColl1->X + pColl2->X))
 	{
 		return false;
 	}
-	if ((pTrans1->mPosition.y - pTrans2->mPosition.y) > (pColl1->X + pColl2->X))
+	if (abs(pTrans1->mPosition.y - pTrans2->mPosition.y) > (pColl1->X + pColl2->X))
 	{
 		return false;
 	}
-	/*if ((pTrans1->mPosition.z - pTrans2->mPosition.z) > (pColl1->X + pColl2->X))  //for the Z, don't think we will use it?
+	/*if (abs(pTrans1->mPosition.z - pTrans2->mPosition.z) > (pColl1->X + pColl2->X))  //for the Z, don't think we will use it?
 	{
 		return false;
 	}*/
@@ -181,16 +181,18 @@ void PhysicSystem::Update(double pDeltaTime)
 	CollisionComponent* tColl = GetComponent<CollisionComponent>(tID);
 	tTrans->mPosition = vec3();
 	tColl->mType = CollisionGeo::AABB;
-	tColl->X = 1;
-	tColl->Y = 1;
+	tColl->X = 0.5f;
+	tColl->Y = 0.5f;
+	tTrans->mPosition = vec3(0.0f, 0.0f, 0);
 
 	tID = tEntManager->AddEntity();
 	tCompTable->AddComponent(tID, CollisionType | TransformType);
 	tTrans = GetComponent<TransformComponent>(tID);
 	tColl = GetComponent<CollisionComponent>(tID);
-	tColl->mType = CollisionGeo::Sphere;
-	tColl->X = 1.0f;
-	tTrans->mPosition = vec3(0.0f, 2.0f, 0);
+	tColl->mType = CollisionGeo::AABB;
+	tColl->X = 0.5f;
+	tColl->Y = 0.5f;
+	tTrans->mPosition = vec3(0.0f, 1.1f, 0);
 
 	int tMaxEnt = tEntManager->GetLastEntity();
 
