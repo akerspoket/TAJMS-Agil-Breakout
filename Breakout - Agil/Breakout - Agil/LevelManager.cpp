@@ -112,7 +112,7 @@ void LevelManager::Initialize()
 	//return the ID To meshComponent
 	tLabel->mLabel = Label::Pad;
 	tColl->Dim = vec2(0.5, 0.5);
-	
+
 	//add to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
@@ -193,6 +193,8 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
+	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
+
 	
 	//tGraphicsInterFace->CreateTexture(L"namn.dds");
 	//tGraphicsInterFace->CreateObject("Box.obj");
@@ -219,8 +221,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 	/////////////////////BLOCKS//////////////////////
-
 	
+
 	int blockX = 4;
 	int blockY = 3;
 	vec2 startOffset = vec2(-2, 0);
