@@ -10,7 +10,6 @@ public:
 	static void WriteTextFile(string p_textName, string p_textAttSkriva);
 	static vector<string> ReadTextFile(string p_textName);
 
-
 };
 
 
