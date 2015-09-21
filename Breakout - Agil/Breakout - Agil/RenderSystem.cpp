@@ -40,13 +40,13 @@ void RenderSystem::Update(double pDeltaTime)
 	testMesh.mMaterialID = mGraphicsInterface->CreateTexture(L"davai.dds");
 	testMesh.mMeshID = mGraphicsInterface->CreateObject("Box");
 	TransformComponent testTransform[1];
-	testTransform[0].mPosition[0] = -2;
-	testTransform[0].mPosition[1] = 0;
-	testTransform[0].mPosition[2] = 8;
-	testTransform[0].mQuatRotation[0] = 0;
-	testTransform[0].mQuatRotation[1] = 0;
-	testTransform[0].mQuatRotation[2] = 0;
-	testTransform[0].mQuatRotation[3] = 0;
+	testTransform[0].mPosition.x = -2;
+	testTransform[0].mPosition.y = 0;
+	testTransform[0].mPosition.z = 8;
+	testTransform[0].mQuatRotation.x = 0;
+	testTransform[0].mQuatRotation.y = 0;
+	testTransform[0].mQuatRotation.z = 0;
+	testTransform[0].mQuatRotation.w = 0;
 	mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, testTransform, 1);
 	mGraphicsInterface->EndDraw();
 	for (int i = 0; i < tMaxEnt; i++)
@@ -56,7 +56,7 @@ void RenderSystem::Update(double pDeltaTime)
 		{ //Teststuff
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
 			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
-			tTrans->mPosition[2] = 8;
+			tTrans->mPosition.z = 8;
 			mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
 		}
 	}
