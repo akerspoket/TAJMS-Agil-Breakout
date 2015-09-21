@@ -1,5 +1,10 @@
 #pragma once
+#ifdef _WIN32
 #include "GraphicsEngine.h"
+#elif __linux__
+#include "OGLGraphicsEngine.h"
+#endif
+
 #include <map>
 #include "TransformComponent.h"
 class GraphicsInterface
@@ -27,7 +32,12 @@ public:
 private: 
 	GraphicsInterface();
 	static GraphicsInterface* mSingleton;
+#ifdef _WIN32
 	GraphicsEngine* mGraphicsEngine;
+#elif __linux__
+	OGLGraphicsEngine* mGraphicsEngine;
+#endif
+
 	vector<MaterialStruct> mMaterials;
 	map<const wchar_t*, int>mLoadedTextures;
 	map<const char*, int>mLoadedObjects;

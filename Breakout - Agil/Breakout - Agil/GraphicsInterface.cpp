@@ -4,8 +4,11 @@ GraphicsInterface* GraphicsInterface::mSingleton = 0;
 
 GraphicsInterface::GraphicsInterface()
 {
+#ifdef _WIN32
 	mGraphicsEngine = new GraphicsEngine();
-
+#elif __linux__
+	mGraphicsEngine = new OGLGraphicEngine();
+#endif
 }
 
 
@@ -17,7 +20,7 @@ GraphicsInterface* GraphicsInterface::GetSingleton()
 {
 	if (!mSingleton)
 	{
-		mSingleton = new GraphicsInterface;
+		mSingleton = new GraphicsInterface();
 	}
 
 	return mSingleton;
@@ -25,7 +28,7 @@ GraphicsInterface* GraphicsInterface::GetSingleton()
 
 void GraphicsInterface::Initialize()
 {
-	mGraphicsEngine->InitD3D(GetActiveWindow());
+	mGraphicsEngine->InitD3D();
 	mGraphicsEngine->InitPipeline();
 	mGraphicsEngine->InitGraphics();
 }

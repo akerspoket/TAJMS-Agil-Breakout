@@ -12,7 +12,7 @@ GraphicsEngine::~GraphicsEngine()
 {
 }
 
-void GraphicsEngine::InitD3D(HWND hWnd) 
+void GraphicsEngine::InitD3D() 
 {
 	// create a struct to hold information about the swap chain
 	DXGI_SWAP_CHAIN_DESC scd;
@@ -24,7 +24,7 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 	scd.BufferCount = 1;                                    // one back buffer
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = hWnd;                                // the window to be used
+	scd.OutputWindow = GetActiveWindow();                                // the window to be used
 	scd.SampleDesc.Count = 4;                               // how many multisamples
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 

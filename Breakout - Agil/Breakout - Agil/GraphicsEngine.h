@@ -86,7 +86,7 @@ public:
 	
 	float time;
 
-	void InitD3D(HWND hWnd);     // sets 
+	void InitD3D();     // sets 
 	void InitPipeline();
 	void CleanD3D(void);         // close
 	void RenderFrame(void);
