@@ -11,12 +11,13 @@ public:
 
 	void LevelManager::Initialize();
 	void GenerateWorld(string pWorldName);
-
+	void AnalyzeText(string pTextToCheck);
 private:
 	LevelManager();
 	~LevelManager();
 
 	EntityFactory* mEntityFactory;
 	static LevelManager* mSingleton;
+
 };
 

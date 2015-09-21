@@ -34,9 +34,14 @@ LevelManager::LevelManager()
 LevelManager::~LevelManager()
 {
 }
+void LevelManager::AnalyzeText(string pTextToCheck)
+{
+
+}
 
 void LevelManager::Initialize()
 {
+	GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
 	//TODO: TEST remove this when we load maps in a good way
 	EntityFactory::EntityBlueprint tBlueprint;
 
@@ -46,18 +51,51 @@ void LevelManager::Initialize()
 	PhysicComponent* tPhysic = new PhysicComponent();
 	VelocityComponent* tVelocity = new VelocityComponent();
 
-	vector<string> mBluePrintVector;
-	mBluePrintVector = TextFileReader::ReadTextFile("Blueprints/Pad.txt");
 
 
+	///ska skapa en BluePrint
+	vector<string> mEntitiyVector;
+	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
+	string tBlueprintNamn = "";
+	//string TestSomSatan = "";
+	for (size_t i = 0; i < mEntitiyVector.size(); i++)
+	{
+		//TestSomSatan = mEntitiyVector[i];
+		if (mEntitiyVector[i].compare("xEntity") == 0)
+		{
+			++i;
+			tBlueprintNamn = mEntitiyVector[i];
+		}
+		else if (mEntitiyVector[i].compare("xTranform") == 0)
+		{
+			tBlueprint[TransformType] = tTrans;
+		}
+		else if (mEntitiyVector[i].compare("xMesh") == 0)
+		{
+			//++i;
+			//std::wstring name((L)mEntitiyVector[i]);
+			//const wchar_t* szName = name.c_str();
+			//
+			//tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);
+			//++i;
+			//tGraphicsInterFace->CreateObject(mEntitiyVector[i]);
+			////tBlueprint[MeshType] = mEntitiyVector[i];
+		}
+		else if (mEntitiyVector[i].compare("xLabel"))
+		{
+			///////////Kolla vilken label det är i LabelComponent
+
+		}
+	}
 	//set component values
 	//we ignore this and use the initialization values for test
 	//WARNINIG: We should call the graphic engine for loading a texture then
 	//return the ID To meshComponent
 	tLabel->mLabel = Label::Pad;
-
+	
 	//add to blueprint
-	tBlueprint[TransformType] = tTrans;
+	
+	//tBlueprint[TransformType] = tTrans;
 	tBlueprint[MeshType] = tMesh;
 	tBlueprint[LabelType] = tLabel;
 
@@ -98,9 +136,11 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
-	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
-
 	
+	//tGraphicsInterFace->CreateTexture(L"namn.dds");
+	//tGraphicsInterFace->CreateObject("Box.obj");
+
+
 	/////Creating a Pad for the game
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
@@ -109,8 +149,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
 	
 	//Reading The level from textfile
-	vector<string> mLevelTextVector;
-	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
+	//vector<string> mLevelTextVector;
+	//mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
 
 
 	//Create blocks
