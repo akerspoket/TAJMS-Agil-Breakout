@@ -36,7 +36,7 @@ void RenderSystem::Update(double pDeltaTime)
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
-	MeshComponent testMesh;
+	MeshComponent testMesh;  //teststuffs
 	testMesh.mMaterialID = mGraphicsInterface->CreateTexture(L"davai.dds");
 	testMesh.mMeshID = mGraphicsInterface->CreateObject("Box");
 	TransformComponent testTransform[1];
@@ -53,7 +53,7 @@ void RenderSystem::Update(double pDeltaTime)
 	{
 		short tFlags = MeshType | TransformType;
 		if (tCompTable->HasComponent(i, tFlags))
-		{
+		{ //Teststuff
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
 			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
 			tTrans->mPosition[2] = 8;
