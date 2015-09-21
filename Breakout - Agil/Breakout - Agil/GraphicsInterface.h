@@ -14,7 +14,7 @@ public:
 		BRICK,
 		ELEPHANT
 	};
-	GraphicsInterface();
+
 	~GraphicsInterface();
 
 	int CreateObject(const char* pMeshGroup);
@@ -23,10 +23,10 @@ public:
 	int CreateTexture(const wchar_t* pTextureName);
 	void EndDraw(); //Call this at the end of drawing multiple objects
 	void Initialize();
-
+	static GraphicsInterface* GetSingleton();
 private: 
-
-
+	GraphicsInterface();
+	static GraphicsInterface* mSingleton;
 	GraphicsEngine* mGraphicsEngine;
 	vector<MaterialStruct> mMaterials;
 	map<const wchar_t*, int>mLoadedTextures;
