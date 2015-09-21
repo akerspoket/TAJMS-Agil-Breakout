@@ -29,6 +29,15 @@ struct vec2
 	{
 		return vec2(x - v.x, y - v.y);
 	}
+	vec2 operator*(float f)
+	{
+		return vec2(x *f, y*f);
+	}
+	void operator*=(float f)
+	{
+		x *= f;
+		y *= f;
+	}
 	float operator*(vec2 v)
 	{
 		return x*v.x + y*v.y;
@@ -78,6 +87,16 @@ struct vec3
 	{
 		return x*v.x + y*v.y + z*v.x;
 	}
+	void operator*=(float f)
+	{
+		x *= f;
+		y *= f;
+		z *= f;
+	}
+	vec3 operator*(float f)
+	{
+		return vec3(x *f, y*f, z*f);
+	}
 	float Abs()
 	{
 		return sqrt(x*x + y*y + z*z);
@@ -122,6 +141,17 @@ struct vec4
 	float operator*(vec4 v)
 	{
 		return x*v.x + y*v.y + z*v.x + w*v.w;
+	}
+	void operator*=(float f)
+	{
+		x *= f;
+		y *= f;
+		z *= f;
+		w *= f;
+	}
+	vec4 operator*(float f)
+	{
+		return vec4(x *f, y*f, z*f, w*f);
 	}
 	float Abs()
 	{
