@@ -13,7 +13,7 @@
 #include <vector>
 #include "DDSTextureLoader.h"
 #include <iostream>
-
+#include "GraphicsVirtual.h"
 #ifdef DEBUG
 	#include <iostream>
 #endif // DEBUG
@@ -55,13 +55,13 @@ struct ObjectBufferType
 		
 	}
 };
+
 struct InstanceBufferType
 {
-	 XMFLOAT4X4 translationMatrices;
+	XMFLOAT4X4 translationMatrices;
 };
 
-
-class GraphicsEngine
+class GraphicsEngine: public GraphicsVirtual
 {
 private:
 	struct VertexShaderComponents

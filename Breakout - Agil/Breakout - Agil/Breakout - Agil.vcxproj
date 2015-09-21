@@ -164,6 +164,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Game1.h" />
     <ClInclude Include="GraphicsInterface.h" />
+    <ClInclude Include="GraphicsVirtual.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LabelComponent.h" />
     <ClInclude Include="LevelManager.h" />

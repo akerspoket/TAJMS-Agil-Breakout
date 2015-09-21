@@ -1,12 +1,16 @@
 #pragma once
-#ifdef _WIN32
-#include "GraphicsEngine.h"
-#elif __linux__
+//#define __linux__ //FOR DEBUGGING LINUX, REMOVE IN FINAL THINGIE OR FOR WINDOWS DEBUGGING
+#ifdef __linux__
 #include "OGLGraphicsEngine.h"
+#elif _WIN32
+#include "GraphicsEngine.h"
 #endif
 
 #include <map>
+#include <vector>
 #include "TransformComponent.h"
+
+using namespace std;
 class GraphicsInterface
 {
 public:
@@ -32,10 +36,10 @@ public:
 private: 
 	GraphicsInterface();
 	static GraphicsInterface* mSingleton;
-#ifdef _WIN32
-	GraphicsEngine* mGraphicsEngine;
-#elif __linux__
+#ifdef __linux__
 	OGLGraphicsEngine* mGraphicsEngine;
+#elif _WIN32
+	GraphicsEngine* mGraphicsEngine;
 #endif
 
 	vector<MaterialStruct> mMaterials;

@@ -4,11 +4,12 @@ GraphicsInterface* GraphicsInterface::mSingleton = 0;
 
 GraphicsInterface::GraphicsInterface()
 {
-#ifdef _WIN32
+#ifdef __linux__
+	mGraphicsEngine = new OGLGraphicsEngine();
+#elif _WIN32
 	mGraphicsEngine = new GraphicsEngine();
-#elif __linux__
-	mGraphicsEngine = new OGLGraphicEngine();
 #endif
+	
 }
 
 
@@ -36,15 +37,14 @@ void GraphicsInterface::Initialize()
 int GraphicsInterface::CreateObject(const char* pMeshGroup)
 {
 	int retValue;
-#ifdef _WIN32
+#ifdef __linux__
+	//Linux Code
+#elif _WIN32
 	if (mLoadedObjects.find(pMeshGroup) != mLoadedObjects.end())
 	{
 		return mLoadedObjects[pMeshGroup];
 	}
 	retValue = mGraphicsEngine->CreateObject(pMeshGroup);
-#elif __linux__
-	//Linux Code
-
 #endif
 	mLoadedObjects[pMeshGroup] = retValue;
 	return retValue;
