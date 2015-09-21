@@ -27,7 +27,7 @@ bool ComponentTable::HasComponent(int pEntityID, short pMask)
 {
 	short tLineToCheck = mComponentTable[pEntityID];
 
-	if ((tLineToCheck ^ pMask) != 0) //then there are the components from mask
+	if ((tLineToCheck & pMask) == pMask) //then there are the components from mask
 	{
 		return true;
 	}
