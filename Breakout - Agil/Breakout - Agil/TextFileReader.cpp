@@ -40,10 +40,12 @@ vector<string> TextFileReader::ReadTextFile(string p_textName)
 	{
 		cout << "Unable to open file";
 	}
+
 	//for (size_t i = 0; i < o_text.size(); i++)
 	//{
 	//	cout << o_text[i];
 	//}
+
 	return o_text;
 	
 }

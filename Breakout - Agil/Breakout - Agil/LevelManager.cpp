@@ -9,6 +9,7 @@
 #include "TextFileReader.h"
 #include "ComponentTable.h"
 #include <iostream>
+#include "GraphicsInterface.h"
 using namespace std;
 
 
@@ -48,6 +49,10 @@ void LevelManager::Initialize()
 	PhysicComponent* tPhysic = new PhysicComponent();
 	VelocityComponent* tVelocity = new VelocityComponent();
 	CollisionComponent* tColl = new CollisionComponent();
+
+	vector<string> mBluePrintVector;
+	mBluePrintVector = TextFileReader::ReadTextFile("Blueprints/Pad.txt");
+
 
 	//set component values
 	//we ignore this and use the initialization values for test
@@ -135,6 +140,8 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
+	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
+
 	
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
