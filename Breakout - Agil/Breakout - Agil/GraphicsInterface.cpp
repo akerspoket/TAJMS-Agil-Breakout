@@ -1,6 +1,6 @@
 #include "GraphicsInterface.h"
 
-
+GraphicsInterface* GraphicsInterface::mSingleton = 0;
 
 GraphicsInterface::GraphicsInterface()
 {
@@ -13,7 +13,15 @@ GraphicsInterface::~GraphicsInterface()
 {
 }
 
+GraphicsInterface* GraphicsInterface::GetSingleton()
+{
+	if (!mSingleton)
+	{
+		mSingleton = new GraphicsInterface;
+	}
 
+	return mSingleton;
+}
 
 void GraphicsInterface::Initialize()
 {
