@@ -153,7 +153,7 @@ void LevelManager::Initialize()
 	//return the ID To meshComponent
 	tLabel->mLabel = Label::Pad;
 	tColl->Dim = vec2(0.5, 0.5);
-	
+
 	//////////////////////////////////////////add padda to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
@@ -278,7 +278,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 		for (size_t j = 0; j < t_forLooPJ; j++)
 		{
 			if (mLevelTextVector[i].at(j) == 'X')
-	{
+			{
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = i;
@@ -289,7 +289,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 
-
+	
 	/////////////////////BLOCKS//////////////////////
 	//
 	//int blockX = 10;
@@ -298,7 +298,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	////Space between blocks. Should probably be expanded to account for block sizes
 	////Hard-coded until we can read from proper level file
 	//float margin = 1;
-	
+
 	//for (int i = 0; i < blockX; i++)
 	//	for (int j = 0; j < blockY; j++)
 	//	{
