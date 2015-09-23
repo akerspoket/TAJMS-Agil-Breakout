@@ -177,6 +177,7 @@
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriggerSystem.h" />
     <ClInclude Include="VelocityComponent.h" />
+    <ClInclude Include="VelocityForceComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsEngine.h" />

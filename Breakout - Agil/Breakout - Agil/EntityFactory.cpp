@@ -8,6 +8,7 @@
 #include "LabelComponent.h"
 #include "VelocityComponent.h"
 #include "CollisionComponent.h"
+#include "VelocityForceComponent.h"
 
 
 
@@ -81,6 +82,10 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::CollisionType)
 		{
 			memcpy(GetComponent<CollisionComponent>(tNewEntityID), iter->second, sizeof(CollisionComponent));
+		}
+		else if (iter->first == ComponentType::VelocityForceType)
+		{
+			memcpy(GetComponent<VelocityForceComponent>(tNewEntityID), iter->second, sizeof(VelocityForceComponent));
 		}
 	}
 

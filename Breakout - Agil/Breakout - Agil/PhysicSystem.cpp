@@ -5,6 +5,7 @@
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
+#include "VelocityForceComponent.h"
 #include "LabelComponent.h"
 
 
@@ -98,16 +99,21 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 	if (tCollide)
 	{
-		vec2 tNormDir = vec3toVec2(pTrans2->mPosition - pTrans1->mPosition);
+		vec2 tNormDir = vec3toVec2(pTrans2->mPrevPosition - pTrans1->mPrevPosition);
 		tNormDir.x /= pColl1->Dim.x;
 		tNormDir.y /= pColl1->Dim.y;
 		//Collision on vertical side (left or right)
+		
+
 		if (abs(tNormDir.x) > abs(tNormDir.y))
 		{
-			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
+			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType | TransformType))
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.x *= -1;
+
+				TransformComponent* tTrans = GetComponent<TransformComponent>(pEntityID2);
+				tTrans->mPosition = tTrans->mPrevPosition;
 			}
 
 		}
@@ -117,6 +123,9 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.y *= -1;
+
+				TransformComponent* tTrans = GetComponent<TransformComponent>(pEntityID2);
+				tTrans->mPosition = tTrans->mPrevPosition;
 			}
 		}
 	}
@@ -167,9 +176,38 @@ void PhysicSystem::Update(double pDeltaTime)
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
 			VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
 
-			tTrans->mPosition.x += tVel->mDirection.x * tVel->mSpeed*pDeltaTime;
-			tTrans->mPosition.y += tVel->mDirection.y * tVel->mSpeed*pDeltaTime;
-			tTrans->mPosition.z += tVel->mDirection.z * tVel->mSpeed*pDeltaTime;
+
+			tTrans->mPrevPosition = tTrans->mPosition;
+
+			
+
+			if (tCompTable->HasComponent(i, VelocityForceType))
+			{
+				VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+				//update position
+				if (tVelForce->mType == ForceType::ByValue)
+				{
+					//tTrans->mPosition += tVel->mDirection * tVelForce->mAmount * (float)pDeltaTime* (float)pDeltaTime * 0.5f;
+					tVel->mSpeed += tVelForce->mAmount * (float)pDeltaTime;
+				}
+				else if (tVelForce->mType == ForceType::Percentage)
+				{
+					tVel->mSpeed *= tVelForce->mAmount * (float)pDeltaTime;
+					//tTrans->mPosition = tVel->mDirection * tVel->mSpeed * tVelForce->mAmount * (float)pDeltaTime;
+				}
+
+				//update speed
+				if ((tVel->mSpeed > tVelForce->mEndValue) == tVelForce->mIncrease)
+				{
+					tVel->mSpeed = tVelForce->mEndValue;
+					tCompTable->RemoveComponent(i, VelocityForceType);
+				}
+
+			}
+
+			tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
+
 
 			//DEBUG
 			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
@@ -184,6 +222,40 @@ void PhysicSystem::Update(double pDeltaTime)
 			}
 		}
 	}
+
+	//update position with force
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+
+		//Ensure that relevant components exist
+		short tFlags = VelocityForceType | TransformType;
+		if (tCompTable->HasComponent(i, tFlags))
+		{
+			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+			VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+			if (tVelForce->mType == ForceType::ByValue)
+			{
+				tTrans->mPosition += tTrans->mPosition.Normalize() * tVelForce->mAmount * (float)pDeltaTime;
+			}
+			else if (tVelForce->mType == ForceType::Percentage)
+			{
+				tTrans->mPosition = tTrans->mPosition * tVelForce->mAmount * (float)pDeltaTime;
+			}
+
+			//we don't set previous position to position here... should move this code into same loop
+			
+
+			//check if reached goal on the velocity
+			
+
+			//DEBUG
+			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+				cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+			//END DEBUG
+		}
+	}
+
 
 	//checking static collisions, not counting in their moved distance as a box
 	for (int i = 0; i < tMaxEnt; i++)
