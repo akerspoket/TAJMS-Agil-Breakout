@@ -178,7 +178,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 0.002f;
+	tVel->mSpeed = 0.0002f;
 	vec3 tStartDirection = vec3(-1.0f, 1.0f, 0.0f).Normalize();
 	tVel->mDirection.x = tStartDirection.x;
 	tVel->mDirection.y = tStartDirection.y;
