@@ -101,42 +101,6 @@ void LevelManager::Initialize()
 	///ska skapa en BluePrint
 
 
-	////Med Textfil
-	//vector<string> mEntitiyVector;
-	//mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
-	//string tBlueprintNamn = "";
-	//string TestSomSatan = "";
-	//for (size_t i = 0; i < mEntitiyVector.size(); i++)
-	//{
-	//	//TestSomSatan = mEntitiyVector[i];
-	//	if (mEntitiyVector[i].compare("xEntity") == 0)
-	//	{
-	//		++i;
-	//		tBlueprintNamn = mEntitiyVector[i];
-	//	}
-	//	else if (mEntitiyVector[i].compare("xTranform") == 0)
-	//	{
-	//		tBlueprint[TransformType] = tTrans;
-	//	}
-	//	else if (mEntitiyVector[i].compare("xMesh") == 0)
-	//	{
-	//		//++i;
-	//		//std::wstring name((L)mEntitiyVector[i]);
-	//		//const wchar_t* szName = name.c_str();
-	//		//
-	//		//tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);
-	//		//++i;
-	//		//tGraphicsInterFace->CreateObject(mEntitiyVector[i]);
-	//		////tBlueprint[MeshType] = mEntitiyVector[i];
-	//	}
-	//	else if (mEntitiyVector[i].compare("xLabel"))
-	//	{
-	//		///////////Kolla vilken label det är i LabelComponent
-
-	//	}
-	//}
-
-
 
 
 
