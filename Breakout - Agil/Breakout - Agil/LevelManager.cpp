@@ -107,8 +107,8 @@ void LevelManager::Initialize()
 	//WARNINIG: We should call the graphic engine for loading a texture then
 	//return the ID To meshComponent
 	tLabel->mLabel = Label::Pad;
-	
-	//////////////////////////////////////////add padda to blueprint
+
+	//add to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
 	tBlueprint[MeshType] = tMesh;
@@ -151,7 +151,7 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
-
+	
 	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
 	//tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
 	//tGraphicsInterFace->CreateObject("Box.obj");
@@ -185,7 +185,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 
-
+	
 	//Create blocks
 	//
 	//int blockX = 10;
