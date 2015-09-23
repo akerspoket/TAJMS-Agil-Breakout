@@ -153,6 +153,7 @@ void LevelManager::Initialize()
 	//////////////////////////////////////////add padda to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
 	tBlueprint[MeshType] = tMesh;
 	tBlueprint[LabelType] = tLabel;
 	tBlueprint[CollisionType] = tColl;
@@ -166,7 +167,7 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
 	tVelocity = new VelocityComponent();
-	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
@@ -188,6 +189,7 @@ void LevelManager::Initialize()
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");//prov
 
 	tBallBlueprint[TransformType] = tTrans;
 	tBallBlueprint[MeshType] = tMesh;
@@ -199,6 +201,22 @@ void LevelManager::Initialize()
 
 	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 
+
+	/////////////////////////////////GOALBLOCK///////////////////
+	EntityFactory::EntityBlueprint tGoalBlockBlueprint;
+
+	//Component values might be silly and have to be altered later
+	tTrans = new TransformComponent();
+	tMesh = new MeshComponent();
+	tVelocity = new VelocityComponent();
+	tLabel = new LabelComponent();
+	tLabel->mLabel = Label::GoalBlock;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tGoalBlockBlueprint[TransformType] = tTrans;
+	tGoalBlockBlueprint[MeshType] = tMesh;
+	tGoalBlockBlueprint[VelocityType] = tVelocity;
+	tGoalBlockBlueprint[LabelType] = tLabel;
+	mEntityFactory->RegisterEntityTemplate("GoalBlock", tBlockBlueprint);
 	////////////////////SIDE WALL///////////////////////////
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
@@ -304,9 +322,10 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 	////////////////////GOAL//////////////////////////
-	tNewID = mEntityFactory->CreateEntity("Block");
-	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
-	GetComponent<LabelComponent>(tNewID)->mLabel = Label::Goal;
+	tNewID = mEntityFactory->CreateEntity("GoalBlock");
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
+	//ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
+	//GetComponent<LabelComponent>(tNewID)->mLabel = Label::GoalBlock;
 
 
 	//////////////////TOP BOT WALL///////////////////

@@ -58,7 +58,8 @@ void RenderSystem::Update(double pDeltaTime)
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
 			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
 			tTrans->mPosition.z = 8;
-			mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
+			//mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
+			mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, tMesh->mMaterialID, tTrans, 1);
 		}
 	}
 }
