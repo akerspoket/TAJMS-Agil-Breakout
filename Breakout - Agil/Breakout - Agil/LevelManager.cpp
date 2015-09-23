@@ -150,7 +150,7 @@ void LevelManager::Initialize()
 	tLabel->mLabel = Label::Pad;
 	tColl->Dim = vec2(0.5, 0.5);
 	
-	//add to blueprint
+	//////////////////////////////////////////add padda to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
 	tBlueprint[MeshType] = tMesh;
@@ -166,11 +166,10 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
 	tVelocity = new VelocityComponent();
+	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
-
-
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
@@ -231,7 +230,8 @@ void LevelManager::Initialize()
 void LevelManager::GenerateWorld(string pWorldName)
 {
 	
-	//tGraphicsInterFace->CreateTexture(L"namn.dds");
+	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
+	//tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
 	//tGraphicsInterFace->CreateObject("Box.obj");
 
 
@@ -249,36 +249,42 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
 	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
-	string hej = "12345";
-	string hejsan;
-
-	for (size_t i = 0; i < mLevelTextVector[7].size(); i++)
+	int t_forLoopI = mLevelTextVector.size();
+	int t_forLooPJ = mLevelTextVector[2].size();
+	for (size_t i = 0; i < t_forLoopI; i++)
 	{
-		hejsan+= mLevelTextVector[5].at(i);
+		for (size_t j = 0; j < t_forLooPJ; j++)
+		{
+			if (mLevelTextVector[i].at(j) == 'X')
+	{
+				tNewID = mEntityFactory->CreateEntity("Block");
+				tTrans = GetComponent<TransformComponent>(tNewID);
+				tTrans->mPosition.x = i;
+				tTrans->mPosition.y = j;
+			}
+		}
 	}
 
 
 
 
 	/////////////////////BLOCKS//////////////////////
+	//
+	//int blockX = 10;
+	//int blockY = 5;
 
+	////Space between blocks. Should probably be expanded to account for block sizes
+	////Hard-coded until we can read from proper level file
+	//float margin = 1;
 	
-	int blockX = 4;
-	int blockY = 3;
-	vec2 startOffset = vec2(-2, 0);
-
-	//Space between blocks. Should probably be expanded to account for block sizes
-	//Hard-coded until we can read from proper level file
-	float margin = 1.5;
-
-	for (int i = 0; i < blockX; i++)
-		for (int j = 0; j < blockY; j++)
-		{
-			tNewID = mEntityFactory->CreateEntity("Block");
-			tTrans = GetComponent<TransformComponent>(tNewID);
-			tTrans->mPosition.x = margin*i+startOffset.x;
-			tTrans->mPosition.y = margin*j+startOffset.y;
-		}
+	//for (int i = 0; i < blockX; i++)
+	//	for (int j = 0; j < blockY; j++)
+	//	{
+	//		tNewID = mEntityFactory->CreateEntity("Block");
+	//		tTrans = GetComponent<TransformComponent>(tNewID);
+	//		tTrans->mPosition.x = margin*i;
+	//		tTrans->mPosition.y = margin*j; 
+	//	}
 
 	//////////////////////////BALL////////////////////
 	float tStartPositionX = 2;
