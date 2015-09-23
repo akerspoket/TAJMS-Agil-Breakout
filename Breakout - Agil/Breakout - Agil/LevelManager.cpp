@@ -95,46 +95,61 @@ void LevelManager::Initialize()
 
 
 	///ska skapa en BluePrint
-	vector<string> mEntitiyVector;
-	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
-	string tBlueprintNamn = "";
-	//string TestSomSatan = "";
-	for (size_t i = 0; i < mEntitiyVector.size(); i++)
-	{
-		//TestSomSatan = mEntitiyVector[i];
-		if (mEntitiyVector[i].compare("xEntity") == 0)
-		{
-			++i;
-			tBlueprintNamn = mEntitiyVector[i];
-		}
-		else if (mEntitiyVector[i].compare("xTranform") == 0)
-		{
-			tBlueprint[TransformType] = tTrans;
-		}
-		else if (mEntitiyVector[i].compare("xMesh") == 0)
-		{
-			//++i;
-			//std::wstring name((L)mEntitiyVector[i]);
-			//const wchar_t* szName = name.c_str();
-			//
-			//tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);
-			//++i;
-			//tGraphicsInterFace->CreateObject(mEntitiyVector[i]);
-			////tBlueprint[MeshType] = mEntitiyVector[i];
-		}
-		else if (mEntitiyVector[i].compare("xLabel"))
-		{
-			///////////Kolla vilken label det är i LabelComponent
 
-		}
-	}
+
+	////Med Textfil
+	//vector<string> mEntitiyVector;
+	//mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
+	//string tBlueprintNamn = "";
+	//string TestSomSatan = "";
+	//for (size_t i = 0; i < mEntitiyVector.size(); i++)
+	//{
+	//	//TestSomSatan = mEntitiyVector[i];
+	//	if (mEntitiyVector[i].compare("xEntity") == 0)
+	//	{
+	//		++i;
+	//		tBlueprintNamn = mEntitiyVector[i];
+	//	}
+	//	else if (mEntitiyVector[i].compare("xTranform") == 0)
+	//	{
+	//		tBlueprint[TransformType] = tTrans;
+	//	}
+	//	else if (mEntitiyVector[i].compare("xMesh") == 0)
+	//	{
+	//		//++i;
+	//		//std::wstring name((L)mEntitiyVector[i]);
+	//		//const wchar_t* szName = name.c_str();
+	//		//
+	//		//tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);
+	//		//++i;
+	//		//tGraphicsInterFace->CreateObject(mEntitiyVector[i]);
+	//		////tBlueprint[MeshType] = mEntitiyVector[i];
+	//	}
+	//	else if (mEntitiyVector[i].compare("xLabel"))
+	//	{
+	//		///////////Kolla vilken label det är i LabelComponent
+
+	//	}
+	//}
+
+
+
+
+
+
+
+
+
+
+
+
 	//set component values
 	//we ignore this and use the initialization values for test
 	//WARNINIG: We should call the graphic engine for loading a texture then
 	//return the ID To meshComponent
 	tLabel->mLabel = Label::Pad;
 	tColl->Dim = vec2(0.5, 0.5);
-
+	
 	//add to blueprint
 	
 	//tBlueprint[TransformType] = tTrans;
@@ -219,7 +234,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//tGraphicsInterFace->CreateTexture(L"namn.dds");
 	//tGraphicsInterFace->CreateObject("Box.obj");
 
-	
+
 	//tGraphicsInterFace->CreateTexture(L"namn.dds");
 	//tGraphicsInterFace->CreateObject("Box.obj");
 
@@ -232,14 +247,22 @@ void LevelManager::GenerateWorld(string pWorldName)
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
 	
 	//Reading The level from textfile
-	//vector<string> mLevelTextVector;
-	//mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
+	vector<string> mLevelTextVector;
+	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
+	string hej = "12345";
+	string hejsan;
+
+	for (size_t i = 0; i < mLevelTextVector[7].size(); i++)
+	{
+		hejsan+= mLevelTextVector[5].at(i);
+	}
+
 
 
 
 	/////////////////////BLOCKS//////////////////////
-	
 
+	
 	int blockX = 4;
 	int blockY = 3;
 	vec2 startOffset = vec2(-2, 0);
