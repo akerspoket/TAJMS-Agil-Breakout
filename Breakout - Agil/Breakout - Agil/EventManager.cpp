@@ -29,11 +29,19 @@ void EventManager::BroadcastEvent(string pID, Payload pPayload)
 
 	EventMap::iterator tIter = mEventMap.find(tEvent.mID);
 
+
+
 	//if event exist in map send it to subscribed systems
 	if (tIter != mEventMap.end())
 	{
 		for (unsigned int i = 0; i < tIter->second.size(); i++)
 		{
+			//DEBUG
+#ifdef _DEBUG
+			cout << "Broadcasting event: " << pID << " to  " << tIter->second[i]->GetName() << endl;
+#endif
+			//END DEBUG
+
 			tIter->second[i]->OnEvent(&tEvent);
 		}
 	}
@@ -48,4 +56,10 @@ void EventManager::BroadcastEvent(string pID, Payload pPayload)
 void EventManager::Subscribe(string pEventID, System* pSystem)
 {
 	mEventMap[pEventID].push_back(pSystem);
+
+	//DEBUG
+#ifdef _DEBUG
+	cout << "Subscribing  collision event: " << pEventID << " with " << pSystem->GetName()<< endl;
+#endif
+	//END DEBUG
 }

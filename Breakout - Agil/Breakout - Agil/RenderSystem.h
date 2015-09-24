@@ -6,6 +6,7 @@ class RenderSystem : public System
 {
 public:
 	RenderSystem();
+	RenderSystem(string pName);
 	~RenderSystem();
 	virtual void Initialize();
 	virtual void Start();

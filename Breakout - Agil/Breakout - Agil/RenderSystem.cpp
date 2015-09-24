@@ -13,6 +13,10 @@ RenderSystem::RenderSystem()
 {
 }
 
+RenderSystem::RenderSystem(string pName):System(pName)
+{
+}
+
 
 RenderSystem::~RenderSystem()
 {

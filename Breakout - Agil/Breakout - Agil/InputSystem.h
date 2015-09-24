@@ -8,6 +8,7 @@ class InputSystem :	public System
 {
 public:
 	InputSystem();
+	InputSystem(string pName);
 	~InputSystem();
 	
 	void Initialize();

@@ -19,19 +19,19 @@ Game1::~Game1()
 
 bool Game1::Initialize()
 {
-	InputSystem* tInput = new InputSystem();
+	InputSystem* tInput = new InputSystem("InputSystem");
 	tInput->Initialize();
 	mSystems.push_back(tInput);
 	
-	PhysicSystem* tPhysics = new PhysicSystem();
+	PhysicSystem* tPhysics = new PhysicSystem("PhysicSystem");
 	tPhysics->Initialize();
 	mSystems.push_back(tPhysics);
 
-	RenderSystem* tRender = new RenderSystem();
+	RenderSystem* tRender = new RenderSystem("RenderSystem");
 	tRender->Initialize();
 	mSystems.push_back(tRender);
 
-	TriggerSystem* tTrigger = new TriggerSystem();
+	TriggerSystem* tTrigger = new TriggerSystem("TriggerSystem");
 	tTrigger->Initialize();
 	mSystems.push_back(tTrigger);
 
