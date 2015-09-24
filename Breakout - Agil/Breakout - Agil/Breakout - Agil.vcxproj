@@ -145,6 +145,7 @@
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="OGLGraphicsEngine.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -165,11 +166,13 @@
     <ClInclude Include="Game1.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="GraphicsInterface.h" />
+    <ClInclude Include="GraphicsVirtual.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LabelComponent.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="OGLGraphicsEngine.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
@@ -207,6 +210,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bthcolor.dds" />
     <Image Include="davai.dds" />
     <Image Include="davai.png" />
     <Image Include="test2in1pic.dds" />
