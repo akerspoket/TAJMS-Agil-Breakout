@@ -1,4 +1,5 @@
 #include "LevelManager.h"
+#include "EntityManager.h"
 #include "StorageShelf.h"
 #include "TransformComponent.h"
 #include "MeshComponent.h"
@@ -195,13 +196,19 @@ void LevelManager::Initialize()
 	tMesh = new MeshComponent();
 	tVelocity = new VelocityComponent();
 	tLabel = new LabelComponent();
+	tColl = new CollisionComponent();
+
+
+	tColl->mType = CollisionGeo::AABB;
+	tColl->Dim = vec2(0.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
 	tGoalBlockBlueprint[TransformType] = tTrans;
 	tGoalBlockBlueprint[MeshType] = tMesh;
 	tGoalBlockBlueprint[VelocityType] = tVelocity;
 	tGoalBlockBlueprint[LabelType] = tLabel;
-	mEntityFactory->RegisterEntityTemplate("GoalBlock", tBlockBlueprint);
+	tGoalBlockBlueprint[CollisionType] = tColl;
+	mEntityFactory->RegisterEntityTemplate("GoalBlock", tGoalBlockBlueprint);
 	////////////////////SIDE WALL///////////////////////////
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
@@ -253,7 +260,12 @@ void LevelManager::GenerateWorld(string pWorldName)
 	vector<string> mLevelTextVector;
 	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
 	int t_forLoopI = mLevelTextVector.size();
-	int t_forLooPJ = mLevelTextVector[2].size();
+	int t_forLooPJ = 0;
+	if (t_forLoopI != 0)
+	{
+		t_forLooPJ = mLevelTextVector[2].size();
+	}
+	
 	for (size_t i = 0; i < t_forLoopI; i++)
 	{
 		for (size_t j = 0; j < t_forLooPJ; j++)
@@ -292,7 +304,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//////////////////////////BALL////////////////////
 	float tStartPositionX = -2;
-	float tStartPositionY = -2;
+	float tStartPositionY = -1;
 
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	tTrans = GetComponent<TransformComponent>(tNewID);
@@ -320,6 +332,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	tNewID = mEntityFactory->CreateEntity("HorWall");
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -4, 8);
+	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
+	LabelComponent* tLabel = GetComponent<LabelComponent>(tNewID);
+	tLabel->mLabel = Label::BottomArea;
 
 	/////////////////SIDE WALLS/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("VerWall");
@@ -327,5 +342,16 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	tNewID = mEntityFactory->CreateEntity("VerWall");
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-4, 0, 8);
+
 }
 
+void LevelManager::DegenerateWorld()
+{
+	EntityManager* pEntManager = pEntManager->GetInstance();
+	int tMaxEnt = pEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		pEntManager->RemoveEntity(i);
+	}
+}

@@ -11,6 +11,7 @@ public:
 
 	void LevelManager::Initialize();
 	void GenerateWorld(string pWorldName);
+	void DegenerateWorld();
 	void AnalyzeText(string pTextToCheck);
 private:
 	LevelManager();

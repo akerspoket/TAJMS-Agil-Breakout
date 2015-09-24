@@ -14,6 +14,10 @@ PhysicSystem::PhysicSystem()
 
 }
 
+PhysicSystem::PhysicSystem(string pName):System(pName)
+{
+}
+
 PhysicSystem::~PhysicSystem()
 {
 
@@ -104,6 +108,11 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		tNormDir.y /= pAABBColl->Dim.y;
 		//Collision on vertical side (left or right)
 
+		//DEBUG
+#ifdef _DEBUG
+		cout << "Collision happened! ComponentID that collided:" << pEntityID1 << " and " << pEntityID2 << endl;
+#endif
+		//END DEBUG
 		
 		
 
@@ -202,14 +211,32 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		}
 
 
-		//if AABB is label Box, we remove it
+		
 		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
 		{
-			if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Box)
+			LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
+
+			if (tLabel->mLabel == Label::Box)		//if AABB is label Box, we remove it
 			{
 				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
 			}
+			else if (tLabel->mLabel == Label::BottomArea)		//if bottom area, we lose
+			{
+				//not sure if we need to send any specific data here
+				std::unordered_map<string, void*> tPayLoad;
+				EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
+			}
+			else if (tLabel->mLabel == Label::GoalBlock)
+			{
+				//remove entity
+				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+
+				//send event
+				std::unordered_map<string, void*> tPayLoad;
+				EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+			}
 		}
+
 
 	}
 }
@@ -294,8 +321,8 @@ void PhysicSystem::Update(double pDeltaTime)
 
 
 				//DEBUG
-				if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
-					cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+				//if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+				//	cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
 				
 				//END DEBUG
 			}

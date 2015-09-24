@@ -12,6 +12,10 @@ InputSystem::InputSystem()
 {
 }
 
+InputSystem::InputSystem(string pName):System(pName)
+{
+}
+
 
 InputSystem::~InputSystem()
 {

@@ -8,6 +8,7 @@ class PhysicSystem : public System
 {
 public:
 	PhysicSystem();
+	PhysicSystem(string pName);
 	~PhysicSystem();
 
 	void Initialize();
