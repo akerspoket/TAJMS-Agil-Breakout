@@ -1,2 +1,6 @@
-NewEntity
-"Padda"
+xEntity
+Block_Regular
+xTransform
+xMesh
+Textures/BlokTex.dds
+Pad.obj

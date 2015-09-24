@@ -2,7 +2,7 @@ xEntity
 Pad
 xTransform
 xMesh
-davai.dds
+Textures/PadTex.dds
 Pad.obj
 xLabel
 Pad

@@ -46,7 +46,7 @@ void LevelManager::Initialize()
 	//TODO: TEST remove this when we load maps in a good way
 
 	/////////////PADDA///////////////
-	EntityFactory::EntityBlueprint tBlueprint;
+	EntityFactory::EntityBlueprint tPadBlueprint;
 
 	TransformComponent* tTrans = new TransformComponent();
 	MeshComponent* tMesh = new MeshComponent();
@@ -63,56 +63,65 @@ void LevelManager::Initialize()
 	tColl->Dim = vec2(0.5, 0.5);
 
 	//tBlueprint[TransformType] = tTrans;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
-	tBlueprint[MeshType] = tMesh;
-	tBlueprint[LabelType] = tLabel;
-	tBlueprint[CollisionType] = tColl;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/PadTex.dds");
+	tPadBlueprint[MeshType] = tMesh;
+	tPadBlueprint[LabelType] = tLabel;
+	tPadBlueprint[CollisionType] = tColl;
+	tPadBlueprint[TransformType] = tTrans;
+	tPadBlueprint[VelocityType] = tVelocity;
 
-	mEntityFactory->RegisterEntityTemplate("Padda", tBlueprint);
+	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
 	///ska skapa en BluePrint
 
 
 	//Med Textfil
-	vector<string> mEntitiyVector;
-	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
-	string tBlueprintNamn = "";
-	//string TestSomSatan = "";
-	for (size_t i = 0; i < mEntitiyVector.size(); i++)
-	{
-		//TestSomSatan = mEntitiyVector[i];
-		if (mEntitiyVector[i].compare("xEntity") == 0)
-		{
-			++i;
-			tBlueprintNamn = mEntitiyVector[i];
-		}
-		else if (mEntitiyVector[i].compare("xTranform") == 0)
-		{
-			tBlueprint[TransformType] = tTrans;
-		}
-		else if (mEntitiyVector[i].compare("xMesh") == 0)
-		{
-			++i;
-			//std::wstring name(L+mEntitiyVector[i]);
-			//const wchar_t* szName = name.c_str();
-			std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
-			const wchar_t* widecstr = widestr.c_str();
-			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
-			
-			////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
-			++i;
-			const char * tConstChar = mEntitiyVector[i].c_str();
-			tMesh->mMeshID = tGraphicsInterFace->CreateObject(tConstChar);
-			tBlueprint[MeshType] = tMesh;
-		}
-		else if (mEntitiyVector[i].compare("xLabel"))
-		{
-			///////////Kolla vilken label det är i LabelComponent
-		}
+	//vector<string> mEntitiyVector;
+	//mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
+	//tTrans = new TransformComponent();
+	//tMesh = new MeshComponent();
+	//tLabel = new LabelComponent();
+	//tPhysic = new PhysicComponent();
+	//tVelocity = new VelocityComponent();
+	//tColl = new CollisionComponent();
+	//string tBlueprintNamn = "";
+	////string TestSomSatan = "";
+	//EntityFactory::EntityBlueprint tBlueprint;///////tPadBluePrint
+	//for (size_t i = 0; i < mEntitiyVector.size(); i++)
+	//{
+	//	//TestSomSatan = mEntitiyVector[i];
+	//	if (mEntitiyVector[i].compare("xEntity") == 0)
+	//	{
+	//		++i;
+	//		tBlueprintNamn = mEntitiyVector[i];
+	//	}
+	//	else if (mEntitiyVector[i].compare("xTransform") == 0)
+	//	{
+	//		tBlueprint[TransformType] = tTrans;
+	//	}
+	//	else if (mEntitiyVector[i].compare("xMesh") == 0)
+	//	{
+	//		++i;
+	//		//std::wstring name(L+mEntitiyVector[i]);
+	//		//const wchar_t* szName = name.c_str();
+	//		std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
+	//		const wchar_t* widecstr = widestr.c_str();
+	//		tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
+	//		
+	//		////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
+	//		++i;
+	//		const char * tConstChar = mEntitiyVector[i].c_str();
+	//		tMesh->mMeshID = tGraphicsInterFace->CreateObject(tConstChar);
+	//		tBlueprint[MeshType] = tMesh;
+	//	}
+	//	else if (mEntitiyVector[i].compare("xLabel"))
+	//	{
+	//		///////////Kolla vilken label det är i LabelComponent
+	//	}
 
-	}
+	//}
 
-	///ska skapa en BluePrint
+	/////ska skapa en BluePrint
 
 
 
@@ -171,7 +180,7 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 
 
-	/////////////////////////////////GOALBLOCK///////////////////
+	///////////////////////////////////GOALBLOCK///////////////////
 	EntityFactory::EntityBlueprint tGoalBlockBlueprint;
 
 	//Component values might be silly and have to be altered later
@@ -246,11 +255,12 @@ void LevelManager::GenerateWorld(string pWorldName)
 			{
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
-				tTrans->mPosition.x = i;
-				tTrans->mPosition.y = j;
+				tTrans->mPosition.x = j;
+				tTrans->mPosition.y = t_forLoopI - i;
 			}
 		}
 	}
+
 
 
 
@@ -291,8 +301,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 	////////////////////GOAL//////////////////////////
-	tNewID = mEntityFactory->CreateEntity("GoalBlock");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
+	//tNewID = mEntityFactory->CreateEntity("GoalBlock");
+	//GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
 	//ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
 	//GetComponent<LabelComponent>(tNewID)->mLabel = Label::GoalBlock;
 
@@ -311,3 +321,4 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tNewID = mEntityFactory->CreateEntity("VerWall");
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-4, 0, 8);
 }
+
