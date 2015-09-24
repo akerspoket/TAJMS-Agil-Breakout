@@ -103,6 +103,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		tNormDir.x /= pAABBColl->Dim.x;
 		tNormDir.y /= pAABBColl->Dim.y;
 		//Collision on vertical side (left or right)
+
+		
 		
 
 		if (abs(tNormDir.x) > abs(tNormDir.y))
@@ -198,6 +200,17 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				}
 			}
 		}
+
+
+		//if AABB is label Box, we remove it
+		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
+		{
+			if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Box)
+			{
+				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+			}
+		}
+
 	}
 }
 
