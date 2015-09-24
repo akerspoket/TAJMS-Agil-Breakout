@@ -234,6 +234,11 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <Object Include="bth.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="shader.fs" />
     <None Include="shader.vs" />
   </ItemGroup>

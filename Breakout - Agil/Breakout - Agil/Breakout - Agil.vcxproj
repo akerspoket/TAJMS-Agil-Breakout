@@ -217,6 +217,9 @@
     <Image Include="test2in1pic.png" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="bth.obj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="shader.fs" />
     <None Include="shader.vs" />
   </ItemGroup>
