@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include "GraphicsEngine.h"
 
 
@@ -133,6 +134,7 @@ void GraphicsEngine::InitPipeline()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
 		{ "INSTANCEMATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{ "INSTANCEMATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
@@ -419,19 +421,17 @@ void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, 
 
 int GraphicsEngine::CreateObject(const char* pMeshName)
 {
-	if ("BTH")
-	{
-		vector<Vertex> tVertices = mObjLoader->LoadObj("box.obj", 1.0f);
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
 
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(Vertex) * tVertices.size();
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		int retValue = CreateObjectBuffer(bd, tVertices.size());
-		PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
-		return retValue;
-	}
-	return -1;
+	vector<Vertex> tVertices = mObjLoader->LoadObj(pMeshName, 1.0f);
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(Vertex) * tVertices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	int retValue = CreateObjectBuffer(bd, tVertices.size());
+	PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
+	return retValue;
 }
+#endif

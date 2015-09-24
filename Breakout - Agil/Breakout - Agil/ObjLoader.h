@@ -26,7 +26,7 @@ public:
 	
 	vector<Vertex> LoadModel(const char* fileName);
 
-	vector<Vertex> ObjLoader::LoadObj(const char* fileName, float pScale);
+	vector<Vertex> LoadObj(const char* fileName, float pScale);
 	void LoadTGA();
 	//vector<Material> materials;
 	void LoadMaterial(const char* materialFileName);

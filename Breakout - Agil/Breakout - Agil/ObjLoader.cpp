@@ -26,6 +26,7 @@ vector<Vertex> ObjLoader::LoadObj(const char* fileName, float pScale)
 	if (file == nullptr)
 	{
 		cout << "Couldnt load obj file!";
+
 	}
 	while(true)
 	{
