@@ -15,11 +15,11 @@ GraphicsInterface::~GraphicsInterface()
 
 
 
-void GraphicsInterface::Initialize()
+void GraphicsInterface::Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos)
 {
 	mGraphicsEngine->InitD3D(GetActiveWindow());
 	mGraphicsEngine->InitPipeline();
-	mGraphicsEngine->InitGraphics();
+	mGraphicsEngine->InitGraphics(pFoVAngleY, pHeight, pWidth, pNear, pFar, pZPos);
 }
 
 int GraphicsInterface::CreateObject(const char* pMeshGroup)

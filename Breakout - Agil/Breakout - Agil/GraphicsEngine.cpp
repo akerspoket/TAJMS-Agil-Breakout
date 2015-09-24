@@ -145,7 +145,7 @@ void GraphicsEngine::InitPipeline()
 	SetActiveShader(PixelShader, mPixelShader);
 }
 
-void GraphicsEngine::InitGraphics()
+void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth, float pNear, float pFar, float pZPos)
 {
 	time = 0;
 	Vertex OurVertices[] =
@@ -251,8 +251,8 @@ void GraphicsEngine::InitGraphics()
 	mWVPBufferID.bufferID = CreateBuffer(bd);
 
 	tBufferInfo.world = XMMatrixTranspose(XMMatrixIdentity());
-	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
+	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, pZPos)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
+	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(pFoVAngleY, pWidth / pHeight, pNear, pFar));  //XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
 	PushToDevice(mWVPBufferID.bufferID, &tBufferInfo, sizeof(tBufferInfo), mWVPBufferID.reg,VertexShader);
 	HRESULT res;
 

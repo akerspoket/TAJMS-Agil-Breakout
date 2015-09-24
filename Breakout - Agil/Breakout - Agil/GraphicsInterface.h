@@ -22,7 +22,7 @@ public:
 	int GetTextureID(TextureNames pName);
 	int CreateTexture(const wchar_t* pTextureName);
 	void EndDraw(); //Call this at the end of drawing multiple objects
-	void Initialize();
+	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 
 private: 
 

@@ -39,9 +39,9 @@ int main(int argc, char* args[])
 			bool tNoError = gGame.Initialize();
 			if (tNoError)
 			{
-				//gGame.Run();
-				while(true)
-				mOGLGraphics->RenderFrame();
+				gGame.Run();
+				//while(true)
+				//mOGLGraphics->RenderFrame();
 			}
 		}
 	}
