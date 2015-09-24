@@ -33,7 +33,6 @@ public:
 	void EndDraw(); //Call this at the end of drawing multiple objects
 	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 
-	void Initialize();
 	static GraphicsInterface* GetSingleton();
 private: 
 	GraphicsInterface();

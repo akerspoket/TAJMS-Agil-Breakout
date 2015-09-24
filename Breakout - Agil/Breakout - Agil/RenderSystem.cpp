@@ -23,10 +23,8 @@ void RenderSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
 
-	mGraphicsInterface = new GraphicsInterface();
-	mGraphicsInterface->Initialize(45.0f, 800.0f, 600.0f, 0.1f, 100, 0.0f);
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
-	mGraphicsInterface->Initialize();
+	mGraphicsInterface->Initialize(45.0f, 800.0f, 600.0f, 0.1f, 100, 0.0f);
 
 }
 
