@@ -3,6 +3,7 @@
 #include <SDL2\SDL.h>
 #include "glext.h"
 #include "Math.h"
+#include "ObjLoader.h"
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -12,16 +13,7 @@
 
 using namespace std;
 
-struct Vertexasd
-{
-	Vertexasd(vec3 pos, vec2 tex)
-	{
-		position = pos;
-		texcoord = tex;
-	}
-	vec3 position;
-	vec2 texcoord;
-};
+
 
 
 class OGLGraphicsEngine

@@ -50,7 +50,10 @@ void OGLGraphicsEngine::CreateTriangle()
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
-
+	//Vertices[0] = Vertex(vec3(-0.3f, -0.3f, 0.0f), vec2(0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
+	//Vertices[1] = Vertex(vec3(0.0f, 0.3f, 0.0f), vec2(0.5f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
+	//Vertices[2] = Vertex(vec3(0.3f, -0.3f, 0.0f), vec2(1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
+	
 }
 
 int OGLGraphicsEngine::CreateVertexBuffer(void* pDataStart, int pBufferSize)

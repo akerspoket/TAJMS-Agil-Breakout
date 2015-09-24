@@ -85,7 +85,6 @@ public:
 	void InitD3D();     // sets 
 	void InitPipeline();
 	void CleanD3D(void);         // close
-	void RenderFrame(void);
 	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 	int CreateObject(const char* pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
