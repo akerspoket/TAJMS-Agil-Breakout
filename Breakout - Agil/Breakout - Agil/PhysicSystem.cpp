@@ -112,20 +112,6 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.x *= -1;
 
-				//instead of this we step back
-				//WARNING here we assume the pad is not bouncing back
-				//if (tNormDir.x > 0)
-				//{
-				//	//get the distance traveled this frame
-				//	float tDist = (pAABBTrans->mPosition.x + pAABBColl->Dim.x - pSphereTrans->mPosition.x + pSphereColl->Dim.x);
-
-				//	//get the fraction of deltaTime we travled to collision
-				//	float tFrac = tDist / (tVel->mDirection.x * tVel->mSpeed);
-
-				//	//move sphere back
-				//	pSphereTrans->mPosition =
-
-				//}
 
 				if (tNormDir.x > 0)
 				{
@@ -188,8 +174,28 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.y *= -1;
 
-				TransformComponent* tTrans = GetComponent<TransformComponent>(pEntityID2);
-				tTrans->mPosition = tTrans->mPrevPosition;
+				if (tNormDir.y > 0)
+				{
+					//save old position
+					float tOldY = pSphereTrans->mPosition.y;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+				}
+				else
+				{
+					//save old position
+					float tOldY = pSphereTrans->mPosition.y;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+				}
 			}
 		}
 	}
