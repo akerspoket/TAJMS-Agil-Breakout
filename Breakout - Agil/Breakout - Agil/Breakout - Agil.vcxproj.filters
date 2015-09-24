@@ -99,6 +99,9 @@
     <ClCompile Include="OGLGraphicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsEngine.h">
@@ -161,6 +164,9 @@
     <ClInclude Include="GraphicsVirtual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game1.h">
@@ -218,6 +224,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="test2in1pic.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bthcolor.dds">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
