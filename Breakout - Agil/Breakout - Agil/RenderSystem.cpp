@@ -24,7 +24,7 @@ void RenderSystem::Initialize()
 	mEventManager->Subscribe("DebugTest", this);
 
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
-	mGraphicsInterface->Initialize(45.0f, 800.0f, 600.0f, 0.1f, 100, 0.0f);
+	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -30.0f);
 
 }
 
@@ -39,7 +39,7 @@ void RenderSystem::Update(double pDeltaTime)
 	int tMaxEnt = tEntManager->GetLastEntity();
 	MeshComponent testMesh;  //teststuffs
 	testMesh.mMaterialID = mGraphicsInterface->CreateTexture(L"bthcolor.dds");
-	testMesh.mMeshID = mGraphicsInterface->CreateObject("box.obj");
+	//testMesh.mMeshID = mGraphicsInterface->CreateObject("box.obj");
 	//TransformComponent testTransform[1];
 	//testTransform[0].mPosition.x = -2;
 	//testTransform[0].mPosition.y = 0;
@@ -59,7 +59,7 @@ void RenderSystem::Update(double pDeltaTime)
 			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
 			tTrans->mPosition.z = 8;
 			//mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
-			mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, tMesh->mMaterialID, tTrans, 1);
+			mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, tTrans, 1);
 		}
 	}
 	mGraphicsInterface->EndDraw();

@@ -132,8 +132,8 @@ void LevelManager::Initialize()
 			
 			////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
 			++i;
-			//const char * tConstChar = mEntitiyVector[i].c_str();  ///HÄR NÄR KONY FIXAT BOXANDET!
-			//tMesh->mMeshID = tGraphicsInterFace->CreateObject(tConstChar);
+			const char * tConstChar = mEntitiyVector[i].c_str();  ///HÄR NÄR KONY FIXAT BOXANDET!
+			tMesh->mMeshID = tGraphicsInterFace->CreateObject(mEntitiyVector[i]);
 			tPadBlueprint[MeshType] = tMesh;
 		}
 
@@ -169,6 +169,7 @@ void LevelManager::Initialize()
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
@@ -191,8 +192,8 @@ void LevelManager::Initialize()
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");//prov
-
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"davai.dds");//prov
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
 	tBallBlueprint[TransformType] = tTrans;
 	tBallBlueprint[MeshType] = tMesh;
 	tBallBlueprint[LabelType] = tLabel;
@@ -214,6 +215,7 @@ void LevelManager::Initialize()
 	tLabel = new LabelComponent();
 	tLabel->mLabel = Label::GoalBlock;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
 	tGoalBlockBlueprint[MeshType] = tMesh;
 	tGoalBlockBlueprint[VelocityType] = tVelocity;
@@ -262,7 +264,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition = vec3(0, -3, 8);
+	tTrans->mPosition = vec3(0, -8, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 1.0f;
 	
@@ -279,7 +281,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 			{
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
-				tTrans->mPosition.x = j;
+				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
 				tTrans->mPosition.y = t_forLoopI - i;
 			}
 		}

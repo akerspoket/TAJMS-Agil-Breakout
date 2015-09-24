@@ -26,7 +26,7 @@ public:
 
 	~GraphicsInterface();
 
-	int CreateObject(const char* pMeshGroup);
+	int CreateObject(string pMeshGroup);
 	void DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances); //Draws pNumberofInstances of pMeshType
 	int GetTextureID(TextureNames pName);
 	int CreateTexture(const wchar_t* pTextureName);
@@ -45,6 +45,6 @@ private:
 
 	vector<MaterialStruct> mMaterials;
 	map<const wchar_t*, int>mLoadedTextures;
-	map<const char*, int>mLoadedObjects;
+	map<string, int>mLoadedObjects;
 };
 

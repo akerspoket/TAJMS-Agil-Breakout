@@ -232,19 +232,13 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
 
-	switch (pMeshType)
-	{
-	case 0:
-	{
-		mInstanceBuffer = pInstanceBufferData;
-		mVertexBufferID = 0;
-		devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
+
+	mInstanceBuffer = pInstanceBufferData;
+	mVertexBufferID = 0;
+	devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
 
 
-	} break;
-	//case 2 :
-	}
-		//case 3 :
+
 
 	unsigned int strides[2];
 	unsigned int offsets[2];
@@ -419,10 +413,25 @@ void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, 
 	}
 }
 
-int GraphicsEngine::CreateObject(const char* pMeshName)
+int GraphicsEngine::CreateObject(string pMeshName)
 {
-
-	vector<Vertex> tVertices = mObjLoader->LoadObj(pMeshName, 1.0f);
+	vector<Vertex> tVertices;
+	if (pMeshName == "Object/Block.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f,1.0f,1.0f));
+	}
+	else if (pMeshName == "Object/Pad.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(2.0f, 0.5f, 1.0f));
+	}
+	else if (pMeshName == "Object/Boll.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+	}
+	else
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+	}
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 

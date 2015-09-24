@@ -34,7 +34,7 @@ void GraphicsInterface::Initialize(float pFoVAngleY, float pHeight, float pWidth
 	mGraphicsEngine->InitGraphics(pFoVAngleY, pHeight, pWidth, pNear, pFar, pZPos);
 }
 
-int GraphicsInterface::CreateObject(const char* pMeshGroup)
+int GraphicsInterface::CreateObject(string pMeshGroup)
 {
 	int retValue;
 #ifdef __linux__
