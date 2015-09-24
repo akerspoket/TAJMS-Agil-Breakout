@@ -141,7 +141,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -3, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
-	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
+	GetComponent<VelocityComponent>(tNewID)->mSpeed = 1.0f;
 	
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
@@ -178,7 +178,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 0.0002f;
+	tVel->mSpeed = 1.0f;
 	vec3 tStartDirection = vec3(-1.0f, 1.0f, 0.0f).Normalize();
 	tVel->mDirection.x = tStartDirection.x;
 	tVel->mDirection.y = tStartDirection.y;

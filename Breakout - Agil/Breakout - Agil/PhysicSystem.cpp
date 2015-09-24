@@ -123,11 +123,15 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						//Force component
 						ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
+
+						//need to check if already have force
+
+
 						VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
 						tVelForceComp->mEndValue = tVel->mSpeed;
 						tVelForceComp->mType = ByValue;
 						tVelForceComp->mIncrease = false;
-						tVelForceComp->mAmount = -0.000005;
+						tVelForceComp->mAmount = -0.09f;
 
 						//Increase speed
 						tVel->mSpeed *= 2;
