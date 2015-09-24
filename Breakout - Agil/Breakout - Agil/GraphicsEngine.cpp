@@ -149,81 +149,11 @@ void GraphicsEngine::InitPipeline()
 void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth, float pNear, float pFar, float pZPos)
 {
 	time = 0;
-	Vertex OurVertices[] =
-	{
-		{ vec3(-0.5f, 0.5f, -0.5f),vec2( 0.0f, 0.0f)},
-		{ vec3(-0.5f, -0.5, -0.5f), vec2(0.0f, 1.0f)}, //Framsidan
-		{ vec3(0.5f, -0.5f, -0.5f), vec2(1.0f, 1.0f)},
-		{ vec3(0.5f, 0.5f, -0.5f), vec2(1.0f, 0.0f)},
-
-		{ vec3(-0.5f, 0.5f, 0.5f),vec2( 1.0f, 0.0f) }, //4
-		{ vec3(-0.5f, -0.5, 0.5f),vec2( 1.0f, 1.0f) }, //5  Baksidan
-		{ vec3(0.5f, -0.5f, 0.5f),vec2( 0.0f, 1.0f) }, //6
-		{ vec3(0.5f, 0.5f, 0.5f), vec2(0.0f, 0.0f )},  //7
-
-
-		{ vec3(-0.5f, 0.5f, -0.5f),vec2( 0.0f,0.0f)},  //ovanpå 8
-		{ vec3(-0.5f, 0.5, 0.5f),  vec2(0.0f, 1.0f)},   //// 9
-		{ vec3(0.5f, 0.5f, 0.5f),  vec2(1.0f, 1.0f)},   ////10
-		{ vec3(0.5f, 0.5f, -0.5f), vec2(1.0f, 0.0f) },  //11
-
-		{ vec3(-0.5f, -0.5f, 0.5f),vec2( 0.0f,0.0f )},  //under 12
-		{ vec3(-0.5f, -0.5, -0.5f),vec2( 0.0f, 1.0f) },   //// 13
-		{ vec3(0.5f, -0.5f, -0.5f),vec2( 1.0f, 1.0f) },   ////14
-		{ vec3(0.5f, -0.5f, 0.5f), vec2(1.0f, 0.0f )},  //15
-
-		{ vec3(-0.5f, 0.5f, -0.5f),vec2( 0.0f,0.0f )},  //vänster 16
-		{ vec3(-0.5f, -0.5, -0.5f),vec2( 0.0f, 1.0f) },   //// 17
-		{ vec3(-0.5f, -0.5f, 0.5f),vec2( 1.0f, 1.0f) },   ////18
-		{ vec3(-0.5f, 0.5f, 0.5f), vec2(1.0f, 0.0f )},  //19
-
-		{ vec3(0.5f, 0.5f, 0.5f),  vec2(0.0f,0.0f  )},  //höger 20
-		{ vec3(0.5f, -0.5, 0.5f),  vec2(0.0f, 1.0f )},   //// 21
-		{ vec3(0.5f, -0.5f, -0.5f),vec2( 1.0f, 1.0f) },   ////22
-		{ vec3(0.5f, 0.5f, -0.5f), vec2(1.0f, 0.0f )},  //23
-	};
-
-	int OurIndices[] =
-	{
-		2,1,0,
-		2,0,3,
-
-		4,5,6,
-		4,6,7,
-
-		8,9,10,
-		8,10,11,
-
-		12,13,14,
-		12,14,15,
-
-		16,17,18,
-		16,18,19,
-
-		20,21,22,
-		20,22,23
-
-
-		/*4,0,3,
-		4,3,7,
-		5,1,2,
-		5,2,6,
-		0,1,5,
-		0,5,4,
-		6,2,3,
-		6,3,7*/
-	};
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(OurVertices);
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	mVertexBufferID = CreateBuffer(bd);
 
-	PushToDevice(mVertexBufferID, &OurVertices, sizeof(OurVertices));
 
 	InstanceBufferType temp;
 	for (int i = 0; i < 5; i++)
@@ -257,16 +187,6 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	PushToDevice(mWVPBufferID.bufferID, &tBufferInfo, sizeof(tBufferInfo), mWVPBufferID.reg,VertexShader);
 	HRESULT res;
 
-	D3D11_BUFFER_DESC ibd;
-	ZeroMemory(&ibd, sizeof(ibd));
-
-	ibd.Usage = D3D11_USAGE_DYNAMIC;
-	ibd.ByteWidth = sizeof(OurIndices);
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	ibd.MiscFlags = 0;
-	mIndexBufferID = CreateBuffer(ibd);
-	PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
 
 
 
@@ -501,7 +421,7 @@ int GraphicsEngine::CreateObject(const char* pMeshName)
 {
 	if ("BTH")
 	{
-		vector<Vertex> tVertices = mObjLoader->LoadObj("bth.obj");
+		vector<Vertex> tVertices = mObjLoader->LoadObj("box.obj", 1.0f);
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
