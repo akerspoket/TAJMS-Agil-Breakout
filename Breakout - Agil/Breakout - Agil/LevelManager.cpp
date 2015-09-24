@@ -46,7 +46,7 @@ void LevelManager::Initialize()
 	//TODO: TEST remove this when we load maps in a good way
 
 	/////////////PADDA///////////////
-	EntityFactory::EntityBlueprint tPadBlueprint;
+	
 
 	TransformComponent* tTrans = new TransformComponent();
 	MeshComponent* tMesh = new MeshComponent();
@@ -55,71 +55,91 @@ void LevelManager::Initialize()
 	VelocityComponent* tVelocity = new VelocityComponent();
 	CollisionComponent* tColl = new CollisionComponent();
 
-	//set component values
-	//we ignore this and use the initialization values for test
-	//WARNINIG: We should call the graphic engine for loading a texture then
-	//return the ID To meshComponent
-	tLabel->mLabel = Label::Pad;
-	tColl->Dim = vec2(0.5, 0.5);
-
-	//tBlueprint[TransformType] = tTrans;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/PadTex.dds");
-	tPadBlueprint[MeshType] = tMesh;
-	tPadBlueprint[LabelType] = tLabel;
-	tPadBlueprint[CollisionType] = tColl;
-	tPadBlueprint[TransformType] = tTrans;
-	tPadBlueprint[VelocityType] = tVelocity;
-
-	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
+	////////set component values
+	////////we ignore this and use the initialization values for test
+	///////WARNINIG: We should call the graphic engine for loading a texture then
+	////////////return the ID To meshComponent
+	//tLabel->mLabel = Label::Pad;
+	//tColl->Dim = vec2(0.5, 0.5);
+	//EntityFactory::EntityBlueprint tPadBlueprint;
+	//tPadBlueprint[TransformType] = tTrans;
+	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/PadTex.dds");
+	//tPadBlueprint[MeshType] = tMesh;
+	//tPadBlueprint[LabelType] = tLabel;
+	//tPadBlueprint[CollisionType] = tColl;
+	//tPadBlueprint[TransformType] = tTrans;
+	//tPadBlueprint[VelocityType] = tVelocity;
+	//
+	//mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
 	///ska skapa en BluePrint
 
 
-	//Med Textfil
-	//vector<string> mEntitiyVector;
-	//mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
+	////Med Textfil
+
+	EntityFactory::EntityBlueprint tPadBlueprint;///////tPadBluePrint
 	//tTrans = new TransformComponent();
 	//tMesh = new MeshComponent();
 	//tLabel = new LabelComponent();
 	//tPhysic = new PhysicComponent();
 	//tVelocity = new VelocityComponent();
 	//tColl = new CollisionComponent();
-	//string tBlueprintNamn = "";
-	////string TestSomSatan = "";
-	//EntityFactory::EntityBlueprint tBlueprint;///////tPadBluePrint
-	//for (size_t i = 0; i < mEntitiyVector.size(); i++)
-	//{
-	//	//TestSomSatan = mEntitiyVector[i];
-	//	if (mEntitiyVector[i].compare("xEntity") == 0)
-	//	{
-	//		++i;
-	//		tBlueprintNamn = mEntitiyVector[i];
-	//	}
-	//	else if (mEntitiyVector[i].compare("xTransform") == 0)
-	//	{
-	//		tBlueprint[TransformType] = tTrans;
-	//	}
-	//	else if (mEntitiyVector[i].compare("xMesh") == 0)
-	//	{
-	//		++i;
-	//		//std::wstring name(L+mEntitiyVector[i]);
-	//		//const wchar_t* szName = name.c_str();
-	//		std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
-	//		const wchar_t* widecstr = widestr.c_str();
-	//		tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
-	//		
-	//		////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
-	//		++i;
-	//		const char * tConstChar = mEntitiyVector[i].c_str();
-	//		tMesh->mMeshID = tGraphicsInterFace->CreateObject(tConstChar);
-	//		tBlueprint[MeshType] = tMesh;
-	//	}
-	//	else if (mEntitiyVector[i].compare("xLabel"))
-	//	{
-	//		///////////Kolla vilken label det är i LabelComponent
-	//	}
+	string tBlueprintNamn = "";
+	vector<string> mEntitiyVector;
+	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
+	//string TestSomSatan = "";
+	for (size_t i = 0; i < mEntitiyVector.size(); i++)
+	{
+		//TestSomSatan = mEntitiyVector[i];
+		if (mEntitiyVector[i].compare("xEntity") == 0)
+		{
+			++i;
+			tBlueprintNamn = mEntitiyVector[i];
+		}
+		else if (mEntitiyVector[i].compare("xLabel") == 0)
+		{
+			i++;
+			tLabel->mLabel = Label::Pad;
+			tPadBlueprint[LabelType] = tLabel;
+			///////////Kolla vilken label det är i LabelComponent
+		}
 
-	//}
+		else if (mEntitiyVector[i].compare("xTransform") == 0)
+		{
+			tPadBlueprint[TransformType] = tTrans;
+		}
+		else if (mEntitiyVector[i].compare("xVelocity") == 0)
+		{
+			tPadBlueprint[VelocityType] = tVelocity;
+		}
+		else if (mEntitiyVector[i].compare("xCollision") == 0)
+		{
+			//i++;
+			//int tXColl=;
+			//int tYColl=;
+
+			tColl->Dim = vec2(0.5, 0.5);
+			tPadBlueprint[CollisionType] = tColl;
+		}
+		else if (mEntitiyVector[i].compare("xMesh") == 0)
+		{
+			++i;
+			//std::wstring name(L+mEntit iyVector[i]);
+			//const wchar_t* szName = name.c_str();
+			std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
+			const wchar_t* widecstr = widestr.c_str();
+			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
+			
+			////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
+			++i;
+			//const char * tConstChar = mEntitiyVector[i].c_str();  ///HÄR NÄR KONY FIXAT BOXANDET!
+			//tMesh->mMeshID = tGraphicsInterFace->CreateObject(tConstChar);
+			tPadBlueprint[MeshType] = tMesh;
+		}
+
+
+	}
+	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
 	/////ska skapa en BluePrint
 
