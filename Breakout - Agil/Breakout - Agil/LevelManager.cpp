@@ -70,10 +70,15 @@ void LevelManager::Initialize()
 	//Component values might be silly and have to be altered later
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
-	tVelocity = new VelocityComponent();
+	tColl = new CollisionComponent();
+
+	tColl->Dim = vec2(0.5, 0.5);
+	tColl->mType = AABB;
+
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
+	tBlockBlueprint[CollisionType] = tColl;
 
 
 
