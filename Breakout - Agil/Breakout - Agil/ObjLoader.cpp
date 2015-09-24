@@ -12,7 +12,7 @@ ObjLoader::~ObjLoader(void)
 }
 
 
-vector<Vertex> ObjLoader::LoadObj(const char* fileName)
+vector<Vertex> ObjLoader::LoadObj(const char* fileName, float pScale)
 {
 	vector<unsigned int> vertexIndices, texCoordIndices, normalIndices;
 	vector<vec3> temp_positions;
@@ -25,8 +25,7 @@ vector<Vertex> ObjLoader::LoadObj(const char* fileName)
 	fopen_s(&file, fileName, "r");
 	if (file == nullptr)
 	{
-		cout << "Couldnt load obj file! Shutting down";
-		exit(0);
+		cout << "Couldnt load obj file!";
 	}
 	while(true)
 	{
@@ -74,13 +73,13 @@ vector<Vertex> ObjLoader::LoadObj(const char* fileName)
 				&vertexIndex[0], &texCoordIndex[0], &normalIndex[0],
 				&vertexIndex[1], &texCoordIndex[1], &normalIndex[1],
 				&vertexIndex[2], &texCoordIndex[2], &normalIndex[2]);
-			float scale = 0.03f;
+		
 			Vertex currentVertex;
 			for (int i = 0; i < 3; i++)
 			{
-				currentVertex.position.x = temp_positions[vertexIndex[i]-1].x * scale;
-				currentVertex.position.y = temp_positions[vertexIndex[i]-1].y* scale;;
-				currentVertex.position.z = temp_positions[vertexIndex[i]-1].z* scale;;
+				currentVertex.position.x = temp_positions[vertexIndex[i]-1].x * pScale;
+				currentVertex.position.y = temp_positions[vertexIndex[i]-1].y* pScale;;
+				currentVertex.position.z = temp_positions[vertexIndex[i]-1].z* pScale;;
 				currentVertex.normal.x = temp_normals[normalIndex[i]-1].x;
 				currentVertex.normal.y = temp_normals[normalIndex[i]-1].y;
 				currentVertex.normal.z = temp_normals[normalIndex[i]-1].z;

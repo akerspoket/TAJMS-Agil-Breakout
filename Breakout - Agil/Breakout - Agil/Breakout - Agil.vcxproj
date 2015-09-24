@@ -215,9 +215,6 @@
     <Image Include="test2in1pic.dds" />
     <Image Include="test2in1pic.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="bth.obj" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -9,6 +9,14 @@ struct Vertex
 	vec3 position;
 	vec2 texCoord;
 	vec3 normal;
+	Vertex(vec3 pPosition, vec2 pTexCoord, vec3 pNormal)
+	{
+		position = pPosition;
+		texCoord = pTexCoord;
+		normal = pNormal;
+	}
+	Vertex()
+	{}
 };
 class ObjLoader
 {
@@ -18,7 +26,7 @@ public:
 	
 	vector<Vertex> LoadModel(const char* fileName);
 
-	vector<Vertex> ObjLoader::LoadObj(const char* fileName);
+	vector<Vertex> ObjLoader::LoadObj(const char* fileName, float pScale);
 	void LoadTGA();
 	//vector<Material> materials;
 	void LoadMaterial(const char* materialFileName);
