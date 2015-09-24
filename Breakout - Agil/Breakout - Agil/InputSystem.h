@@ -24,5 +24,6 @@ private:
 	SDL_Event mSDLEvent;
 	void MoveRight(EntityID pEntityID);
 	void MoveLeft(EntityID pEntityID);
+	void StandStill(EntityID pEntityID);
 };
 

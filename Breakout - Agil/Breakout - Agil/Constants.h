@@ -10,12 +10,13 @@ typedef int EntityID;
 //if you add component add code to CreateEntity function in EntityFactory
 enum ComponentType
 {
-	PhysicType		= 0x01,
-	TransformType	= 0x02,
-	MeshType		= 0x04,
-	LabelType		= 0x08,
-	VelocityType	= 0x10,
-	CollisionType	= 0x20,
+	PhysicType = 0x01,
+	TransformType = 0x02,
+	MeshType = 0x04,
+	LabelType = 0x08,
+	VelocityType = 0x10,
+	CollisionType = 0x20,
+	VelocityForceType = 0x40,
 };
 
 // 0x01 ==   1 == "00000001"

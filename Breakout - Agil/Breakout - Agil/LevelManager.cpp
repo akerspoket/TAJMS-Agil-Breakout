@@ -144,11 +144,15 @@ void LevelManager::Initialize()
 	//Component values might be silly and have to be altered later
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
-	tVelocity = new VelocityComponent();
+	tColl = new CollisionComponent();
+
+	tColl->Dim = vec2(0.5, 0.5);
+	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
+	tBlockBlueprint[CollisionType] = tColl;
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
@@ -240,7 +244,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -3, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
-	GetComponent<VelocityComponent>(tNewID)->mSpeed = 0.001f;
+	GetComponent<VelocityComponent>(tNewID)->mSpeed = 1.0f;
 	
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
@@ -284,8 +288,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//	}
 
 	//////////////////////////BALL////////////////////
-	float tStartPositionX = 2;
-	float tStartPositionY = 2;
+	float tStartPositionX = -2;
+	float tStartPositionY = -2;
 
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	tTrans = GetComponent<TransformComponent>(tNewID);
@@ -293,8 +297,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 0.001f;
-	vec3 tStartDirection = vec3(-1.0f, 1.0f, 0.0f).Normalize();
+	tVel->mSpeed = 0.2f;
+	vec3 tStartDirection = vec3(1.0f, -1.0f, 0.0f).Normalize();
 	tVel->mDirection.x = tStartDirection.x;
 	tVel->mDirection.y = tStartDirection.y;
 	tVel->mDirection.z = tStartDirection.z;

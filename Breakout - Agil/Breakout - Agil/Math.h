@@ -79,6 +79,12 @@ struct vec3
 	{
 		return vec3(x + v.x, y + v.y, z + v.z);
 	}
+	void operator+=(vec3 v)
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+	}
 	vec3 operator-(vec3 v)
 	{
 		return vec3(x - v.x, y - v.y, z - v.z);

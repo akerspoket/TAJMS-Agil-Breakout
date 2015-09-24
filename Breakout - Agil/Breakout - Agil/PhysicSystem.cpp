@@ -5,6 +5,7 @@
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
+#include "VelocityForceComponent.h"
 #include "LabelComponent.h"
 
 
@@ -90,24 +91,79 @@ float SquareDistToPoint(CollisionComponent* pColl1, TransformComponent* pTrans1,
 	return out;
 }
 
-void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pColl1, TransformComponent* pTrans1, CollisionComponent* pColl2, TransformComponent* pTrans2)
+void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pAABBColl, TransformComponent* pAABBTrans, CollisionComponent* pSphereColl, TransformComponent* pSphereTrans)
 {
-	float tSquareDistance = SquareDistToPoint(pColl1, pTrans1, pColl2, pTrans2);
+	float tSquareDistance = SquareDistToPoint(pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 
-	bool tCollide = tSquareDistance <= (pColl2->Dim.x * pColl2->Dim.x);
+	bool tCollide = tSquareDistance <= (pSphereColl->Dim.x * pSphereColl->Dim.x);
 
 	if (tCollide)
 	{
-		vec2 tNormDir = vec3toVec2(pTrans2->mPosition - pTrans1->mPosition);
-		tNormDir.x /= pColl1->Dim.x;
-		tNormDir.y /= pColl1->Dim.y;
+		vec2 tNormDir = vec3toVec2(pSphereTrans->mPrevPosition - pAABBTrans->mPrevPosition);
+		tNormDir.x /= pAABBColl->Dim.x;
+		tNormDir.y /= pAABBColl->Dim.y;
 		//Collision on vertical side (left or right)
+		
+
 		if (abs(tNormDir.x) > abs(tNormDir.y))
 		{
 			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.x *= -1;
+
+
+				if (tNormDir.x > 0)
+				{
+					//save old position
+					float tOldX = pSphereTrans->mPosition.x;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+				}
+				else
+				{
+					//save old position
+					float tOldX = pSphereTrans->mPosition.x;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+				}
+				
+				
+
+
+				
+				//pSphereTrans->mPosition = pSphereTrans->mPrevPosition;
+
+				//if (ComponentTable::GetInstance()->HasComponent(pEntityID1, VelocityType))
+				//{
+				//	VelocityComponent* tVel2 = GetComponent<VelocityComponent>(pEntityID1);
+				//	float tDot = tVel2->mDirection*tVel->mDirection;
+				//	if (tDot > 0.0f)
+				//	{
+				//		//Force component
+				//		ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
+
+				//		//need to check if already have force
+
+
+				//		VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
+				//		tVelForceComp->mEndValue = tVel->mSpeed;
+				//		tVelForceComp->mType = ByValue;
+				//		tVelForceComp->mIncrease = false;
+				//		tVelForceComp->mAmount = -0.09f;
+
+				//		//Increase speed
+				//		tVel->mSpeed *= 2;
+				//	}
+				//}
 			}
 
 		}
@@ -117,6 +173,29 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.y *= -1;
+
+				if (tNormDir.y > 0)
+				{
+					//save old position
+					float tOldY = pSphereTrans->mPosition.y;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+				}
+				else
+				{
+					//save old position
+					float tOldY = pSphereTrans->mPosition.y;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+				}
 			}
 		}
 	}
@@ -159,31 +238,90 @@ void PhysicSystem::Update(double pDeltaTime)
 	//Update position with velocity
 	for (int i = 0; i < tMaxEnt; i++)
 	{
-
-		//Ensure that relevant components exist
-		short tFlags = VelocityType | TransformType;
-		if (tCompTable->HasComponent(i, tFlags))
+		if (tCompTable->HasComponent(i, TransformType))
 		{
 			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-			VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
+			//Update previous position
+			tTrans->mPrevPosition = tTrans->mPosition;
 
-			tTrans->mPosition.x += tVel->mDirection.x * tVel->mSpeed*pDeltaTime;
-			tTrans->mPosition.y += tVel->mDirection.y * tVel->mSpeed*pDeltaTime;
-			tTrans->mPosition.z += tVel->mDirection.z * tVel->mSpeed*pDeltaTime;
-
-			//DEBUG
-			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
-				cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
-			//END DEBUG
-
-			if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+			//Ensure that relevant components exist
+			if (tCompTable->HasComponent(i, VelocityType))
 			{
-				GetComponent<VelocityComponent>(i)->mDirection.x = 0.0f;
-				GetComponent<VelocityComponent>(i)->mDirection.y = 0.0f;
-				GetComponent<VelocityComponent>(i)->mDirection.z = 0.0f;
+
+				VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
+
+				//Update speed with force if needed
+				if (tCompTable->HasComponent(i, VelocityForceType))
+				{
+					VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+					//update position
+					if (tVelForce->mType == ForceType::ByValue)
+					{
+						//tTrans->mPosition += tVel->mDirection * tVelForce->mAmount * (float)pDeltaTime* (float)pDeltaTime * 0.5f;
+						tVel->mSpeed += tVelForce->mAmount * (float)pDeltaTime;
+					}
+					else if (tVelForce->mType == ForceType::Percentage)
+					{
+						tVel->mSpeed *= tVelForce->mAmount * (float)pDeltaTime;
+						//tTrans->mPosition = tVel->mDirection * tVel->mSpeed * tVelForce->mAmount * (float)pDeltaTime;
+					}
+
+					//update speed
+					if ((tVel->mSpeed > tVelForce->mEndValue) == tVelForce->mIncrease)
+					{
+						tVel->mSpeed = tVelForce->mEndValue;
+						tCompTable->RemoveComponent(i, VelocityForceType);
+					}
+
+				}
+
+				//Update position with velocity
+				tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
+
+
+				//DEBUG
+				if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+					cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+				
+				//END DEBUG
 			}
 		}
 	}
+
+	//update position with force
+	//for (int i = 0; i < tMaxEnt; i++)
+	//{
+
+	//	//Ensure that relevant components exist
+	//	short tFlags = VelocityForceType | TransformType;
+	//	if (tCompTable->HasComponent(i, tFlags))
+	//	{
+	//		TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+	//		VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+	//		if (tVelForce->mType == ForceType::ByValue)
+	//		{
+	//			tTrans->mPosition += tTrans->mPosition.Normalize() * tVelForce->mAmount * (float)pDeltaTime;
+	//		}
+	//		else if (tVelForce->mType == ForceType::Percentage)
+	//		{
+	//			tTrans->mPosition = tTrans->mPosition * tVelForce->mAmount * (float)pDeltaTime;
+	//		}
+
+	//		//we don't set previous position to position here... should move this code into same loop
+	//		
+
+	//		//check if reached goal on the velocity
+	//		
+
+	//		//DEBUG
+	//		if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+	//			cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+	//		//END DEBUG
+	//	}
+	//}
+
 
 	//checking static collisions, not counting in their moved distance as a box
 	for (int i = 0; i < tMaxEnt; i++)

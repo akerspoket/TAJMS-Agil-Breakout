@@ -47,7 +47,7 @@ bool Game1::Initialize()
 
 void Game1::Run()
 {
-	double tDeltaTimeMilli = 17; //global? or sent in func
+	double tDeltaTimeSecond = 0.017f; //global? or sent in func
 
 	SDL_Event tEvent;
 
@@ -64,7 +64,7 @@ void Game1::Run()
 		//mGraphicsEngine->RenderFrame();
 		for each (System* sys in mSystems)
 		{
-			sys->Update(tDeltaTimeMilli);
+			sys->Update(tDeltaTimeSecond);
 		}
 
 	}
