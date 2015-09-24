@@ -58,6 +58,7 @@ void InputSystem::CheckKeyboard()
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
 		cout << "Stäng av programmet";
+		exit(0);
 	}
 }
 
