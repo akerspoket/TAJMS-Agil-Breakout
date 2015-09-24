@@ -5,6 +5,7 @@
 GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
+	mObjLoader = new ObjLoader();
 }
 
 
@@ -12,7 +13,7 @@ GraphicsEngine::~GraphicsEngine()
 {
 }
 
-void GraphicsEngine::InitD3D(HWND hWnd) 
+void GraphicsEngine::InitD3D() 
 {
 	// create a struct to hold information about the swap chain
 	DXGI_SWAP_CHAIN_DESC scd;
@@ -24,7 +25,7 @@ void GraphicsEngine::InitD3D(HWND hWnd)
 	scd.BufferCount = 1;                                    // one back buffer
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = hWnd;                                // the window to be used
+	scd.OutputWindow = GetActiveWindow();                                // the window to be used
 	scd.SampleDesc.Count = 4;                               // how many multisamples
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
@@ -145,84 +146,14 @@ void GraphicsEngine::InitPipeline()
 	SetActiveShader(PixelShader, mPixelShader);
 }
 
-void GraphicsEngine::InitGraphics()
+void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth, float pNear, float pFar, float pZPos)
 {
 	time = 0;
-	Vertex OurVertices[] =
-	{
-		{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f},
-		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f}, //Framsidan
-		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f},
-		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f},
-
-		{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
-		{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
-		{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
-		{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
-
-
-		{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f},  //ovanpå 8
-		{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f},   //// 9
-		{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f},   ////10
-		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
-
-		{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f},  //under 12
-		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
-		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
-		{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
-
-		{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f},  //vänster 16
-		{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
-		{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
-		{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
-
-		{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
-		{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
-		{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
-		{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
-	};
-
-	int OurIndices[] =
-	{
-		2,1,0,
-		2,0,3,
-
-		4,5,6,
-		4,6,7,
-
-		8,9,10,
-		8,10,11,
-
-		12,13,14,
-		12,14,15,
-
-		16,17,18,
-		16,18,19,
-
-		20,21,22,
-		20,22,23
-
-
-		/*4,0,3,
-		4,3,7,
-		5,1,2,
-		5,2,6,
-		0,1,5,
-		0,5,4,
-		6,2,3,
-		6,3,7*/
-	};
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(OurVertices);
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	mVertexBufferID = CreateBuffer(bd);
 
-	PushToDevice(mVertexBufferID, &OurVertices, sizeof(OurVertices));
 
 	InstanceBufferType temp;
 	for (int i = 0; i < 5; i++)
@@ -251,21 +182,11 @@ void GraphicsEngine::InitGraphics()
 	mWVPBufferID.bufferID = CreateBuffer(bd);
 
 	tBufferInfo.world = XMMatrixTranspose(XMMatrixIdentity());
-	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
+	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, pZPos)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
+	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(pFoVAngleY, pWidth / pHeight, pNear, pFar));  //XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
 	PushToDevice(mWVPBufferID.bufferID, &tBufferInfo, sizeof(tBufferInfo), mWVPBufferID.reg,VertexShader);
 	HRESULT res;
 
-	D3D11_BUFFER_DESC ibd;
-	ZeroMemory(&ibd, sizeof(ibd));
-
-	ibd.Usage = D3D11_USAGE_DYNAMIC;
-	ibd.ByteWidth = sizeof(OurIndices);
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	ibd.MiscFlags = 0;
-	mIndexBufferID = CreateBuffer(ibd);
-	PushToDevice(mIndexBufferID, &OurIndices, sizeof(OurIndices));
 
 
 
@@ -304,45 +225,7 @@ void GraphicsEngine::InitGraphics()
 
 }
 
-void GraphicsEngine::RenderFrame(void)
-{
-	float color[] = { 0.0f,0.2f,0.4f,1.0f };
-	unsigned int strides[2];
-	unsigned int offsets[2];
-	ID3D11Buffer* bufferPointers[2];
-	PushToDevice(mInstanceBufferID, mInstanceBuffer.data(), sizeof(InstanceBufferType) * mInstanceBuffer.size());
-	// clear the back buffer to a deep blue
-	devcon->ClearRenderTargetView(backbuffer, color);
-	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	strides[0] = sizeof(Vertex);
-	strides[1] = sizeof(InstanceBufferType);
-
-	offsets[0] = 0;
-	offsets[1] = 0;
-
-	bufferPointers[0] = mBuffers.at(mVertexBufferID);
-	bufferPointers[1] = mBuffers.at(mInstanceBufferID);
-
-	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
-	devcon->IASetIndexBuffer(mBuffers.at(mIndexBufferID), DXGI_FORMAT_R32_UINT, 0);
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//devcon->DrawIndexed(8*3, 0, 0);
-#ifdef _WIN32
-	devcon->DrawIndexedInstanced(12 * 3, mInstanceBuffer.size(), 0, 0, 0);
-#elif __linux__
-	cout << "Linux kernel noticed";
-#endif
-	// do 3D rendering on the back buffer here
-
-	// switch the back buffer and the front buffer
-
-	swapchain->Present(0, 0);
-	if (mInstanceBuffer.size() > 0)
-	{
-		//mInstanceBuffer.pop_back();
-	}
-}
 
 void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
@@ -377,10 +260,11 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 	bufferPointers[1] = mBuffers.at(mInstanceBufferID);
 
 	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
-	devcon->IASetIndexBuffer(mObjectBuffers[pMeshType].indexDescription, DXGI_FORMAT_R32_UINT, 0);
+	//devcon->IASetIndexBuffer(mObjectBuffers[pMeshType].indexDescription, DXGI_FORMAT_R32_UINT, 0);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
-	devcon->DrawIndexedInstanced(12 * 3, mInstanceBuffer.size(), 0, 0, 0);
+	devcon->DrawInstanced(mObjectBuffers[pMeshType].numberOfIndices, mInstanceBuffer.size(), 0, 0);
+	
 
 }
 void GraphicsEngine::EndDraw()
@@ -510,21 +394,16 @@ bool GraphicsEngine::PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsig
 
 }
 
-int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, D3D11_BUFFER_DESC pIndexBufferDescription, unsigned int pNumberOfIndices)
+int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, unsigned int pNumberOfVertices)
 {
 	ID3D11Buffer* tVertexHolder;
-	ID3D11Buffer* tIndexHolder;
 	HRESULT res = dev->CreateBuffer(&pVertexBufferDescription, NULL, &tVertexHolder);
 	if (res != S_OK)
 	{
 		return -1;
 	}
-	res = dev->CreateBuffer(&pIndexBufferDescription, NULL, &tIndexHolder);
-	if (res != S_OK)
-	{
-		return -1;
-	}
-	mObjectBuffers.push_back(ObjectBufferType(tVertexHolder, tIndexHolder, pNumberOfIndices));
+
+	mObjectBuffers.push_back(ObjectBufferType(tVertexHolder, pNumberOfVertices));
 	return mObjectBuffers.size() - 1;
 
 }
@@ -540,151 +419,19 @@ void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, 
 
 int GraphicsEngine::CreateObject(const char* pMeshName)
 {
-
-	if (pMeshName == "Box")
+	if ("BTH")
 	{
-		Vertex OurVertices[] =
-		{
-			{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f },
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f }, //Framsidan
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },
-
-			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
-			{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
-			{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
-			{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
-
-
-			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //ovanpå 8
-			{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f },   //// 9
-			{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f },   ////10
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
-
-			{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f },  //under 12
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
-			{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
-
-			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //vänster 16
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
-			{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
-			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
-
-			{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
-			{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
-		};
-
-		int OurIndices[] =
-		{
-			2,1,0,
-			2,0,3,
-
-			4,5,6,
-			4,6,7,
-
-			8,9,10,
-			8,10,11,
-
-			12,13,14,
-			12,14,15,
-
-			16,17,18,
-			16,18,19,
-
-			20,21,22,
-			20,22,23,
-		};
-
-		int rIndex;
+		vector<Vertex> tVertices = mObjLoader->LoadObj("box.obj", 1.0f);
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(OurVertices);
+		bd.ByteWidth = sizeof(Vertex) * tVertices.size();
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-		D3D11_BUFFER_DESC ibd;
-		ZeroMemory(&ibd, sizeof(ibd));
-
-		ibd.Usage = D3D11_USAGE_DYNAMIC;
-		ibd.ByteWidth = sizeof(OurIndices);
-		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		ibd.MiscFlags = 0;
-
-		rIndex = CreateObjectBuffer(bd, ibd, ARRAYSIZE(OurIndices));
-
-		PushToDevice(mObjectBuffers[rIndex].indexDescription, &OurIndices, sizeof(OurIndices));
-
-		PushToDevice(mObjectBuffers[rIndex].vertexDescription, &OurVertices, sizeof(OurVertices));
-
-		return rIndex;
+		int retValue = CreateObjectBuffer(bd, tVertices.size());
+		PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
+		return retValue;
 	}
-	else if (pMeshName == "Sphere")
-	{
-		//objloader
-
-	}
-	else if (pMeshName == "Pad")
-	{
-		Vertex OurVertices[] =
-		{
-			{ -0.5f, 0.5f, -0.5f, 0.0f, 0.0f },
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f }, //Framsidan
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },
-
-			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f }, //4
-			{ -0.5f, -0.5, 0.5f, 1.0f, 1.0f }, //5  Baksidan
-			{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f }, //6
-			{ 0.5f, 0.5f, 0.5f, 0.0f, 0.0f },  //7
-
-
-			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //ovanpå 8
-			{ -0.5f, 0.5, 0.5f, 0.0f, 1.0f },   //// 9
-			{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f },   ////10
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //11
-
-			{ -0.5f, -0.5f, 0.5f, 0.0f,0.0f },  //under 12
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 13
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////14
-			{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f },  //15
-
-			{ -0.5f, 0.5f, -0.5f, 0.0f,0.0f },  //vänster 16
-			{ -0.5f, -0.5, -0.5f, 0.0f, 1.0f },   //// 17
-			{ -0.5f, -0.5f, 0.5f, 1.0f, 1.0f },   ////18
-			{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f },  //19
-
-			{ 0.5f, 0.5f, 0.5f, 0.0f,0.0f },  //höger 20
-			{ 0.5f, -0.5, 0.5f, 0.0f, 1.0f },   //// 21
-			{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f },   ////22
-			{ 0.5f, 0.5f, -0.5f, 1.0f, 0.0f },  //23
-		};
-
-		int OurIndices[] =
-		{
-			2,1,0,
-			2,0,3,
-
-			4,5,6,
-			4,6,7,
-
-			8,9,10,
-			8,10,11,
-
-			12,13,14,
-			12,14,15,
-
-			16,17,18,
-			16,18,19,
-
-			20,21,22,
-			20,22,23,
-		};
-
-	}
+	return -1;
 }

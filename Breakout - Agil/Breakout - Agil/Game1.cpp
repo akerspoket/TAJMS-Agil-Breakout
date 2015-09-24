@@ -36,10 +36,6 @@ bool Game1::Initialize()
 	mSystems.push_back(tTrigger);
 
 
-	mGraphicsEngine = new GraphicsEngine();
-	mGraphicsEngine->InitD3D(GetActiveWindow());
-	mGraphicsEngine->InitPipeline();
-	mGraphicsEngine->InitGraphics();
 
 	
 	return true;
