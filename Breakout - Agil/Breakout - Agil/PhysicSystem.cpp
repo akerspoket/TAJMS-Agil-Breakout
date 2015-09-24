@@ -91,17 +91,17 @@ float SquareDistToPoint(CollisionComponent* pColl1, TransformComponent* pTrans1,
 	return out;
 }
 
-void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pColl1, TransformComponent* pTrans1, CollisionComponent* pColl2, TransformComponent* pTrans2)
+void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pAABBColl, TransformComponent* pAABBTrans, CollisionComponent* pSphereColl, TransformComponent* pSphereTrans)
 {
-	float tSquareDistance = SquareDistToPoint(pColl1, pTrans1, pColl2, pTrans2);
+	float tSquareDistance = SquareDistToPoint(pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 
-	bool tCollide = tSquareDistance <= (pColl2->Dim.x * pColl2->Dim.x);
+	bool tCollide = tSquareDistance <= (pSphereColl->Dim.x * pSphereColl->Dim.x);
 
 	if (tCollide)
 	{
-		vec2 tNormDir = vec3toVec2(pTrans2->mPrevPosition - pTrans1->mPrevPosition);
-		tNormDir.x /= pColl1->Dim.x;
-		tNormDir.y /= pColl1->Dim.y;
+		vec2 tNormDir = vec3toVec2(pSphereTrans->mPrevPosition - pAABBTrans->mPrevPosition);
+		tNormDir.x /= pAABBColl->Dim.x;
+		tNormDir.y /= pAABBColl->Dim.y;
 		//Collision on vertical side (left or right)
 		
 
@@ -112,31 +112,72 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 				tVel->mDirection.x *= -1;
 
-				TransformComponent* tTrans = GetComponent<TransformComponent>(pEntityID2);
-				tTrans->mPosition = tTrans->mPrevPosition;
+				//instead of this we step back
+				//WARNING here we assume the pad is not bouncing back
+				//if (tNormDir.x > 0)
+				//{
+				//	//get the distance traveled this frame
+				//	float tDist = (pAABBTrans->mPosition.x + pAABBColl->Dim.x - pSphereTrans->mPosition.x + pSphereColl->Dim.x);
 
-				if (ComponentTable::GetInstance()->HasComponent(pEntityID1, VelocityType))
+				//	//get the fraction of deltaTime we travled to collision
+				//	float tFrac = tDist / (tVel->mDirection.x * tVel->mSpeed);
+
+				//	//move sphere back
+				//	pSphereTrans->mPosition =
+
+				//}
+
+				if (tNormDir.x > 0)
 				{
-					VelocityComponent* tVel2 = GetComponent<VelocityComponent>(pEntityID1);
-					float tDot = tVel2->mDirection*tVel->mDirection;
-					if (tDot > 0.0f)
-					{
-						//Force component
-						ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
+					//save old position
+					float tOldX = pSphereTrans->mPosition.x;
 
-						//need to check if already have force
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
 
-
-						VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
-						tVelForceComp->mEndValue = tVel->mSpeed;
-						tVelForceComp->mType = ByValue;
-						tVelForceComp->mIncrease = false;
-						tVelForceComp->mAmount = -0.09f;
-
-						//Increase speed
-						tVel->mSpeed *= 2;
-					}
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
 				}
+				else
+				{
+					//save old position
+					float tOldX = pSphereTrans->mPosition.x;
+
+					//move the sphere to the edge of the box
+					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+
+					//move out with the difference from old and edge position out
+					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+				}
+				
+				
+
+
+				
+				//pSphereTrans->mPosition = pSphereTrans->mPrevPosition;
+
+				//if (ComponentTable::GetInstance()->HasComponent(pEntityID1, VelocityType))
+				//{
+				//	VelocityComponent* tVel2 = GetComponent<VelocityComponent>(pEntityID1);
+				//	float tDot = tVel2->mDirection*tVel->mDirection;
+				//	if (tDot > 0.0f)
+				//	{
+				//		//Force component
+				//		ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
+
+				//		//need to check if already have force
+
+
+				//		VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
+				//		tVelForceComp->mEndValue = tVel->mSpeed;
+				//		tVelForceComp->mType = ByValue;
+				//		tVelForceComp->mIncrease = false;
+				//		tVelForceComp->mAmount = -0.09f;
+
+				//		//Increase speed
+				//		tVel->mSpeed *= 2;
+				//	}
+				//}
 			}
 
 		}

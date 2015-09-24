@@ -169,8 +169,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 		}
 
 	//////////////////////////BALL////////////////////
-	float tStartPositionX = 2;
-	float tStartPositionY = 2;
+	float tStartPositionX = -2;
+	float tStartPositionY = -2;
 
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	tTrans = GetComponent<TransformComponent>(tNewID);
@@ -178,8 +178,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 1.0f;
-	vec3 tStartDirection = vec3(-1.0f, 1.0f, 0.0f).Normalize();
+	tVel->mSpeed = 0.2f;
+	vec3 tStartDirection = vec3(1.0f, -1.0f, 0.0f).Normalize();
 	tVel->mDirection.x = tStartDirection.x;
 	tVel->mDirection.y = tStartDirection.y;
 	tVel->mDirection.z = tStartDirection.z;
