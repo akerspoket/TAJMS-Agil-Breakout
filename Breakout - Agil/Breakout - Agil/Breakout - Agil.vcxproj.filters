@@ -235,6 +235,9 @@
     <Image Include="bthcolor.dds">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Textures\GoalTexture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

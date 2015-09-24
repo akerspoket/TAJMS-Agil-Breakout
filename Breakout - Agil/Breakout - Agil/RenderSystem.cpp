@@ -28,7 +28,7 @@ void RenderSystem::Initialize()
 	mEventManager->Subscribe("DebugTest", this);
 
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
-	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -30.0f);
+	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -13.0f);
 
 }
 

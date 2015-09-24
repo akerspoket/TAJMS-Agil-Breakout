@@ -216,6 +216,7 @@
     <Image Include="davai.png" />
     <Image Include="test2in1pic.dds" />
     <Image Include="test2in1pic.png" />
+    <Image Include="Textures\GoalTexture.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

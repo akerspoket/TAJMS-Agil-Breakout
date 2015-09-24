@@ -119,7 +119,7 @@ void LevelManager::Initialize()
 			//int tXColl=;
 			//int tYColl=;
 
-			tColl->Dim = vec2(0.5, 0.5);
+			tColl->Dim = vec2(1, 0.5);
 			tPadBlueprint[CollisionType] = tColl;
 		}
 		else if (mEntitiyVector[i].compare("xMesh") == 0)
@@ -223,7 +223,7 @@ void LevelManager::Initialize()
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(0.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/GoalTexture.dds");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
 	tGoalBlockBlueprint[MeshType] = tMesh;
@@ -241,7 +241,7 @@ void LevelManager::Initialize()
 	
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
-
+	//tWallBlueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("HorWall", tWallBlueprint);
 
 	///////////////////TOP-BOT WALL////////////////
@@ -254,7 +254,7 @@ void LevelManager::Initialize()
 
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
-
+	//tWall2Blueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
 }
@@ -276,7 +276,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -8, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
-	GetComponent<VelocityComponent>(tNewID)->mSpeed = 1.0f;
+	GetComponent<VelocityComponent>(tNewID)->mSpeed = 6.0f;
 	
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
@@ -297,6 +297,13 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
+				tTrans->mPosition.y = t_forLoopI - i;
+			}
+			else if (mLevelTextVector[i].at(j) == 'G')
+			{
+				tNewID = mEntityFactory->CreateEntity("GoalBlock");
+				tTrans = GetComponent<TransformComponent>(tNewID);
+				tTrans->mPosition.x = j - (float)t_forLooPJ / 2;
 				tTrans->mPosition.y = t_forLoopI - i;
 			}
 		}
@@ -334,8 +341,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition.y = tStartPositionY;
 
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 1.0f;
-	vec3 tStartDirection = vec3(1.0f, -1.0f, 0.0f).Normalize();
+	tVel->mSpeed = 5.0f;
+	vec3 tStartDirection = vec3(1.0f, 1.0f, 0.0f).Normalize();
 	tVel->mDirection.x = tStartDirection.x;
 	tVel->mDirection.y = tStartDirection.y;
 	tVel->mDirection.z = tStartDirection.z;
@@ -350,20 +357,20 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//////////////////TOP BOT WALL///////////////////
 	tNewID = mEntityFactory->CreateEntity("HorWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0,4,8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0,t_forLoopI+1,8);
 
 	tNewID = mEntityFactory->CreateEntity("HorWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -4, 8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -10, 8);
 	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
 	LabelComponent* tLabel = GetComponent<LabelComponent>(tNewID);
 	tLabel->mLabel = Label::BottomArea;
 
 	/////////////////SIDE WALLS/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("VerWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(4, 0, 8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(t_forLooPJ / 2 + 1, 0, 8);
 
 	tNewID = mEntityFactory->CreateEntity("VerWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-4, 0, 8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-t_forLooPJ / 2 - 1, 0, 8);
 
 }
 
