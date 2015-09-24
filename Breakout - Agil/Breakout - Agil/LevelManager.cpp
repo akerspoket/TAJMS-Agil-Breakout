@@ -55,7 +55,20 @@ void LevelManager::Initialize()
 	VelocityComponent* tVelocity = new VelocityComponent();
 	CollisionComponent* tColl = new CollisionComponent();
 
+	//set component values
+	//we ignore this and use the initialization values for test
+	//WARNINIG: We should call the graphic engine for loading a texture then
+	//return the ID To meshComponent
+	tLabel->mLabel = Label::Pad;
+	tColl->Dim = vec2(0.5, 0.5);
 
+	//tBlueprint[TransformType] = tTrans;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
+	tBlueprint[MeshType] = tMesh;
+	tBlueprint[LabelType] = tLabel;
+	tBlueprint[CollisionType] = tColl;
+
+	mEntityFactory->RegisterEntityTemplate("Padda", tBlueprint);
 
 	///ska skapa en BluePrint
 
@@ -96,6 +109,7 @@ void LevelManager::Initialize()
 		{
 			///////////Kolla vilken label det är i LabelComponent
 		}
+
 	}
 
 	///ska skapa en BluePrint
@@ -111,22 +125,9 @@ void LevelManager::Initialize()
 
 
 
-	//set component values
-	//we ignore this and use the initialization values for test
-	//WARNINIG: We should call the graphic engine for loading a texture then
-	//return the ID To meshComponent
-	tLabel->mLabel = Label::Pad;
-	tColl->Dim = vec2(0.5, 0.5);
 
-	//////////////////////////////////////////add padda to blueprint
-	
-	//tBlueprint[TransformType] = tTrans;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
-	tBlueprint[MeshType] = tMesh;
-	tBlueprint[LabelType] = tLabel;
-	tBlueprint[CollisionType] = tColl;
 
-	mEntityFactory->RegisterEntityTemplate("Padda", tBlueprint);
+
 
 	/////////////////////////////////BLOCK///////////////////
 	EntityFactory::EntityBlueprint tBlockBlueprint;
