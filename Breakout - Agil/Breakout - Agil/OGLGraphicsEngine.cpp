@@ -24,7 +24,7 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	m_glContext = SDL_GL_CreateContext(pWND);
-
+	mObjLoader = new ObjLoader();
 	GLenum res = glewInit();
 	if (res != GLEW_OK)
 	{
@@ -33,26 +33,34 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	}
 	glEnable(GL_DEPTH_TEST);
 	//printf("GL version: %s\n", glGetString(GL_VERSION));
-	CreateTriangle();
-	mVertexBufferID = CreateVertexBuffer(Vertices, sizeof(Vertices));
+	//CreateTriangle();
+	Vertices = mObjLoader->LoadObj("bth.obj", 0.03f);
+
+
+	mVertexBufferID = CreateVertexBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size());
 	CompileShaders();
 	mUniformID = AddUniform(normalShaderProg, "gScale");
+
+	glm::mat4x4 tWorldMat;
+
+
+
 
 	return 1;
 }
 
 void OGLGraphicsEngine::CreateTriangle()
 {
-	Vertices[0] = vec3(-0.3f, -0.3f, 0.0f);
-	Vertices[1] = vec3(0.0f, 0.3f, 0.0f);
-	Vertices[2] = vec3(0.3f, -0.3f, 0.0f);
+	//Vertices[0] = vec3(-0.3f, -0.3f, 0.0f);
+	//Vertices[1] = vec3(0.0f, 0.3f, 0.0f);
+	//Vertices[2] = vec3(0.3f, -0.3f, 0.0f);
 	//glGenBuffers(1, &VBO);
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	//Vertices[0] = Vertex(vec3(-0.3f, -0.3f, 0.0f), vec2(0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
-	//Vertices[1] = Vertex(vec3(0.0f, 0.3f, 0.0f), vec2(0.5f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
-	//Vertices[2] = Vertex(vec3(0.3f, -0.3f, 0.0f), vec2(1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
+	Vertices.push_back(Vertex(vec3(-0.3f, -0.3f, 0.0f), vec2(0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	Vertices.push_back(Vertex(vec3(0.0f, 0.3f, 0.0f), vec2(0.5f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+	Vertices.push_back(Vertex(vec3(0.3f, -0.3f, 0.0f), vec2(1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f)));
 	
 }
 
@@ -90,12 +98,16 @@ void OGLGraphicsEngine::RenderFrame()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, mBuffers[mVertexBufferID]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(5 * sizeof(float)));
+	glDrawArrays(GL_TRIANGLES, 0, Vertices.size());
 	glDisableVertexAttribArray(0);
-	
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 
 }
 

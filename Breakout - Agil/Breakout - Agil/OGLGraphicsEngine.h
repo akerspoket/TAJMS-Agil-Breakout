@@ -10,9 +10,9 @@
 #include <fstream>
 #include <assert.h>
 #include <vector>
+#include <glm\glm.hpp>
 
 using namespace std;
-
 
 
 
@@ -28,9 +28,9 @@ public:
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	void CompileShaders();
 	
+	glm::mat4x4 mProjMat;
 
-
-	vec3 Vertices[3];
+	vector< Vertex >Vertices;
 	GLuint VBO;
 	SDL_Window* mWindow;
 	SDL_GLContext m_glContext;
@@ -46,6 +46,7 @@ private:
 	vector<GLuint> mUniforms;
 	int mUniformID;
 	GLuint normalShaderProg;
+	ObjLoader* mObjLoader;
 
 
 };
