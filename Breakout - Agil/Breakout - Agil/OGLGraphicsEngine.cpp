@@ -34,7 +34,7 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	glEnable(GL_DEPTH_TEST);
 	//printf("GL version: %s\n", glGetString(GL_VERSION));
 	//CreateTriangle();
-	Vertices = mObjLoader->LoadObj("bth.obj", 0.03f);
+	//Vertices = mObjLoader->LoadObj("bth.obj", 0.03f);
 
 
 	mVertexBufferID = CreateVertexBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size());

@@ -265,7 +265,7 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 }
 void GraphicsEngine::EndDraw()
 {
-	swapchain->Present(0, 0);
+	swapchain->Present(1, 0);
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

@@ -109,9 +109,9 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		//Collision on vertical side (left or right)
 
 		//DEBUG
-#ifdef _DEBUG
-		cout << "Collision happened! ComponentID that collided:" << pEntityID1 << " and " << pEntityID2 << endl;
-#endif
+//#ifdef _DEBUG
+//		cout << "Collision happened! ComponentID that collided:" << pEntityID1 << " and " << pEntityID2 << endl;
+//#endif
 		//END DEBUG
 		
 		
