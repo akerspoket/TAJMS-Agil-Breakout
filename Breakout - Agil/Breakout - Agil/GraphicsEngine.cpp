@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include "GraphicsEngine.h"
 
 
@@ -133,6 +134,7 @@ void GraphicsEngine::InitPipeline()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
 		{ "INSTANCEMATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{ "INSTANCEMATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
@@ -230,19 +232,13 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
 
-	switch (pMeshType)
-	{
-	case 0:
-	{
-		mInstanceBuffer = pInstanceBufferData;
-		mVertexBufferID = 0;
-		devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
+
+	mInstanceBuffer = pInstanceBufferData;
+	mVertexBufferID = 0;
+	devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
 
 
-	} break;
-	//case 2 :
-	}
-		//case 3 :
+
 
 	unsigned int strides[2];
 	unsigned int offsets[2];
@@ -417,21 +413,34 @@ void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, 
 	}
 }
 
-int GraphicsEngine::CreateObject(const char* pMeshName)
+int GraphicsEngine::CreateObject(string pMeshName)
 {
-	if ("BTH")
+	vector<Vertex> tVertices;
+	if (pMeshName == "Object/Block.obj")
 	{
-		vector<Vertex> tVertices = mObjLoader->LoadObj("box.obj", 1.0f);
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(Vertex) * tVertices.size();
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		int retValue = CreateObjectBuffer(bd, tVertices.size());
-		PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
-		return retValue;
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f,1.0f,1.0f));
 	}
-	return -1;
+	else if (pMeshName == "Object/Pad.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(2.0f, 0.5f, 1.0f));
+	}
+	else if (pMeshName == "Object/Boll.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+	}
+	else
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+	}
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(Vertex) * tVertices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	int retValue = CreateObjectBuffer(bd, tVertices.size());
+	PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
+	return retValue;
 }
+#endif

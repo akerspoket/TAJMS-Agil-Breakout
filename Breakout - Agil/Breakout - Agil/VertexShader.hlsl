@@ -7,9 +7,9 @@ cbuffer MatrixBuffer : register(b0)
 
 struct VertexInputType
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float2 texCoord : TEXCOORD;
-
+	float3 normal : NORMAL;
 	matrix matris : INSTANCEMATRIX;
 };
 
@@ -27,9 +27,9 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 
 	output.texCoord = input.texCoord;
 	//input.position.y += input.position.y * sin(time);
-	input.position = mul(input.position, input.matris);
+	input.position = mul(float4(input.position,1.0f), input.matris).xyz;
 	//output.color = input.color * instances[instanceID].colorInstance;
-	output.position = mul(input.position, worldMatrix);
+	output.position = mul(float4(input.position, 1.0f), worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 	return output;

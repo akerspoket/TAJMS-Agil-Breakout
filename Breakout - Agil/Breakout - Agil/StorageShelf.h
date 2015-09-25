@@ -61,7 +61,7 @@ static T* GetComponent(EntityID pEntityID)
 }
 
 
-static struct UserCmd
+struct UserCmd
 {
 	vector<char>mKeysPressed;
 	float mXMove;//for the mouse

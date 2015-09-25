@@ -17,7 +17,7 @@
 // http://go.microsoft.com/fwlink/?LinkId=248926
 // http://go.microsoft.com/fwlink/?LinkId=248929
 //--------------------------------------------------------------------------------------
-
+#ifdef _WIN32
 #ifdef _MSC_VER
 #pragma once
 #endif
@@ -95,3 +95,4 @@ namespace DirectX
 		_Out_opt_ DDS_ALPHA_MODE* alphaMode = nullptr
 		);
 }
+#endif

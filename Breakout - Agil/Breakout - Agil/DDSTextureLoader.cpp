@@ -17,6 +17,7 @@
 // http://go.microsoft.com/fwlink/?LinkId=248926
 // http://go.microsoft.com/fwlink/?LinkId=248929
 //--------------------------------------------------------------------------------------
+#ifdef _WIN32
 #define _WIN32_WINNT 0x0601
 
 #include <dxgiformat.h>
@@ -1580,3 +1581,4 @@ DDS_ALPHA_MODE* alphaMode)
 
 	return hr;
 }
+#endif

@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -16,6 +17,7 @@
 #include "GraphicsVirtual.h"
 #include "Math.h"
 #include "ObjLoader.h"
+#include <string>
 #ifdef DEBUG
 	#include <iostream>
 #endif // DEBUG
@@ -86,7 +88,7 @@ public:
 	void InitPipeline();
 	void CleanD3D(void);         // close
 	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
-	int CreateObject(const char* pMeshName);
+	int CreateObject(string pMeshName);
 	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateTexture(const wchar_t *pFileName);
@@ -128,3 +130,4 @@ private:
 	ObjLoader* mObjLoader;
 };
 
+#endif
