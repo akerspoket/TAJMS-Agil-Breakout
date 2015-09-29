@@ -7,6 +7,7 @@
 #include "StorageShelf.h"
 
 
+
 TriggerSystem::TriggerSystem()
 {
 	mCreateNextLevel = true;

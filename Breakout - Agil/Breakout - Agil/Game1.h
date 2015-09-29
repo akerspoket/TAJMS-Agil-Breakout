@@ -1,7 +1,8 @@
 #pragma once
 #include "System.h"
 #include <vector>
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
+
 using namespace std;
 
 class Game1

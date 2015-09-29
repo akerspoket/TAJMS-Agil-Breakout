@@ -1,6 +1,6 @@
 #pragma once
-#include <GL\glew.h>
-#include <SDL2\SDL.h>
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
 #include "glext.h"
 #include "Math.h"
 #include "ObjLoader.h"
@@ -10,7 +10,7 @@
 #include <fstream>
 #include <assert.h>
 #include <vector>
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 using namespace std;
 

@@ -1,6 +1,10 @@
 #include "ObjLoader.h"
 #include <iostream>
 
+#include <fstream> //needed for linux
+#include <string.h> //needed for linux
+
+
 ObjLoader::ObjLoader(void)
 {
 	
@@ -22,7 +26,7 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 	int numberOfBatches = 0;
 
 	FILE * file;
-	fopen_s(&file, fileName.c_str(), "r");
+	file = fopen(fileName.c_str(), "r");
 	if (file == nullptr)
 	{
 		cout << "Couldnt load obj file!";
@@ -31,7 +35,7 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 	while(true)
 	{
 		char lineHeader[128];    //first word not bigger than 128 chars. Fair assumption much?
-		int res = fscanf_s(file, "%s", lineHeader,_countof(lineHeader));
+		int res = fscanf(file, "%s", lineHeader);
 		if(res == EOF)
 			break;  //end of file (eof) -> bail
 
@@ -39,7 +43,7 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 		if(strcmp(lineHeader, "mtllib") == 0)
 		{
 			char materialCharArray[128];
-			fscanf_s(file, "%s\n", materialCharArray, _countof(materialCharArray));
+			fscanf(file, "%s\n", materialCharArray);
 			const char* materialString;
 			materialString = (const char*)materialCharArray;
 			//LoadMaterial(materialString);		//Loads all materials into global vector<Material>
@@ -48,21 +52,21 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 		else if(strcmp(lineHeader, "v") == 0)
 		{
 			vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
 			temp_positions.push_back(vertex);
 		}
 		//deal with texture coordinates
 		else if ( strcmp( lineHeader, "vt" ) == 0 )
 		{
 			vec2 texCoord;
-			fscanf_s(file, "%f %f\n", &texCoord.x, &texCoord.y );
+			fscanf(file, "%f %f\n", &texCoord.x, &texCoord.y );
 			temp_texCoords.push_back(texCoord);
 		}
 		//deal with normals
 		else if ( strcmp( lineHeader, "vn" ) == 0 )
 		{
 			vec3 normal;
-			fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
 			temp_normals.push_back(normal);
 		}
 		//indexing
@@ -70,7 +74,7 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 		{
 			//string vertex1,vertex2, vertex3;   copypasted useless stuff?
 			unsigned int vertexIndex[3], texCoordIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
 				&vertexIndex[0], &texCoordIndex[0], &normalIndex[0],
 				&vertexIndex[1], &texCoordIndex[1], &normalIndex[1],
 				&vertexIndex[2], &texCoordIndex[2], &normalIndex[2]);

@@ -10,6 +10,7 @@
 #include "CollisionComponent.h"
 #include "VelocityForceComponent.h"
 
+#include <string.h> //needed for linux
 
 
 EntityFactory* EntityFactory::mSingleton = nullptr;

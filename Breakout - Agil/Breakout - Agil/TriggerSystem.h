@@ -1,6 +1,8 @@
 #pragma once
 #include "System.h"
 
+#include <vector> //needed for linux
+
 class TriggerSystem : public System
 {
 public:

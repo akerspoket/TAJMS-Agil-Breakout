@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <math.h> //needed for linux
 
 struct vec2
 {

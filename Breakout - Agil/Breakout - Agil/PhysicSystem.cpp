@@ -8,6 +8,8 @@
 #include "VelocityForceComponent.h"
 #include "LabelComponent.h"
 
+#include <cmath> //needed for linux... come on!
+
 
 PhysicSystem::PhysicSystem()
 {

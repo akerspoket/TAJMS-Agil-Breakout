@@ -2,6 +2,9 @@
 #include <math.h> //why does this need to be here??
 #include "Math.h"
 #include <vector>
+#include <string> //needed for linux
+
+
 
 using namespace std;
 struct Vertex

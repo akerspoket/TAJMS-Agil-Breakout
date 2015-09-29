@@ -1,4 +1,5 @@
 #include "ComponentTable.h"
+#include <string.h> //needed for linux
 
 
 ComponentTable* ComponentTable::mSingleton = nullptr;

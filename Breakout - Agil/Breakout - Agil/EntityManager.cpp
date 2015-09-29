@@ -1,6 +1,8 @@
 #include "EntityManager.h"
 #include "ComponentTable.h"
 
+#include <vector> //needed for linux
+
 EntityManager* EntityManager::mSingleton = nullptr;
 
 EntityManager* EntityManager::GetInstance()

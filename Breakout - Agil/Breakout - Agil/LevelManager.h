@@ -9,7 +9,7 @@ class LevelManager
 public:
 	static LevelManager* GetInstance();
 
-	void LevelManager::Initialize();
+	void Initialize();
 	void GenerateWorld(string pWorldName);
 	void DegenerateWorld();
 	void AnalyzeText(string pTextToCheck);
