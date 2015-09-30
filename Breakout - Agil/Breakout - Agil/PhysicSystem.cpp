@@ -213,8 +213,25 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			}
 		}
 
+		//send sound event
+		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID1)->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
+		if (ComponentTable::GetInstance()->HasComponent(pEntityID2, SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID2)->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
 
-		
+		//remove block
 		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
 		{
 			LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
@@ -239,25 +256,6 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
 			}
 		}
-
-		//send sound event
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, SoundCollisionType))
-		{
-			unsigned int* tSoundIDptr = new unsigned int();
-			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID1)->SoundID;
-			EventManager::Payload tPayload;
-			tPayload["SoundID"] = tSoundIDptr;
-			mEventManager->BroadcastEvent("Sound", tPayload);
-		}
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID2, SoundCollisionType))
-		{
-			unsigned int* tSoundIDptr = new unsigned int();
-			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID2)->SoundID;
-			EventManager::Payload tPayload;
-			tPayload["SoundID"] = tSoundIDptr;
-			mEventManager->BroadcastEvent("Sound", tPayload);
-		}
-
 	}
 }
 

@@ -7,10 +7,13 @@
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
 #include "CollisionComponent.h"
+#include "SoundCollisionComponent.h"
 #include "TextFileReader.h"
 #include "ComponentTable.h"
 #include <iostream>
 #include "GraphicsInterface.h"
+
+#include "SoundEngine.h"
 using namespace std;
 
 
@@ -55,6 +58,7 @@ void LevelManager::Initialize()
 	PhysicComponent* tPhysic = new PhysicComponent();
 	VelocityComponent* tVelocity = new VelocityComponent();
 	CollisionComponent* tColl = new CollisionComponent();
+	SoundCollisionComponent* tSoundColl = new SoundCollisionComponent();
 
 	////////set component values
 	////////we ignore this and use the initialization values for test
@@ -131,6 +135,10 @@ void LevelManager::Initialize()
 			const wchar_t* widecstr = widestr.c_str();
 			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
 			
+
+
+
+
 			////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
 			++i;
 			const char * tConstChar = mEntitiyVector[i].c_str();  ///HÄR NÄR KONY FIXAT BOXANDET!
@@ -140,14 +148,12 @@ void LevelManager::Initialize()
 
 
 	}
+
+	SoundEngine::GetInstance()->LoadSoundToMemory("PadCollision.wav", tSoundColl->SoundID);
+	tPadBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
 	/////ska skapa en BluePrint
-
-
-
-
-
 
 
 
@@ -167,17 +173,22 @@ void LevelManager::Initialize()
 	tMesh = new MeshComponent();
 	tColl = new CollisionComponent();
 	tLabel = new LabelComponent();
+	tSoundColl = new SoundCollisionComponent();
 
+	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
 	tLabel->mLabel = Label::Box;
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
+
+
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
 	tBlockBlueprint[CollisionType] = tColl;
 	tBlockBlueprint[LabelType] = tLabel;
+	tBlockBlueprint[SoundCollisionType] = tSoundColl;
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
@@ -218,8 +229,10 @@ void LevelManager::Initialize()
 	tVelocity = new VelocityComponent();
 	tLabel = new LabelComponent();
 	tColl = new CollisionComponent();
+	tSoundColl = new SoundCollisionComponent();
 
 
+	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(0.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
@@ -230,17 +243,22 @@ void LevelManager::Initialize()
 	tGoalBlockBlueprint[VelocityType] = tVelocity;
 	tGoalBlockBlueprint[LabelType] = tLabel;
 	tGoalBlockBlueprint[CollisionType] = tColl;
+	tGoalBlockBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("GoalBlock", tGoalBlockBlueprint);
 	////////////////////SIDE WALL///////////////////////////
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
 	tTrans = new TransformComponent();
 	tColl = new CollisionComponent();
+	tSoundColl = new SoundCollisionComponent();
+
+	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(30,0.2f);
 	
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
+	tWallBlueprint[SoundCollisionType] = tSoundColl;
 	//tWallBlueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("HorWall", tWallBlueprint);
 
@@ -249,11 +267,16 @@ void LevelManager::Initialize()
 
 	tTrans = new TransformComponent();
 	tColl = new CollisionComponent();
+	tSoundColl = new SoundCollisionComponent();
+
+
+	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(0.2f, 30.0f);
 
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
+	tWall2Blueprint[SoundCollisionType] = tSoundColl;
 	//tWall2Blueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
@@ -305,6 +328,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ / 2;
 				tTrans->mPosition.y = t_forLoopI - i;
+
 			}
 		}
 	}
