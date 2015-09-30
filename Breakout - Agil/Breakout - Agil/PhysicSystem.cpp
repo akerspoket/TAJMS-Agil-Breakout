@@ -6,6 +6,7 @@
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
 #include "VelocityForceComponent.h"
+#include "SoundCollisionComponent.h"
 #include "LabelComponent.h"
 
 #include <cmath> //needed for linux... come on!
@@ -239,6 +240,23 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			}
 		}
 
+		//send sound event
+		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID1)->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
+		if (ComponentTable::GetInstance()->HasComponent(pEntityID2, SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID2)->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
 
 	}
 }
