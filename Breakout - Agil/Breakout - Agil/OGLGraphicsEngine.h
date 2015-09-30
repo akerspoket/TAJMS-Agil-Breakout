@@ -11,10 +11,29 @@
 #include <assert.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+
 
 using namespace std;
 
+struct MatrixBufferType
+{
+	glm::mat4 world;
+	glm::mat4 view;
+	glm::mat4 projection;
+};
 
+struct ObjectBufferType
+{
+	GLuint BufferHandle;
+	GLuint NumberOfIndices;
+
+};
+
+struct InstanceBufferType
+{
+	glm::mat4 TranslationMatrices;
+};
 
 class OGLGraphicsEngine
 {
@@ -27,6 +46,9 @@ public:
 	void RenderFrame();
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	void CompileShaders();
+	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
+	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
+	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
 	
 	glm::mat4x4 mProjMat;
 
@@ -42,12 +64,18 @@ private:
 	int CreateVertexBuffer(void* pDataStart, int pBufferSize);
 	int AddUniform(GLuint pShader, const GLchar* pName);
 	vector<GLuint> mBuffers;
+	vector<ObjectBufferType> mObjectBuffers;
 	int mVertexBufferID;
 	vector<GLuint> mUniforms;
 	int mUniformID;
-	GLuint normalShaderProg;
+	GLuint mNormalShaderProg;
 	ObjLoader* mObjLoader;
+	MatrixBufferType mWVPBuffer;
+	int mWVPBufferID;
+	GLuint mTransBuffer;
 
+	//Temp things only for testing withouth rest
+	vector<InstanceBufferType> mInstanceMatricesTemp;
 
 };
 
