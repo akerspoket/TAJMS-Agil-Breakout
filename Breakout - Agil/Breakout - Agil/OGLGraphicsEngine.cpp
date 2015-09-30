@@ -45,6 +45,32 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	return 1;
 }
 
+void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos)
+{
+	mWVPBuffer.world = glm::mat4();
+	mWVPBuffer.view = glm::lookAt(glm::vec3(0.0f, 0.0f, pZPos), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0, 1, 0));
+	mWVPBuffer.projection = glm::perspective(pFoVAngleY, pWidth / pHeight, pNear, pFar);
+
+	mWVPBufferID = AddUniform(mNormalShaderProg, "gWorld");
+	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.world);
+	mWVPBufferID = AddUniform(mNormalShaderProg, "gView");
+	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.view);
+	mWVPBufferID = AddUniform(mNormalShaderProg, "gProj");
+	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.projection);
+
+	//För instanceDraw
+	mTransBuffer = CreateVertexBuffer(nullptr, 0);
+
+
+	mTextureID = CreateTexture("Davai.png");
+
+	mTextureID2 = CreateTexture("GoalTexture.png");
+
+
+
+}
+
+
 void OGLGraphicsEngine::CreateTriangle()
 {
 	//Vertices[0] = vec3(-0.3f, -0.3f, 0.0f);
@@ -94,6 +120,36 @@ int OGLGraphicsEngine::AddUniform(GLuint pShader, const GLchar* pName)
 
 }
 
+int OGLGraphicsEngine::CreateTexture(const char *pFileName)
+{
+	GLuint tTexture;
+	glGenTextures(1, &tTexture);
+	glBindTexture(GL_TEXTURE_2D, tTexture);
+	unsigned char* ht_map;
+	int width, height;
+	//char* derp = new char;
+	//wcstombs(derp, pFileName, 128);
+	
+	ht_map = SOIL_load_image
+		(
+			pFileName,
+			&width, &height, 0,
+			SOIL_LOAD_RGBA
+			);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ht_map);//kanske dra in alpha i andra gl_RGB //2048 är widith å height
+	SOIL_free_image_data(ht_map);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT); //vad gör alla wrapsen? mitt projekt hade bara S
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	mTextures.push_back(tTexture);
+	return mTextures.size()-1;
+
+}
+
+
+
 void OGLGraphicsEngine::RenderFrame()
 {
 	SDL_GL_SwapWindow(mWindow);
@@ -117,22 +173,31 @@ void OGLGraphicsEngine::RenderFrame()
 	//glDisableVertexAttribArray(1);
 	//glDisableVertexAttribArray(2);
 
-	mInstanceMatricesTemp.clear();
+	
 	for (size_t i = 0; i < 4; i++)
 	{
 		InstanceBufferType tTransMat;
 		tTransMat.TranslationMatrices = glm::translate(glm::vec3((float)i*4.0f*sin(Scale), 1.0f, 1.0f));
 		mInstanceMatricesTemp.push_back(tTransMat);
-
+		DrawObjects(mVertexBufferID, mInstanceMatricesTemp, i%2);
+		mInstanceMatricesTemp.clear();
 	}
 	
 
-	DrawObjects(mVertexBufferID, mInstanceMatricesTemp, 0);
+
 
 }
 
 void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
+
+	GLuint tTempTexLoc = glGetUniformLocation(mNormalShaderProg, "TextureSampler");
+
+	glUniform1i(tTempTexLoc, 0);
+
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mTextures[pTextureBuffer]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mBuffers[mTransBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, pInstanceBufferData.size()* sizeof(InstanceBufferType), pInstanceBufferData.data(), GL_STATIC_DRAW);
@@ -164,24 +229,7 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 
 
 
-void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos)
-{
-	mWVPBuffer.world = glm::mat4();
-	mWVPBuffer.view = glm::lookAt(glm::vec3(0.0f, 0.0f, pZPos), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0, 1, 0));
-	mWVPBuffer.projection = glm::perspective(pFoVAngleY, pWidth / pHeight, pNear, pFar);
 
-	mWVPBufferID = AddUniform(mNormalShaderProg, "gWorld");
-	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.world);
-	mWVPBufferID = AddUniform(mNormalShaderProg, "gView");
-	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.view);
-	mWVPBufferID = AddUniform(mNormalShaderProg, "gProj");
-	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.projection);
-	
-	//För instanceDraw
-	mTransBuffer = CreateVertexBuffer(nullptr, 0);
-
-
-}
 
 
 void OGLGraphicsEngine::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)

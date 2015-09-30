@@ -12,7 +12,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
+#include <SOIL.h>
 
 using namespace std;
 
@@ -49,7 +49,9 @@ public:
 	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
-	
+	int CreateTexture(const char *pFileName);
+
+
 	glm::mat4x4 mProjMat;
 
 	vector< Vertex >Vertices;
@@ -64,6 +66,12 @@ private:
 	int CreateVertexBuffer(void* pDataStart, int pBufferSize);
 	int AddUniform(GLuint pShader, const GLchar* pName);
 	vector<GLuint> mBuffers;
+
+	vector<GLuint> mTextures;
+
+	int mTextureID;
+	int mTextureID2;
+
 	vector<ObjectBufferType> mObjectBuffers;
 	int mVertexBufferID;
 	vector<GLuint> mUniforms;
