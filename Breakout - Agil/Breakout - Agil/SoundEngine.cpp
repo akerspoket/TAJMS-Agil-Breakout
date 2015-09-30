@@ -16,6 +16,7 @@ SoundEngine* SoundEngine::GetInstance()
 
 SoundEngine::SoundEngine()
 {
+	mSoundMap = map<unsigned int, FMOD::Sound*>();
 }
 
 
@@ -28,7 +29,7 @@ bool SoundEngine::Initialize()
 	FMOD_RESULT tResult;
 	// Create FMOD interface object
 	tResult = FMOD::System_Create(&system);
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
@@ -41,14 +42,14 @@ bool SoundEngine::Initialize()
 		cout << "Error! You are using an old version of FMOD " << version << ". This program requires " << FMOD_VERSION << endl;
 	}
 
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
 
 	// Get number of sound cards 
 	tResult = system->getNumDrivers(&numDrivers);
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
@@ -57,7 +58,7 @@ bool SoundEngine::Initialize()
 	if (numDrivers == 0)
 	{
 		tResult = system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-		if (FAILED(tResult))
+		if (FMODFail(tResult))
 		{
 			return false;
 		}
@@ -66,14 +67,14 @@ bool SoundEngine::Initialize()
 	{
 		// Get the capabilities of the default (0) sound card
 		tResult = system->getDriverCaps(0, &caps, 0, &speakerMode);
-		if (FAILED(tResult))
+		if (FMODFail(tResult))
 		{
 			return false;
 		}
 
 		// Set the speaker mode to match that in Control Panel
 		tResult = system->setSpeakerMode(speakerMode);
-		if (FAILED(tResult))
+		if (FMODFail(tResult))
 		{
 			return false;
 		}
@@ -82,7 +83,7 @@ bool SoundEngine::Initialize()
 		if (caps & FMOD_CAPS_HARDWARE_EMULATED)
 		{
 			tResult = system->setDSPBufferSize(1024, 10);
-			if (FAILED(tResult))
+			if (FMODFail(tResult))
 			{
 				return false;
 			}
@@ -90,7 +91,7 @@ bool SoundEngine::Initialize()
 
 		// Get name of driver
 		tResult = system->getDriverInfo(0, name, 256, 0);
-		if (FAILED(tResult))
+		if (FMODFail(tResult))
 		{
 			return false;
 		}
@@ -100,7 +101,7 @@ bool SoundEngine::Initialize()
 		if (strstr(name, "SigmaTel"))
 		{
 			tResult = system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
-			if (FAILED(tResult))
+			if (FMODFail(tResult))
 			{
 				return false;
 			}
@@ -115,14 +116,14 @@ bool SoundEngine::Initialize()
 	if (tResult == FMOD_ERR_OUTPUT_CREATEBUFFER)
 	{
 		tResult = system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-		if (FAILED(tResult))
+		if (FMODFail(tResult))
 		{
 			return false;
 		}
 
 		tResult = system->init(100, FMOD_INIT_NORMAL, 0);
 	}
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
@@ -132,7 +133,7 @@ bool SoundEngine::Initialize()
 	return true;
 }
 
-bool SoundEngine::FAILED(FMOD_RESULT pResult)
+bool SoundEngine::FMODFail(FMOD_RESULT pResult)
 {
 	if (pResult != FMOD_OK)
 	{
@@ -150,7 +151,7 @@ bool SoundEngine::LoadSoundToMemory(string pFileToLoad, unsigned int &pSoundID)
 	hash<string> tHash;
 	unsigned int tID = tHash(pFileToLoad);
 
-	map<unsigned int, FMOD::Sound*>::iterator tIter = mSoundMap.find(tID);
+	SoundMap::iterator tIter = mSoundMap.find(tID);
 
 	//if we got the sound loaded we return the ID from map
 	if (tIter != mSoundMap.end())
@@ -164,7 +165,7 @@ bool SoundEngine::LoadSoundToMemory(string pFileToLoad, unsigned int &pSoundID)
 	FMOD::Sound *tAudio;
 	string pFullPathName = "../Sounds/" + pFileToLoad;
 	tResult = system->createSound(pFullPathName.c_str(), FMOD_DEFAULT, 0, &tAudio);
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
@@ -189,7 +190,7 @@ bool SoundEngine::PlaySound(unsigned int pSoundID)
 
 	//play sound
 	tResult = system->playSound(FMOD_CHANNEL_FREE, tAudio, false, 0);
-	if (FAILED(tResult))
+	if (FMODFail(tResult))
 	{
 		return false;
 	}
@@ -202,6 +203,6 @@ void SoundEngine::Update()
 	FMOD_RESULT tResult;
 
 	tResult = system->update();
-	FAILED(tResult);
+	FMODFail(tResult);
 
 }

@@ -3,7 +3,7 @@
 #include "fmod_errors.h"
 #include <map>
 
-
+//using namespace FMOD;
 using namespace std;
 #define ERROR_SOUND 0
 
@@ -20,9 +20,9 @@ private:
 	static SoundEngine* mSingleton;
 	SoundEngine();
 	~SoundEngine();
-	bool FAILED(FMOD_RESULT pResult);
-
-	map<unsigned int, FMOD::Sound*> mSoundMap;
+	bool FMODFail(FMOD_RESULT pResult);
+	typedef map<unsigned int, FMOD::Sound*> SoundMap;
+	SoundMap mSoundMap;
 
 	//Interface
 	FMOD::System *system;

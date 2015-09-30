@@ -17,6 +17,7 @@ enum ComponentType
 	VelocityType = 0x10,
 	CollisionType = 0x20,
 	VelocityForceType = 0x40,
+	SoundCollisionType = 0x80,
 };
 
 // 0x01 ==   1 == "00000001"
@@ -27,4 +28,5 @@ enum ComponentType
 // 0x20 ==  32 == "00100000"
 // 0x40 ==  64 == "01000000"
 // 0x80 == 128 == "10000000"
+// 0x100 = 256 = "100000000"
 // options == 0x01 | 0x08 | 0x10 == "00011001"
