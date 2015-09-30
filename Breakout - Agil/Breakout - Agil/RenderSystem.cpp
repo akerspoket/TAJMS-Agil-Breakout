@@ -42,7 +42,7 @@ void RenderSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 	MeshComponent testMesh;  //teststuffs
-	testMesh.mMaterialID = mGraphicsInterface->CreateTexture(L"bthcolor.dds");
+	testMesh.mMaterialID = mGraphicsInterface->CreateTexture("bthcolor.dds");
 	//testMesh.mMeshID = mGraphicsInterface->CreateObject("box.obj");
 	//TransformComponent testTransform[1];
 	//testTransform[0].mPosition.x = -2;

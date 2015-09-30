@@ -15,7 +15,7 @@ int main(int argc, char* args[])
 	//Create window pointer
 	SDL_Window* window = NULL;
 	OGLGraphicsEngine* mOGLGraphics = new OGLGraphicsEngine();
-
+	
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -26,7 +26,7 @@ int main(int argc, char* args[])
 	{
 		//Create window
 		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-
+		
 
 		mOGLGraphics->InitGlew(window);
 		if (window == NULL)
@@ -39,8 +39,8 @@ int main(int argc, char* args[])
 			if (tNoError)
 			{
 				gGame.Run();
-				//while (true)
-				//	mOGLGraphics->RenderFrame();
+				//while(true)
+				//mOGLGraphics->RenderFrame();
 			}
 		}
 	}
