@@ -14,6 +14,7 @@
 #include <glm/gtx/transform.hpp>
 #include <SOIL.h>
 
+
 using namespace std;
 
 struct MatrixBufferType
@@ -50,7 +51,7 @@ public:
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
 	int CreateTexture(const char *pFileName);
-
+	
 
 	glm::mat4x4 mProjMat;
 
