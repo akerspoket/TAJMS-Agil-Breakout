@@ -77,8 +77,8 @@
     <LibraryPath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\include;C:\Agil Stuff\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\lib;C:\Agil Stuff\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\include;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Agil Stuff\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\lib;C:\Agil Stuff\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
