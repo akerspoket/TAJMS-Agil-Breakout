@@ -3,6 +3,7 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "TriggerSystem.h"
+#include "SoundSystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 
@@ -35,6 +36,9 @@ bool Game1::Initialize()
 	tTrigger->Initialize();
 	mSystems.push_back(tTrigger);
 
+	SoundSystem* tSound = new SoundSystem("SoundSystem");
+	tSound->Initialize();
+	mSystems.push_back(tSound);
 
 
 	
