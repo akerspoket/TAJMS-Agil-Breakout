@@ -77,8 +77,8 @@
     <LibraryPath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\include;C:\Agil Stuff\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\lib;C:\Agil Stuff\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\include;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Agil Stuff\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\lib;C:\Agil Stuff\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,7 +89,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -150,6 +151,8 @@
     <ClCompile Include="OGLGraphicsEngine.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="StorageShelf.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextFileReader.cpp" />
@@ -178,6 +181,9 @@
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="SoundCollisionComponent.h" />
+    <ClInclude Include="SoundEngine.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="StorageShelf.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextFileReader.h" />

@@ -9,6 +9,7 @@
 #include "VelocityComponent.h"
 #include "CollisionComponent.h"
 #include "VelocityForceComponent.h"
+#include "SoundCollisionComponent.h"
 
 #include <string.h> //needed for linux
 
@@ -88,6 +89,11 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		{
 			memcpy(GetComponent<VelocityForceComponent>(tNewEntityID), iter->second, sizeof(VelocityForceComponent));
 		}
+		else if (iter->first == ComponentType::SoundCollisionType)
+		{
+			memcpy(GetComponent<SoundCollisionComponent>(tNewEntityID), iter->second, sizeof(SoundCollisionComponent));
+		}
+
 	}
 
 	return tNewEntityID;
