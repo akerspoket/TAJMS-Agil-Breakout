@@ -1,7 +1,6 @@
 #include "OGLGraphicsEngine.h"
 
 
-
 OGLGraphicsEngine::OGLGraphicsEngine()
 {
 }
@@ -14,7 +13,7 @@ OGLGraphicsEngine::~OGLGraphicsEngine()
 
 int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 {
-	mWindow = pWND;
+	mWindow = pWND;// SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -22,25 +21,27 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	//SDL_GLContext tGLContext; //Should be able to have this in main or somewhere else Y
+	//tGLContext = SDL_GL_CreateContext(pWND);
 
-	m_glContext = SDL_GL_CreateContext(pWND);
+	//GLenum res = glewInit();
+	//if (res != GLEW_OK)
+	//{
+	//	fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+	//	return -1;
+	//}	//To here!																	V
 	mObjLoader = new ObjLoader();
-	GLenum res = glewInit();
-	if (res != GLEW_OK)
-	{
-		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
-		return -1;
-	}
 	glEnable(GL_DEPTH_TEST);
 	printf("GL version: %s\n", glGetString(GL_VERSION));
 	//CreateTriangle();
-	Vertices = mObjLoader->LoadObj("bth.obj", vec3(0.03f, 0.03f, 0.03f));
+	//Vertices = mObjLoader->LoadObj("bth.obj", vec3(0.03f, 0.03f, 0.03f));
 
 
-	mVertexBufferID = CreateObjectBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size(), Vertices.size());
+	//mVertexBufferID = CreateObjectBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size(), Vertices.size());
 	CompileShaders();
-	InitGraphics(45.0f, 600.0f, 800.0f, 0.1f, 100, 13.0f);
-
+	//InitGraphics(45.0f, 600.0f, 800.0f, 0.1f, 100, 13.0f);
+	int result = SDL_GL_SetSwapInterval(1);
+	
 
 	return 1;
 }
@@ -48,7 +49,7 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos)
 {
 	mWVPBuffer.world = glm::mat4();
-	mWVPBuffer.view = glm::lookAt(glm::vec3(0.0f, 0.0f, pZPos), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0, 1, 0));
+	mWVPBuffer.view = glm::lookAt(glm::vec3(0.0f, 0.0f, pZPos),glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0, 1, 0));
 	mWVPBuffer.projection = glm::perspective(pFoVAngleY, pWidth / pHeight, pNear, pFar);
 
 	mWVPBufferID = AddUniform(mNormalShaderProg, "gWorld");
@@ -61,10 +62,6 @@ void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWid
 	//För instanceDraw
 	mTransBuffer = CreateVertexBuffer(nullptr, 0);
 
-
-	mTextureID = CreateTexture("Davai.png");
-
-	mTextureID2 = CreateTexture("GoalTexture.png");
 
 
 
@@ -154,6 +151,7 @@ void OGLGraphicsEngine::RenderFrame()
 {
 	SDL_GL_SwapWindow(mWindow);
 
+
 	glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
 
 	static float Scale = 0.0f;
@@ -201,20 +199,23 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 
 	glBindBuffer(GL_ARRAY_BUFFER, mBuffers[mTransBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, pInstanceBufferData.size()* sizeof(InstanceBufferType), pInstanceBufferData.data(), GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	GLuint tPosLoc = glGetAttribLocation(mNormalShaderProg, "Position");
+	GLuint tTexLoc = glGetAttribLocation(mNormalShaderProg, "TexCoord");
+	GLuint tNormLoc = glGetAttribLocation(mNormalShaderProg, "Normal");
+	GLuint tTransLoc = glGetAttribLocation(mNormalShaderProg, "Translation");
+	glEnableVertexAttribArray(tPosLoc);
+	glEnableVertexAttribArray(tTexLoc);
+	glEnableVertexAttribArray(tTransLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[pMeshType].BufferHandle);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(tPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glVertexAttribPointer(tTexLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(tNormLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(5 * sizeof(float)));
 	glBindBuffer(GL_ARRAY_BUFFER, mBuffers[mTransBuffer]);
 	for (size_t i = 0; i < 4; i++)
 	{
-		glEnableVertexAttribArray(3 + i);
-		glVertexAttribPointer(3+i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)*i));
-		glVertexAttribDivisor(3 + i, 1);
+		glEnableVertexAttribArray(tTransLoc + i);
+		glVertexAttribPointer(tTransLoc +i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)*i));
+		glVertexAttribDivisor(tTransLoc + i, 1);
 	}	
 	glDrawArraysInstanced(GL_TRIANGLES, 0, mObjectBuffers[pMeshType].NumberOfIndices, pInstanceBufferData.size());
 	glDisableVertexAttribArray(0);
@@ -332,3 +333,34 @@ bool OGLGraphicsEngine::ReadFile(const char* pFileName, string& outFile)
 	return ret;
 }
 
+int OGLGraphicsEngine::CreateObject(string pMeshName)
+{
+	vector<Vertex> tVertices;
+	if (pMeshName == "Object/Block.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+	}
+	else if (pMeshName == "Object/Pad.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(2.0f, 0.5f, 1.0f));
+	}
+	else if (pMeshName == "Object/Boll.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+	}
+	else
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+	}
+
+	int retValue = CreateObjectBuffer(tVertices.data(), sizeof(Vertex)*tVertices.size(), tVertices.size());
+
+	return retValue;
+}
+
+void OGLGraphicsEngine::EndDraw()
+{
+	SDL_GL_SwapWindow(mWindow);
+	glClearColor(0.0f, 0.2f, 0.4f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}

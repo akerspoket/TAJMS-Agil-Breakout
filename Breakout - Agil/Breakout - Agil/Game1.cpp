@@ -18,7 +18,7 @@ Game1::~Game1()
 {
 }
 
-bool Game1::Initialize()
+bool Game1::Initialize(SDL_Window* pWin)
 {
 	InputSystem* tInput = new InputSystem("InputSystem");
 	tInput->Initialize();
@@ -30,6 +30,7 @@ bool Game1::Initialize()
 
 	RenderSystem* tRender = new RenderSystem("RenderSystem");
 	tRender->Initialize();
+	tRender->Initialize(pWin);
 	mSystems.push_back(tRender);
 
 	TriggerSystem* tTrigger = new TriggerSystem("TriggerSystem");

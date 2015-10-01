@@ -4,7 +4,7 @@ GraphicsInterface* GraphicsInterface::mSingleton = 0;
 
 GraphicsInterface::GraphicsInterface()
 {
-#ifdef __linux__
+#ifdef __linux1__
 	mGraphicsEngine = new OGLGraphicsEngine();
 #elif _WIN32
 	mGraphicsEngine = new GraphicsEngine();
@@ -27,25 +27,30 @@ GraphicsInterface* GraphicsInterface::GetSingleton()
 	return mSingleton;
 }
 
-void GraphicsInterface::Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos)
+void GraphicsInterface::Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos, SDL_Window* pWin)
 {
+#ifdef __linux1__
+	mGraphicsEngine->InitGlew(pWin);
+	mGraphicsEngine->InitGraphics(pFoVAngleY, pHeight, pWidth, pNear, pFar, pZPos);
+#elif _WIN32
 	mGraphicsEngine->InitD3D();
 	mGraphicsEngine->InitPipeline();
 	mGraphicsEngine->InitGraphics(pFoVAngleY, pHeight, pWidth, pNear, pFar, pZPos);
+#endif
+
 }
 
 int GraphicsInterface::CreateObject(string pMeshGroup)
 {
+
 	int retValue;
-#ifdef __linux__
-	//Linux Code
-#elif _WIN32
 	if (mLoadedObjects.find(pMeshGroup) != mLoadedObjects.end())
 	{
 		return mLoadedObjects[pMeshGroup];
 	}
+
 	retValue = mGraphicsEngine->CreateObject(pMeshGroup);
-#endif
+
 	mLoadedObjects[pMeshGroup] = retValue;
 	return retValue;
 }
@@ -57,12 +62,15 @@ int GraphicsInterface::CreateTexture(string pTextureName) //Think this needs to 
 	{
 		return mLoadedTextures[pTextureName];
 	}
+	string tTempName;
 	
-#ifdef __linux__
-	const char* cstr = pTextureName.c_str(); //Not tested
+#ifdef __linux1__
+	tTempName = pTextureName + ".png";
+	const char* cstr = tTempName.c_str(); //Not tested
 	retValue = mGraphicsEngine->CreateTexture(cstr);
 #elif _WIN32
-	std::wstring widestr = std::wstring(pTextureName.begin(), pTextureName.end());
+	tTempName = pTextureName + ".dds";
+	std::wstring widestr = std::wstring(tTempName.begin(), tTempName.end());
 	const wchar_t* widecstr = widestr.c_str();
 	retValue = mGraphicsEngine->CreateTexture(widecstr);
 #endif
@@ -71,20 +79,19 @@ int GraphicsInterface::CreateTexture(string pTextureName) //Think this needs to 
 }
 void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances)
 {
-#ifdef __linux__
+#ifdef __linux1__
 	vector<InstanceBufferType> tMatrixVector;
 	for (int i = 0; i < pNumberOfInstances; i++)
 	{
-		//InstanceBufferType tFinished;
-		//XMMATRIX trans;
-		//trans = XMMatrixTranslation(pTransformMatrices[i].mPosition.x, pTransformMatrices[i].mPosition.y, pTransformMatrices[i].mPosition.z);
-		//XMVECTOR orientation;
-		//orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w));
+		InstanceBufferType tFinished;
+		glm::mat4 trans = glm::translate(glm::vec3( -pTransformMatrices[i].mPosition.x, pTransformMatrices[i].mPosition.y, pTransformMatrices[i].mPosition.z));
+		glm::quat tQuater;
+		tQuater = glm::quat(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w);
+		glm::mat4 rot = glm::mat4_cast(tQuater);
 
-		//XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
-		//XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot*trans));
+		tFinished.TranslationMatrices = rot*trans ;
 
-		//tMatrixVector.push_back(tFinished); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
+		tMatrixVector.push_back(tFinished); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
 	}
 	mGraphicsEngine->DrawObjects(pMeshType, tMatrixVector, pMaterialID);
 #elif _WIN32
@@ -106,8 +113,7 @@ void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned in
 	
 
 #endif
-	//Linux code
-	//mGraphicsEngine->DrawBatch(pMeshGroup, pTextureGroup, pWorldMatrix, pNumberOfMeshes);
+
 
 }
 
