@@ -20,7 +20,7 @@ Game1::~Game1()
 {
 }
 
-bool Game1::Initialize()
+bool Game1::Initialize(SDL_Window* pWin)
 {
 	InputSystem* tInput = new InputSystem("InputSystem");
 	VelocitySystem* tVel = new VelocitySystem("VelocitySystem");
@@ -44,10 +44,14 @@ bool Game1::Initialize()
 	mSystems.push_back(tVel);
 	mSystems.push_back(tAtt);
 	mSystems.push_back(tPhysics);
+
+	RenderSystem* tRender = new RenderSystem("RenderSystem");
+	tRender->Initialize();
+	tRender->Initialize(pWin);
 	mSystems.push_back(tRender);
 	mSystems.push_back(tTrigger);
 	mSystems.push_back(tSound);
-	
+
 
 	
 	return true;

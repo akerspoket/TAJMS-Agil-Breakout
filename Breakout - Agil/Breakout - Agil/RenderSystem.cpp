@@ -27,10 +27,15 @@ void RenderSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
 
-	mGraphicsInterface = GraphicsInterface::GetSingleton();
-	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -13.0f);
+
 
 }
+void RenderSystem::Initialize(SDL_Window* pWin)
+{
+	mGraphicsInterface = GraphicsInterface::GetSingleton();
+	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -13.0f, pWin);
+}
+
 
 void RenderSystem::Start()
 {

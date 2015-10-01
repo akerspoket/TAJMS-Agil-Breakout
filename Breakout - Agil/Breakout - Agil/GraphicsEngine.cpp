@@ -31,7 +31,7 @@ void GraphicsEngine::InitD3D()
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
 															// create a device, device context and swap chain using the information in the scd struct
-	D3D11CreateDeviceAndSwapChain(NULL,
+	HRESULT res = D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		D3D11_CREATE_DEVICE_DEBUG,
@@ -66,7 +66,7 @@ void GraphicsEngine::InitD3D()
 	dbdesc.CPUAccessFlags = 0;
 	dbdesc.MiscFlags = 0;
 
-	HRESULT res = dev->CreateTexture2D(&dbdesc, NULL, &mDepthBuffer);
+	res = dev->CreateTexture2D(&dbdesc, NULL, &mDepthBuffer);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 	ZeroMemory(&descDSV, sizeof(descDSV));

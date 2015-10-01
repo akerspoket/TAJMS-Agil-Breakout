@@ -27,7 +27,17 @@ int main(int argc, char* args[])
 		//Create window
 		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		
+#ifdef _WIN32//__linux__ //Should be linux and notwindows, windows is for testing
+		SDL_GLContext tGLContext; //Should be able to have this in main or somewhere else Y
+		tGLContext = SDL_GL_CreateContext(window);
 
+		GLenum res = glewInit();
+		if (res != GLEW_OK)
+		{
+			fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+			return -1;
+		}	//To here!	
+#endif		
 		mOGLGraphics->InitGlew(window);
 		if (window == NULL)
 		{
@@ -35,12 +45,12 @@ int main(int argc, char* args[])
 		}
 		else
 		{
-			bool tNoError = gGame.Initialize();
+			bool tNoError = gGame.Initialize(window);
 			if (tNoError)
 			{
 				gGame.Run();
-				//while(true)
-				//mOGLGraphics->RenderFrame();
+		/*		while(true)
+				mOGLGraphics->RenderFrame();*/
 			}
 		}
 	}

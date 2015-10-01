@@ -12,7 +12,7 @@ public:
 	~Game1();
 
 	//create systems and add them to systemlist, initializes the systems
-	bool Initialize();
+	bool Initialize(SDL_Window* pWin);
 	void Run();
 	void Destroy();
 

@@ -6,5 +6,5 @@ xTransform
 xVelocity
 xCollision
 xMesh
-Textures/PadTex.dds
+Textures/PadTex
 Object/Pad.obj

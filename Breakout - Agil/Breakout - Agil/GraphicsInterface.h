@@ -1,11 +1,13 @@
 #pragma once
-//#define __linux__ //FOR DEBUGGING LINUX, REMOVE IN FINAL THINGIE OR FOR WINDOWS DEBUGGING
-#ifdef __linux__
+//#define __linux1__ //FOR DEBUGGING LINUX, REMOVE IN FINAL THINGIE OR FOR WINDOWS DEBUGGING should only be linux
+#ifdef __linux1__
 #include "OGLGraphicsEngine.h"
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #elif _WIN32
 #include "GraphicsEngine.h"
 #endif
-
+#include <SDL2/SDL.h>
 #include <map>
 #include <vector>
 #include "TransformComponent.h"
@@ -31,13 +33,13 @@ public:
 	int GetTextureID(TextureNames pName);
 	int CreateTexture(string pTextureName);
 	void EndDraw(); //Call this at the end of drawing multiple objects
-	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
+	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos, SDL_Window* pWin);
 
 	static GraphicsInterface* GetSingleton();
 private: 
 	GraphicsInterface();
 	static GraphicsInterface* mSingleton;
-#ifdef __linux__
+#ifdef __linux1__
 	OGLGraphicsEngine* mGraphicsEngine;
 #elif _WIN32
 	GraphicsEngine* mGraphicsEngine;
