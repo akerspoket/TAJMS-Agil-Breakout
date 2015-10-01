@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttachSystem.cpp" />
     <ClCompile Include="ComponentTable.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttachedComponent.h" />
+    <ClInclude Include="AttachSystem.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="ComponentTable.h" />
     <ClInclude Include="Constants.h" />
