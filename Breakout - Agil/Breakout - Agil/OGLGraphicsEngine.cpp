@@ -40,7 +40,7 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	//mVertexBufferID = CreateObjectBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size(), Vertices.size());
 	CompileShaders();
 	//InitGraphics(45.0f, 600.0f, 800.0f, 0.1f, 100, 13.0f);
-	int result = SDL_GL_SetSwapInterval(1);
+	int result = SDL_GL_SetSwapInterval(1); //Laggs really much if vsync is active, should be something better
 	
 
 	return 1;

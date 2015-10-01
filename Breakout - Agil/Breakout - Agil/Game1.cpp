@@ -30,27 +30,23 @@ bool Game1::Initialize(SDL_Window* pWin)
 	TriggerSystem* tTrigger = new TriggerSystem("TriggerSystem");
 	SoundSystem* tSound = new SoundSystem("SoundSystem");
 	
-	
+	tRender->Initialize();
+	tRender->Initialize(pWin);
 	tInput->Initialize();
 	tVel->Initialize();
 	tAtt->Initialize();
 	tPhysics->Initialize();
-	tRender->Initialize();
 	tTrigger->Initialize();
 	tSound->Initialize();
-	
+
 
 	mSystems.push_back(tInput);
 	mSystems.push_back(tVel);
 	mSystems.push_back(tAtt);
 	mSystems.push_back(tPhysics);
-
-	RenderSystem* tRender = new RenderSystem("RenderSystem");
-	tRender->Initialize();
-	tRender->Initialize(pWin);
-	mSystems.push_back(tRender);
 	mSystems.push_back(tTrigger);
 	mSystems.push_back(tSound);
+	mSystems.push_back(tRender);
 
 
 	

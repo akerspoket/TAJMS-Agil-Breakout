@@ -14,7 +14,7 @@ int main(int argc, char* args[])
 {
 	//Create window pointer
 	SDL_Window* window = NULL;
-	OGLGraphicsEngine* mOGLGraphics = new OGLGraphicsEngine();
+
 	
 
 	//Initialize SDL
@@ -38,7 +38,7 @@ int main(int argc, char* args[])
 			return -1;
 		}	//To here!	
 #endif		
-		mOGLGraphics->InitGlew(window);
+
 		if (window == NULL)
 		{
 			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
