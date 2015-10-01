@@ -50,25 +50,44 @@ int GraphicsInterface::CreateObject(string pMeshGroup)
 	return retValue;
 }
 
-int GraphicsInterface::CreateTexture(const wchar_t* pTextureName)
+int GraphicsInterface::CreateTexture(string pTextureName) //Think this needs to be string so we can converte it ourselfs to wchar or char
 {
 	int retValue;
 	if (mLoadedTextures.find(pTextureName)!=mLoadedTextures.end())
 	{
 		return mLoadedTextures[pTextureName];
 	}
-#ifdef _WIN32
 	
-	retValue = mGraphicsEngine->CreateTexture(pTextureName);
-#elif __linux__
-
+#ifdef __linux__
+	const char* cstr = pTextureName.c_str(); //Not tested
+	retValue = mGraphicsEngine->CreateTexture(cstr);
+#elif _WIN32
+	std::wstring widestr = std::wstring(pTextureName.begin(), pTextureName.end());
+	const wchar_t* widecstr = widestr.c_str();
+	retValue = mGraphicsEngine->CreateTexture(widecstr);
 #endif
 	mLoadedTextures[pTextureName] = retValue;
 	return retValue;
 }
 void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances)
 {
-#ifdef _WIN32
+#ifdef __linux__
+	vector<InstanceBufferType> tMatrixVector;
+	for (int i = 0; i < pNumberOfInstances; i++)
+	{
+		//InstanceBufferType tFinished;
+		//XMMATRIX trans;
+		//trans = XMMatrixTranslation(pTransformMatrices[i].mPosition.x, pTransformMatrices[i].mPosition.y, pTransformMatrices[i].mPosition.z);
+		//XMVECTOR orientation;
+		//orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w));
+
+		//XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
+		//XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot*trans));
+
+		//tMatrixVector.push_back(tFinished); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
+	}
+	mGraphicsEngine->DrawObjects(pMeshType, tMatrixVector, pMaterialID);
+#elif _WIN32
 	vector<InstanceBufferType> tMatrixVector;
 	for (int i = 0; i < pNumberOfInstances; i++)
 	{
@@ -85,7 +104,6 @@ void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned in
 	}
 	mGraphicsEngine->DrawObjects(pMeshType, tMatrixVector, pMaterialID);
 	
-#elif __linux__
 
 #endif
 	//Linux code

@@ -129,7 +129,7 @@ void LevelManager::Initialize()
 			//const wchar_t* szName = name.c_str();
 			std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
 			const wchar_t* widecstr = widestr.c_str();
-			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(widecstr);///Här ska vi byta textur!!
+			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);///Här ska vi byta textur!!
 			
 			////////Sen fixa meshen till objektet när objLoader e klar så borde denna fungera
 			++i;
@@ -171,7 +171,7 @@ void LevelManager::Initialize()
 	tLabel->mLabel = Label::Box;
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");///Här ska vi byta textur!!
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("test2in1pic.dds");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
@@ -196,7 +196,7 @@ void LevelManager::Initialize()
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"davai.dds");//prov
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai.dds");//prov
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
 	tBallBlueprint[TransformType] = tTrans;
 	tBallBlueprint[MeshType] = tMesh;
@@ -223,7 +223,7 @@ void LevelManager::Initialize()
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(0.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/GoalTexture.dds");///Här ska vi byta textur!!
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/GoalTexture.dds");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
 	tGoalBlockBlueprint[MeshType] = tMesh;

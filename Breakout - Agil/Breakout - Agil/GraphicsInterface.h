@@ -29,7 +29,7 @@ public:
 	int CreateObject(string pMeshGroup);
 	void DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances); //Draws pNumberofInstances of pMeshType
 	int GetTextureID(TextureNames pName);
-	int CreateTexture(const wchar_t* pTextureName);
+	int CreateTexture(string pTextureName);
 	void EndDraw(); //Call this at the end of drawing multiple objects
 	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 
@@ -44,7 +44,7 @@ private:
 #endif
 
 	vector<MaterialStruct> mMaterials;
-	map<const wchar_t*, int>mLoadedTextures;
+	map<string, int>mLoadedTextures;
 	map<string, int>mLoadedObjects;
 };
 

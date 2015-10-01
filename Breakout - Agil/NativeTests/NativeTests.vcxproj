@@ -75,8 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Administrator\Source\Repos\AgilProjektutvecklingTAJMS\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;C:\Users\Administrator\Source\Repos\TAJMS-Agil-Breakout\Breakout - Agil\FMOD\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
