@@ -4,6 +4,7 @@
 #include "EntityManager.h"
 #include "ComponentTable.h"
 #include "LabelComponent.h"
+#include "VelocityComponent.h"
 #include "StorageShelf.h"
 
 
@@ -30,6 +31,7 @@ void TriggerSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("CollideWithBottom", this);
 	mEventManager->Subscribe("CollideWithGoalBlock", this);
+	mEventManager->Subscribe("LaunchButtonPressed", this);
 
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
@@ -114,6 +116,11 @@ void TriggerSystem::Stop()
 
 void TriggerSystem::OnEvent(Event* pEvent)
 {
+	EntityManager* tEntMan = tEntMan->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+
+	int tMaxEnt = tEntMan->GetLastEntity();
+
 	string pEventID = pEvent->mID;
 
 	if (pEventID == "CollideWithBottom")
@@ -146,6 +153,21 @@ void TriggerSystem::OnEvent(Event* pEvent)
 			//END DEBUG
 
 			mCreateNextLevel = true;
+		}
+	}
+
+	else if (pEventID == "LaunchButtonPressed")
+	{
+		for (int i = 0; i < tMaxEnt; i++)
+		{
+			short pMask = AttachedType | LabelType;
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			{
+				tCompTable->RemoveComponent(i, AttachedType);
+				tCompTable->AddComponent(i, VelocityType);
+				GetComponent<VelocityComponent>(i)->mDirection = vec3(1, 1, 0).Normalize();
+				GetComponent<VelocityComponent>(i)->mSpeed = 12;
+			}
 		}
 	}
 }
