@@ -18,6 +18,7 @@ enum ComponentType
 	CollisionType = 0x20,
 	VelocityForceType = 0x40,
 	SoundCollisionType = 0x80,
+	AttachedType = 0x100,
 };
 
 // 0x01 ==   1 == "00000001"
