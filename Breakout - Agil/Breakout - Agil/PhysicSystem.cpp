@@ -346,64 +346,6 @@ void PhysicSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
-
-	
-
-
-	//Update position with velocity
-	for (int i = 0; i < tMaxEnt; i++)
-	{
-		if (tCompTable->HasComponent(i, TransformType))
-		{
-			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-			//Update previous position
-			tTrans->mPrevPosition = tTrans->mPosition;
-
-			//Ensure that relevant components exist
-			if (tCompTable->HasComponent(i, VelocityType))
-			{
-
-				VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
-
-				//Update speed with force if needed
-				if (tCompTable->HasComponent(i, VelocityForceType))
-				{
-					VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
-
-					//update position
-					if (tVelForce->mType == ForceType::ByValue)
-					{
-						//tTrans->mPosition += tVel->mDirection * tVelForce->mAmount * (float)pDeltaTime* (float)pDeltaTime * 0.5f;
-						tVel->mSpeed += tVelForce->mAmount * (float)pDeltaTime;
-					}
-					else if (tVelForce->mType == ForceType::Percentage)
-					{
-						tVel->mSpeed *= tVelForce->mAmount * (float)pDeltaTime;
-						//tTrans->mPosition = tVel->mDirection * tVel->mSpeed * tVelForce->mAmount * (float)pDeltaTime;
-					}
-
-					//update speed
-					if ((tVel->mSpeed > tVelForce->mEndValue) == tVelForce->mIncrease)
-					{
-						tVel->mSpeed = tVelForce->mEndValue;
-						tCompTable->RemoveComponent(i, VelocityForceType);
-					}
-
-				}
-
-				//Update position with velocity
-				tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
-
-
-				//DEBUG
-				//if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
-				//	cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
-				
-				//END DEBUG
-			}
-		}
-	}
-
 	//Update attached entities positions
 	for (int i = 0; i < tMaxEnt; i++)
 	{
