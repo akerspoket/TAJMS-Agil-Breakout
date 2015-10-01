@@ -7,6 +7,7 @@
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
 #include "CollisionComponent.h"
+#include "AttachedComponent.h"
 #include "TextFileReader.h"
 #include "ComponentTable.h"
 #include <iostream>
@@ -201,7 +202,6 @@ void LevelManager::Initialize()
 	tBallBlueprint[TransformType] = tTrans;
 	tBallBlueprint[MeshType] = tMesh;
 	tBallBlueprint[LabelType] = tLabel;
-	tBallBlueprint[VelocityType] = tVelocity;
 	tBallBlueprint[CollisionType] = tColl;
 
 	
@@ -273,6 +273,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
+	EntityID tPaddID = tNewID;
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -8, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
@@ -332,20 +333,24 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//	}
 
 	//////////////////////////BALL////////////////////
-	float tStartPositionX = -2;
-	float tStartPositionY = -1;
+
 
 	tNewID = mEntityFactory->CreateEntity("Ball");
-	tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition.x = tStartPositionX;
-	tTrans->mPosition.y = tStartPositionY;
+	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
+	AttachedComponent* tAtt = GetComponent<AttachedComponent>(tNewID);
+	tAtt->attachedTo = tPaddID;
+	tAtt->relPos = vec3(0, 1, 0);
 
-	VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	tVel->mSpeed = 8.0f;
-	vec3 tStartDirection = vec3(1.0f, 2.0f, 0.0f).Normalize();
-	tVel->mDirection.x = tStartDirection.x;
-	tVel->mDirection.y = tStartDirection.y;
-	tVel->mDirection.z = tStartDirection.z;
+	//tTrans = GetComponent<TransformComponent>(tNewID);
+	//tTrans->mPosition.x = -2;
+	//tTrans->mPosition.y = -1;
+
+	//VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
+	//tVel->mSpeed = 8.0f;
+	//vec3 tStartDirection = vec3(1.0f, 2.0f, 0.0f).Normalize();
+	//tVel->mDirection.x = tStartDirection.x;
+	//tVel->mDirection.y = tStartDirection.y;
+	//tVel->mDirection.z = tStartDirection.z;
 
 
 	////////////////////GOAL//////////////////////////
