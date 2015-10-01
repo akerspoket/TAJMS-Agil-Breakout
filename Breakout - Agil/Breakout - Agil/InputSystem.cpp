@@ -64,6 +64,14 @@ void InputSystem::CheckKeyboard()
 		cout << "Stäng av programmet";
 		exit(0);
 	}
+	if (mKeyState[SDL_SCANCODE_SPACE])
+	{
+		gUserCmd.mSpaceButtonPressed = true;
+	}
+	else
+	{
+		gUserCmd.mSpaceButtonPressed = false;
+	}
 }
 
 void InputSystem::MoveRight(EntityID pEntityID)
@@ -113,6 +121,13 @@ void InputSystem::HandleInput(EntityID pEntityID)
 		MoveRight(pEntityID);
 		//cout << "-->";
 	}
+
+	if (gUserCmd.mSpaceButtonPressed)
+	{
+		std::unordered_map<string, void*> tPayLoad; //Sending empty payload has to be fixed...
+		EventManager::GetInstance()->BroadcastEvent("LaunchButtonPressed", tPayLoad);
+	}
+
 		
 
 
