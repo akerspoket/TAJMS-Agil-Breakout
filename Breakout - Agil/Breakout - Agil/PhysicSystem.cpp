@@ -64,6 +64,43 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 	//check if distance between points is less then sumradius
 	bool rCollided = tLength < tSumRadius;
 
+	if (rCollided)
+	{
+		//Special case if component is ball
+		if (GetComponent<LabelComponent>(pEntityID2)->mLabel == Label::Ball)
+		{
+			VelocityComponent* ballVel = GetComponent<VelocityComponent>(pEntityID2);
+			vec2 tPadSphereOffset = vec2(0, -5); //how large we want the sphere to be
+			vec2 tBallPos = vec3toVec2(pTrans2->mPosition);
+			vec2 tPadSpherePos = vec3toVec2(pTrans1->mPosition) + tPadSphereOffset;
+			vec2 collision = tBallPos - tPadSpherePos;
+			float distance = collision.Abs();
+			
+			collision = collision * (1 / distance);
+			vec2 tDir = vec3toVec2(ballVel->mDirection);
+			float aci = tDir*collision;
+			float bci = 0;
+
+			float acf = bci;
+			float bcf = aci;
+
+			tDir += collision*(0 - aci);
+			tDir -= collision*(bcf - 0);
+				
+			float tMinAngle = 0.3;
+			if (tDir.y < tMinAngle) //exit angle too low
+			{
+				float tExitX = 1;
+				if (tDir.x < 0)
+					tExitX = -1;
+				tDir = vec2(tExitX, tMinAngle).Normalize();
+			}
+
+			ballVel->mDirection = vec2toVec3(tDir);
+		
+		}
+	}
+
 	
 }
 
@@ -123,7 +160,16 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-				tVel->mDirection.x *= -1;
+
+
+				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				{
+					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+				}
+				else
+				{
+					tVel->mDirection.x *= -1;
+				}
 
 
 				if (tNormDir.x > 0)
@@ -185,7 +231,14 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-				tVel->mDirection.y *= -1;
+				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				{
+					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+				}
+				else
+				{
+					tVel->mDirection.y *= -1;
+				}
 
 				if (tNormDir.y > 0)
 				{

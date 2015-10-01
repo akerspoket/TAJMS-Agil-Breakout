@@ -21,18 +21,32 @@ struct vec2
 	}
 
 	//Operators
+	//addition
 	vec2 operator+(vec2 v)
 	{
 		return vec2(x + v.x, y + v.y);
 	}
+	void operator+=(vec2 v)
+	{
+		x += v.x;
+		y += v.y;
+	}
+	
+	//subtraction
 	vec2 operator-(vec2 v)
 	{
 		return vec2(x - v.x, y - v.y);
+	}
+	void operator-=(vec2 v)
+	{
+		x -= v.x;
+		y -= v.y;
 	}
 	vec2 operator*(float f)
 	{
 		return vec2(x *f, y*f);
 	}
+
 	void operator*=(float f)
 	{
 		x *= f;
@@ -48,6 +62,8 @@ struct vec2
 	}
 	vec2 Normalize()
 	{
+		if (x == 0 && y ==0)
+			return vec2(0, 0);
 		float length = Abs();
 		return vec2(x / length, y / length);
 	}
