@@ -149,7 +149,7 @@ void LevelManager::Initialize()
 
 	}
 
-	SoundEngine::GetInstance()->LoadSoundToMemory("PadCollision.wav", tSoundColl->SoundID);
+	SoundEngine::GetInstance()->LoadSoundToMemory("PadCollision.mp3", tSoundColl->SoundID);
 	tPadBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
@@ -232,7 +232,7 @@ void LevelManager::Initialize()
 	tSoundColl = new SoundCollisionComponent();
 
 
-	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.wav", tSoundColl->SoundID);
+	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.mp3", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(0.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
