@@ -159,6 +159,7 @@
     <ClCompile Include="TriggerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttachedComponent.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="ComponentTable.h" />
     <ClInclude Include="Constants.h" />

@@ -42,8 +42,7 @@ bool ComponentTable::HasComponent(int pEntityID, short pMask)
 void ComponentTable::AddComponent(int pEntityID, short pMask)
 {
 	short tLineToAddTo = mComponentTable[pEntityID];
-
-	
+	 
 	tLineToAddTo = tLineToAddTo | pMask;
 	mComponentTable[pEntityID] = tLineToAddTo;
 
@@ -51,7 +50,12 @@ void ComponentTable::AddComponent(int pEntityID, short pMask)
 
 void ComponentTable::RemoveComponent(int pEntityID, short pMask)
 {
+	short tLineToRemoveFrom = mComponentTable[pEntityID];
 
+	short tAnd = tLineToRemoveFrom & pMask;
+
+	tLineToRemoveFrom = tLineToRemoveFrom ^ tAnd;
+	mComponentTable[pEntityID] = tLineToRemoveFrom;
 }
 
 void ComponentTable::RemoveEntity(int pEntityID)

@@ -70,6 +70,7 @@ struct UserCmd
 	bool mLeftArrowPressed;
 	bool mUpArrowPressed;
 	bool mDownArrowPressed;
+	bool mSpaceButtonPressed;
 
 };
 
