@@ -6,6 +6,7 @@
 #include "PhysicComponent.h"
 #include "VelocityComponent.h"
 #include "VelocityForceComponent.h"
+#include "AttachedComponent.h"
 #include "LabelComponent.h"
 
 #include <cmath> //needed for linux... come on!
@@ -330,6 +331,9 @@ void PhysicSystem::Update(double pDeltaTime)
 	int tMaxEnt = tEntManager->GetLastEntity();
 
 
+	
+
+
 	//Update position with velocity
 	for (int i = 0; i < tMaxEnt; i++)
 	{
@@ -381,6 +385,21 @@ void PhysicSystem::Update(double pDeltaTime)
 				
 				//END DEBUG
 			}
+		}
+	}
+
+	//Update attached entities positions
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		//Ensure that relevant components exist
+		short tFlags = TransformType | AttachedType;
+		if (tCompTable->HasComponent(i, tFlags))
+		{
+			AttachedComponent* tAtt = GetComponent<AttachedComponent>(i);
+			TransformComponent* tAttTrans = GetComponent<TransformComponent>(i);
+			
+			vec3 attachedTo_Pos = GetComponent<TransformComponent>(tAtt->attachedTo)->mPosition; //position which attached entity is attached to
+			tAttTrans->mPosition = attachedTo_Pos + tAtt->relPos;
 		}
 	}
 
