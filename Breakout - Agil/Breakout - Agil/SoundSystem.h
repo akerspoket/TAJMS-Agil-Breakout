@@ -1,9 +1,9 @@
 #pragma once
 #include "System.h"
 #include "SoundEngine.h"
-#ifndef LinuxSound
-#define LinuxSound
-#endif
+//#ifndef LinuxSound
+//#define LinuxSound
+//#endif
 class SoundSystem :
 	public System
 {
