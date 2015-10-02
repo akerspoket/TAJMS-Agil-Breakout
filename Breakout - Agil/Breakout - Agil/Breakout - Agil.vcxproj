@@ -184,6 +184,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MenuSystem.h" />
+    <ClInclude Include="MenyButtonComponent.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="OGLGraphicsEngine.h" />

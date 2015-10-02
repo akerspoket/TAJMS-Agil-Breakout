@@ -52,6 +52,22 @@ void InputSystem::CheckKeyboard()
 	{
 		gUserCmd.mRightArrowPressed = false;
 	}
+	if (mKeyState[SDL_SCANCODE_UP])
+	{
+		gUserCmd.mUpArrowPressed = true;
+	}
+	else
+	{
+		gUserCmd.mUpArrowPressed = false;
+	}
+	if (mKeyState[SDL_SCANCODE_DOWN])
+	{
+		gUserCmd.mDownArrowPressed = true;
+	}
+	else
+	{
+		gUserCmd.mDownArrowPressed = false;
+	}
 	if (mKeyState[SDL_SCANCODE_A])
 	{
 		gUserCmd.mKeysPressed.push_back('a');
@@ -63,6 +79,14 @@ void InputSystem::CheckKeyboard()
 	if (mKeyState[SDL_SCANCODE_P])
 	{
 		gUserCmd.mKeysPressed.push_back('p');
+	}
+	if (mKeyState[SDL_SCANCODE_W])
+	{
+		gUserCmd.mKeysPressed.push_back('w');
+	}
+	if (mKeyState[SDL_SCANCODE_S])
+	{
+		gUserCmd.mKeysPressed.push_back('s');
 	}
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
@@ -112,22 +136,25 @@ void InputSystem::StandStill(EntityID pEntityID)
 void InputSystem::PadInput(EntityID pEntityID)
 {
 	int tVectorInput = gUserCmd.mKeysPressed.size();
-	int tVectorLastInput = gUserCmd.mKeysPressedLastUpdate.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
 
-	if (gUserCmd.mLeftArrowPressed == gUserCmd.mRightArrowPressed )
-	{
-		StandStill(pEntityID);
-	}
-	else if (gUserCmd.mLeftArrowPressed == true)
-	{
-		MoveLeft(pEntityID);
-		//cout << "<--";
-	}
-	else if (gUserCmd.mRightArrowPressed == true)
-	{
-		MoveRight(pEntityID);
-		//cout << "-->";
-	}
+	bool moveLeft = gUserCmd.mLeftArrowPressed;
+	bool moveRight = gUserCmd.mRightArrowPressed;
+
+	//if (gUserCmd.mLeftArrowPressed == gUserCmd.mRightArrowPressed )
+	//{
+	//	
+	//}
+	//else if (gUserCmd.mLeftArrowPressed == true)
+	//{
+	//	MoveLeft(pEntityID);
+	//	//cout << "<--";
+	//}
+	//else if (gUserCmd.mRightArrowPressed == true)
+	//{
+	//	MoveRight(pEntityID);
+	//	//cout << "-->";
+	//}
 
 	if (gUserCmd.mSpaceButtonPressed)
 	{
@@ -137,16 +164,27 @@ void InputSystem::PadInput(EntityID pEntityID)
 
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
-		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'a')
 		{
-			MoveLeft(pEntityID);
-			//cout << "A";//Move to the left CODE PLEASE!
+			moveLeft = true;
 		}
-		if (gUserCmd.mKeysPressed[i] == 'd' && gUserCmd.mRightArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'd')
 		{
-			MoveRight(pEntityID);
-			//cout << "D";//Déplacer vers la droite CODE S'IL VOUS PLAÎT !
+			moveRight = true;
 		}
+	}
+
+	if (moveLeft == moveRight )
+	{
+		StandStill(pEntityID);
+	}
+	else if (moveLeft)
+	{
+		MoveLeft(pEntityID);
+	}
+	else if (moveRight)
+	{
+		MoveRight(pEntityID);
 	}
 	
 	
@@ -156,13 +194,13 @@ void InputSystem::PadInput(EntityID pEntityID)
 void InputSystem::GameInput()
 {
 	int tVectorInput = gUserCmd.mKeysPressed.size();
-	int tVectorLastInput = gUserCmd.mKeysPressedLastUpdate.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
 		bool t_Found = false;
 		for (size_t k = 0; k < tVectorLastInput; k++)
 		{
-			if (gUserCmd.mKeysPressed[i] == gUserCmd.mKeysPressedLastUpdate[k])
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
 			{
 				t_Found = true;
 				k = tVectorLastInput;
@@ -183,14 +221,14 @@ void InputSystem::GameInput()
 void InputSystem::PauseInput()
 {
 	int tVectorInput = gUserCmd.mKeysPressed.size();
-	int tVectorLastInput = gUserCmd.mKeysPressedLastUpdate.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
 
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
 		bool t_Found = false;
 		for (size_t k = 0; k < tVectorLastInput; k++)
 		{
-			if (gUserCmd.mKeysPressed[i] == gUserCmd.mKeysPressedLastUpdate[k])
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
 			{
 				t_Found = true;
 				k = tVectorLastInput;
@@ -207,6 +245,52 @@ void InputSystem::PauseInput()
 		}
 	}
 }
+
+void InputSystem::MenuInput()
+{
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
+
+	bool moveUp = gUserCmd.mUpArrowPressed && !gLastUserCmd.mUpArrowPressed;
+	bool moveDown = gUserCmd.mDownArrowPressed && !gLastUserCmd.mDownArrowPressed;
+
+	
+
+	for (size_t i = 0; i < tVectorInput; i++)
+	{
+		bool t_Found = false;
+		for (size_t k = 0; k < tVectorLastInput; k++)
+		{
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
+			{
+				t_Found = true;
+				k = tVectorLastInput;
+			}
+		}
+		if (!t_Found)
+		{
+			if (gUserCmd.mKeysPressed[i] == 'w')
+			{
+				moveUp = true;
+			}
+			else if (gUserCmd.mKeysPressed[i] == 's')
+			{
+				moveDown = true;
+			}
+		}
+	}
+
+	if (moveUp && !moveDown)
+	{
+		cout << "HEREWEGOUPP" << endl;
+	}
+	else if (moveDown && !moveUp)
+	{
+		cout << "HEREWEGODOWN" << endl;
+	}
+
+}
+
 void InputSystem::Update(double pDeltaTime)
 {
 	mKeyState = SDL_GetKeyboardState(NULL);
@@ -222,7 +306,7 @@ void InputSystem::Update(double pDeltaTime)
 	switch (GameStateClass::GetInstance()->GetGameState())
 	{
 	case MenuScreen:
-
+		MenuInput();
 		break;
 	case GameScreen:
 		for (int i = 0; i < tMaxEnt; i++)
@@ -249,7 +333,7 @@ void InputSystem::Update(double pDeltaTime)
 	default:
 		break;
 	}
-	gUserCmd.mKeysPressedLastUpdate = gUserCmd.mKeysPressed;
+	gLastUserCmd = gUserCmd;
 
 
 }

@@ -21,6 +21,7 @@ enum ComponentType
 	SoundCollisionType = 0x80,
 	AttachedType = 0x100,
 	ScoreValueType = 0x200,
+	MenyButtonType = 0x400,
 };
 
 // 0x01 ==   1 == "00000001"

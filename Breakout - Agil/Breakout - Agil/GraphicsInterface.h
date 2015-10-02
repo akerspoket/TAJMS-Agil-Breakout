@@ -1,5 +1,5 @@
 #pragma once
-#define __linux1__ //FOR DEBUGGING LINUX, REMOVE IN FINAL THINGIE OR FOR WINDOWS DEBUGGING should only be linux
+//#define __linux1__ //FOR DEBUGGING LINUX, REMOVE IN FINAL THINGIE OR FOR WINDOWS DEBUGGING should only be linux
 #ifdef __linux1__
 #include "OGLGraphicsEngine.h"
 #include <glm/gtc/quaternion.hpp>

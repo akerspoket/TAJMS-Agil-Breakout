@@ -4,7 +4,6 @@ using namespace std;
 struct UserCmd
 {
 	vector<char>mKeysPressed;
-	vector<char>mKeysPressedLastUpdate;
 	float mXMove;//for the mouse
 	float mYMove;//for the mouse
 	bool mRightArrowPressed;
@@ -12,7 +11,7 @@ struct UserCmd
 	bool mUpArrowPressed;
 	bool mDownArrowPressed;
 	bool mSpaceButtonPressed;
-
 };
 
 static UserCmd gUserCmd;
+static UserCmd gLastUserCmd;

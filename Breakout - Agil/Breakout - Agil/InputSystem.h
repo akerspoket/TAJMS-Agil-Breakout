@@ -24,6 +24,7 @@ private:
 	void GameInput();
 	void PadInput(EntityID pEntityID);
 	void PauseInput();
+	void MenuInput();
 	SDL_Event mSDLEvent;
 	void MoveRight(EntityID pEntityID);
 	void MoveLeft(EntityID pEntityID);
