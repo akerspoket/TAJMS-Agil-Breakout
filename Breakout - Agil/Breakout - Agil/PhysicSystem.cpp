@@ -9,6 +9,7 @@
 #include "SoundCollisionComponent.h"
 #include "AttachedComponent.h"
 #include "LabelComponent.h"
+#include "GameState.h"
 
 #include <cmath> //needed for linux... come on!
 
@@ -379,29 +380,45 @@ void PhysicSystem::Update(double pDeltaTime)
 	//	}
 	//}
 
+	
 
-	//checking static collisions, not counting in their moved distance as a box
-	for (int i = 0; i < tMaxEnt; i++)
+	switch (GameStateClass::GetInstance()->GetGameState())
 	{
-		if (tCompTable->HasComponent(i, CollisionType | TransformType))
+	case MenuScreen:
+		break;
+	case GameScreen:
+		//checking static collisions, not counting in their moved distance as a box
+		for (int i = 0; i < tMaxEnt; i++)
 		{
-			CollisionComponent* tColl1 = GetComponent<CollisionComponent>(i);
-			TransformComponent* tTrans1 = GetComponent<TransformComponent>(i);
-
-			for (int k = i + 1; k < tMaxEnt; k++)
+			if (tCompTable->HasComponent(i, CollisionType | TransformType))
 			{
-				if (tCompTable->HasComponent(k, CollisionType | TransformType))
+				CollisionComponent* tColl1 = GetComponent<CollisionComponent>(i);
+				TransformComponent* tTrans1 = GetComponent<TransformComponent>(i);
+
+				for (int k = i + 1; k < tMaxEnt; k++)
 				{
-					CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
-					TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
+					if (tCompTable->HasComponent(k, CollisionType | TransformType))
+					{
+						CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
+						TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
 
-					//Handles everything about collision
-					HandleCollision(i, k, tColl1, tTrans1, tColl2, tTrans2);
+						//Handles everything about collision
+						HandleCollision(i, k, tColl1, tTrans1, tColl2, tTrans2);
 
+					}
 				}
 			}
 		}
+		break;
+	case DeathScreen:
+		break;
+	case PauseScreen:
+		break;
+	default:
+		break;
 	}
+
+	
 }
 
 void PhysicSystem::Pause()
