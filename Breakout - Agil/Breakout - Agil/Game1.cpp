@@ -51,6 +51,9 @@ bool Game1::Initialize(SDL_Window* pWin)
 	
 	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
 
+	
+	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
+
 
 	
 	
