@@ -203,6 +203,18 @@
     <ClInclude Include="AttachedComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserCmdStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="VelocitySystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>

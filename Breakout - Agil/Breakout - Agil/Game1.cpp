@@ -41,7 +41,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tTrigger->Initialize();
 	tSound->Initialize();
 	tScore->Initialize();
-	
+
 	//set systems to game here
 	mSystems.push_back(tInput);
 	mSystems.push_back(tVel);
@@ -51,8 +51,9 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
 	mSystems.push_back(tRender);
-	
+
 	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
+
 
 
 	
