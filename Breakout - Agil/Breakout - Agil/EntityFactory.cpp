@@ -11,6 +11,7 @@
 #include "VelocityForceComponent.h"
 #include "SoundCollisionComponent.h"
 #include "AttachedComponent.h"
+#include "MenyButtonComponent.h"
 
 #include <string.h> //needed for linux
 
@@ -97,6 +98,10 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::AttachedType)
 		{
 			memcpy(GetComponent<AttachedComponent>(tNewEntityID), iter->second, sizeof(AttachedComponent));
+		}
+		else if (iter->first == ComponentType::MenyButtonType)
+		{
+			memcpy(GetComponent<MenyButtonComponent>(tNewEntityID), iter->second, sizeof(MenyButtonComponent));
 		}
 
 	}

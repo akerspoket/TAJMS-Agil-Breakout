@@ -49,10 +49,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tSound);
 	mSystems.push_back(tRender);
 	
-	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
-
-	
-	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
+	GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);
 
 
 	

@@ -20,6 +20,7 @@ enum ComponentType
 	VelocityForceType = 0x40,
 	SoundCollisionType = 0x80,
 	AttachedType = 0x100,
+	MenyButtonType = 0x200,
 };
 
 // 0x01 ==   1 == "00000001"

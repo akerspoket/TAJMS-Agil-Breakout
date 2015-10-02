@@ -31,6 +31,27 @@
     <Filter Include="Source Files\FileReaders/Writers">
       <UniqueIdentifier>{6e9a902f-cbb0-4ee1-968a-49fd093e9c66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphic">
+      <UniqueIdentifier>{9cd5087a-f669-4ac3-a8d6-6dcdba5fa8c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphic">
+      <UniqueIdentifier>{0f7157c0-9cee-4a43-a52a-e61638e26e39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\EntityCreation">
+      <UniqueIdentifier>{85107267-8165-413b-872d-ce558dda9926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EntityCreation">
+      <UniqueIdentifier>{1b5c5178-cb57-4bea-9f9b-b69e6a1fe91d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Event">
+      <UniqueIdentifier>{26bfad68-93c1-4fd2-8928-0f6afe3844a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Event">
+      <UniqueIdentifier>{6c22cbdb-318d-4081-a238-a1e78f174339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{79a729ed-ed99-4070-8917-e53b1cc001ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -39,23 +60,8 @@
     <ClCompile Include="Game1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicSystem.cpp">
       <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>Source Files\Systems</Filter>
@@ -66,9 +72,6 @@
     <ClCompile Include="StorageShelf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
@@ -77,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="TriggerSystem.cpp">
       <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsInterface.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Source Files\Systems</Filter>
@@ -96,20 +96,11 @@
     <ClCompile Include="TextFileReader.cpp">
       <Filter>Source Files\FileReaders/Writers</Filter>
     </ClCompile>
-    <ClCompile Include="OGLGraphicsEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SoundEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoundSystem.cpp">
       <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuSystem.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VelocitySystem.cpp">
       <Filter>Source Files\Systems</Filter>
@@ -120,11 +111,38 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsInterface.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLGraphicsEngine.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTable.cpp">
+      <Filter>Source Files\EntityCreation</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>Source Files\EntityCreation</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Source Files\EntityCreation</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MeshComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -132,9 +150,6 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TriggerSystem.h">
@@ -179,16 +194,7 @@
     <ClInclude Include="VelocityForceComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="OGLGraphicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="glext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsVirtual.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoundEngine.h">
@@ -206,9 +212,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UserCmdStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -218,15 +221,48 @@
     <ClInclude Include="AttachSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsInterface.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsVirtual.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLGraphicsEngine.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTable.h">
+      <Filter>Header Files\EntityCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\EntityCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>Header Files\EntityCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Header Files\EntityCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenyButtonComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
@@ -235,23 +271,11 @@
     <ClInclude Include="PhysicSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="PhysicComponent.h">
       <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
       <Filter>Header Files\Systems</Filter>
@@ -261,8 +285,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="PixelShader.hlsl" />
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="davai.png">
@@ -285,7 +313,11 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fs" />
-    <None Include="shader.vs" />
+    <None Include="shader.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shader.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
