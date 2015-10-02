@@ -8,6 +8,7 @@
 #include "VelocitySystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
+#include "GameState.h"
 
 
 
@@ -38,8 +39,8 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tPhysics->Initialize();
 	tTrigger->Initialize();
 	tSound->Initialize();
-
-
+	
+	//set systems to game here
 	mSystems.push_back(tInput);
 	mSystems.push_back(tVel);
 	mSystems.push_back(tAtt);
@@ -47,8 +48,11 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tTrigger);
 	mSystems.push_back(tSound);
 	mSystems.push_back(tRender);
+	
+	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
 
 
+	
 	
 	return true;
 }
@@ -69,7 +73,7 @@ void Game1::Run()
 			}
 		}
 
-		//mGraphicsEngine->RenderFrame();
+		//update systems based on gamestate
 		for (auto sys : mSystems)
 		{
 			sys->Update(tDeltaTimeSecond);

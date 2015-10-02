@@ -1,0 +1,18 @@
+#pragma once
+#include <vector>
+using namespace std;
+struct UserCmd
+{
+	vector<char>mKeysPressed;
+	vector<char>mKeysPressedLastUpdate;
+	float mXMove;//for the mouse
+	float mYMove;//for the mouse
+	bool mRightArrowPressed;
+	bool mLeftArrowPressed;
+	bool mUpArrowPressed;
+	bool mDownArrowPressed;
+	bool mSpaceButtonPressed;
+
+};
+
+static UserCmd gUserCmd;
