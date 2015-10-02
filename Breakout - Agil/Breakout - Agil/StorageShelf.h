@@ -61,18 +61,5 @@ static T* GetComponent(EntityID pEntityID)
 }
 
 
-struct UserCmd
-{
-	vector<char>mKeysPressed;
-	float mXMove;//for the mouse
-	float mYMove;//for the mouse
-	bool mRightArrowPressed;
-	bool mLeftArrowPressed;
-	bool mUpArrowPressed;
-	bool mDownArrowPressed;
-	bool mSpaceButtonPressed;
 
-};
-
-static UserCmd gUserCmd;
 

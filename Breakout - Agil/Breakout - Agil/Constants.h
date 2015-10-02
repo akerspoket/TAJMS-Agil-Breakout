@@ -6,6 +6,7 @@
 
 typedef int EntityID;
 
+
 //if more then 16 component-types, need to change the table from short->int
 //if you add component add code to CreateEntity function in EntityFactory
 enum ComponentType

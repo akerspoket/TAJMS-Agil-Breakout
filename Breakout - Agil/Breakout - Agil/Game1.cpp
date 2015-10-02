@@ -6,6 +6,7 @@
 #include "SoundSystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
+#include "GameState.h"
 
 
 
@@ -33,12 +34,15 @@ bool Game1::Initialize()
 	tTrigger->Initialize();
 	tSound->Initialize();
 	
-
+	//set systems to game here
 	mSystems.push_back(tInput);
 	mSystems.push_back(tPhysics);
 	mSystems.push_back(tRender);
 	mSystems.push_back(tTrigger);
 	mSystems.push_back(tSound);
+
+	GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
+
 	
 
 	
@@ -61,7 +65,7 @@ void Game1::Run()
 			}
 		}
 
-		//mGraphicsEngine->RenderFrame();
+		//update systems based on gamestate
 		for (auto sys : mSystems)
 		{
 			sys->Update(tDeltaTimeSecond);
