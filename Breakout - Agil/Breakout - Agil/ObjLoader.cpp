@@ -98,6 +98,55 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 	return returnVertices;
 }
 
+vector<TextVertex> ObjLoader::LoadTextVertices(const char* text, int x, int y, int size)
+{
+	unsigned int length = strlen(text);
+
+	// Fill buffers
+	std::vector<TextVertex> vertices;
+	for (unsigned int i = 0; i<length; i++) {
+
+		TextVertex tTextVertex;
+		TextVertex tTextVertex2;
+		TextVertex tTextVertex3;
+		TextVertex tTextVertex4;
+
+		vec2 vertex_up_left = vec2(x + i*size, y + size);
+		tTextVertex.position = vertex_up_left;
+		vec2 vertex_up_right = vec2(x + i*size + size, y + size);
+		tTextVertex2.position = vertex_up_right;
+		vec2 vertex_down_right = vec2(x + i*size + size, y);
+		tTextVertex3.position = vertex_down_right;
+		vec2 vertex_down_left = vec2(x + i*size, y);
+		tTextVertex4.position = vertex_down_left;
+
+
+		char character = text[i];
+		float uv_x = (character % 16) / 16.0f;
+		float uv_y = (character / 16) / 16.0f;
+
+		vec2 uv_up_left = vec2(uv_x, uv_y);
+		tTextVertex.texCoord = uv_up_left;
+		vec2 uv_up_right = vec2(uv_x + 1.0f / 16.0f, uv_y);
+		tTextVertex2.texCoord = uv_up_right;
+		vec2 uv_down_right = vec2(uv_x + 1.0f / 16.0f, (uv_y + 1.0f / 16.0f));
+		tTextVertex3.texCoord = uv_down_right;
+		vec2 uv_down_left = vec2(uv_x, (uv_y + 1.0f / 16.0f));
+		tTextVertex4.texCoord = uv_down_left;
+
+
+		vertices.push_back(tTextVertex);
+		vertices.push_back(tTextVertex4);
+		vertices.push_back(tTextVertex2);
+
+		vertices.push_back(tTextVertex3);
+		vertices.push_back(tTextVertex2);
+		vertices.push_back(tTextVertex4);
+	}
+	return vertices;
+
+}
+
 
 void ObjLoader::LoadMaterial(const char* materialFileName)
 {

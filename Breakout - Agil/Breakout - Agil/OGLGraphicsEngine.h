@@ -53,7 +53,7 @@ public:
 	int CreateTexture(const char *pFileName);
 	int CreateObject(string pMeshName);
 	void EndDraw();
-
+	void printText2D(const char * text, int x, int y, int size);
 	glm::mat4x4 mProjMat;
 
 	vector< Vertex >Vertices;
@@ -63,11 +63,17 @@ public:
 	const char* pVSFileName = "shader.vs";
 	const char* pFSFileName = "shader.fs";
 
+	const char* pTextVSFileName = "textshader.vs";
+	const char* pTextFSFileName = "textshader.fs";
+
 private:
 	bool ReadFile(const char* pFileName, string& outFile);
 	int CreateVertexBuffer(void* pDataStart, int pBufferSize);
 	int AddUniform(GLuint pShader, const GLchar* pName);
 	vector<GLuint> mBuffers;
+
+	void InitText2D();
+	void cleanupText2D();
 
 	vector<GLuint> mTextures;
 
@@ -86,6 +92,18 @@ private:
 
 	//Temp things only for testing withouth rest
 	vector<InstanceBufferType> mInstanceMatricesTemp;
+
+
+
+	GLuint mText2DTextureID;              // Texture containing the font
+	GLuint mText2DVertexBufferID;         // Buffer containing the vertices
+	GLuint mText2DUVBufferID;             //                       UVs
+	GLuint mText2DShaderID;               // Program used to disaply the text
+	GLuint mVertexPosition_screenspaceID; // Location of the program's "vertexPosition_screenspace" attribute
+	GLuint mVertexUVID;                   // Location of the program's "vertexUV" attribute
+	GLuint mText2DUniformID;              // Location of the program's texture attribute
+
+
 
 };
 
