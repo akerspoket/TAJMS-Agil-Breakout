@@ -441,6 +441,13 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	int retValue = CreateObjectBuffer(bd, tVertices.size());
 	PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
+	CreateText("HEJSAN", vec2(0, 0), 0);
+
 	return retValue;
+}
+
+vector<Vertex> GraphicsEngine::CreateText(string pText, vec2 pPosition, float pSize)
+{
+	
 }
 #endif

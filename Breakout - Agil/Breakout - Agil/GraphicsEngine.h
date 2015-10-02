@@ -109,7 +109,7 @@ private:
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType);
 	bool PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsigned int pSize);
 	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, unsigned int pNumberOfVertices);
-
+	vector<Vertex> CreateText(string pText, vec2 pPosition, float pSize);
 	//Variables
 	ID3D11PixelShader* mPixelShader;
 	VertexShaderComponents* mVertexShader = new VertexShaderComponents;

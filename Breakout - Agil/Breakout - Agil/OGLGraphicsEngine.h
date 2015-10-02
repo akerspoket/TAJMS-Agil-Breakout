@@ -12,7 +12,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 
 using namespace std;
