@@ -4,6 +4,7 @@
 #include "EntityManager.h"
 
 
+
 class InputSystem :	public System
 {
 public:
@@ -20,8 +21,9 @@ public:
 	const Uint8* mKeyState;
 private:
 	void CheckKeyboard();
-	void HandleInput(EntityID pEntityID);
-	
+	void GameInput();
+	void PadInput(EntityID pEntityID);
+	void PauseInput();
 	SDL_Event mSDLEvent;
 	void MoveRight(EntityID pEntityID);
 	void MoveLeft(EntityID pEntityID);
