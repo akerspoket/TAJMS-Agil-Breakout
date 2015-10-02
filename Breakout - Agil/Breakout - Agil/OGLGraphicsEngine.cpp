@@ -40,8 +40,8 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	//mVertexBufferID = CreateObjectBuffer(Vertices.data(), sizeof(Vertex)*Vertices.size(), Vertices.size());
 	CompileShaders();
 	//InitGraphics(45.0f, 600.0f, 800.0f, 0.1f, 100, 13.0f);
-	int result = SDL_GL_SetSwapInterval(1); //Laggs really much if vsync is active, should be something better
-	
+	//int result = SDL_GL_SetSwapInterval(1); //Laggs really much if vsync is active, should be something better
+	InitText2D();
 
 	return 1;
 }
@@ -145,6 +145,26 @@ int OGLGraphicsEngine::CreateTexture(const char *pFileName)
 
 }
 
+void OGLGraphicsEngine::InitText2D() {
+
+	// Initialize texture
+	mText2DTextureID = CreateTexture("Letters.png");
+
+	// Initialize VBO
+	glGenBuffers(1, &mText2DVertexBufferID);
+	glGenBuffers(1, &mText2DUVBufferID);
+
+	// Initialize Shader
+	glUseProgram(mText2DShaderID);
+	// Get a handle for our buffers
+	mVertexPosition_screenspaceID = glGetAttribLocation(mText2DShaderID, "vertexPosition_screenspace");
+	mVertexUVID = glGetAttribLocation(mText2DShaderID, "vertexUV");
+
+	// Initialize uniforms' IDs
+	mText2DUniformID = glGetUniformLocation(mText2DShaderID, "myTextureSampler");
+
+}
+
 
 
 void OGLGraphicsEngine::RenderFrame()
@@ -188,7 +208,7 @@ void OGLGraphicsEngine::RenderFrame()
 
 void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
-
+	glUseProgram(mNormalShaderProg);
 	GLuint tTempTexLoc = glGetUniformLocation(mNormalShaderProg, "TextureSampler");
 
 	glUniform1i(tTempTexLoc, 0);
@@ -225,6 +245,9 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 	glDisableVertexAttribArray(4);
 	glDisableVertexAttribArray(5);
 	glDisableVertexAttribArray(6);
+
+	glUseProgram(mText2DShaderID);
+
 
 }
 
@@ -272,7 +295,7 @@ void OGLGraphicsEngine::CompileShaders()
 		std::cin >> hi;
 	}
 
-	std::string vs, fs;
+	std::string vs, fs, textvs, textfs;
 
 	if (!ReadFile(pVSFileName, vs)) {
 		exit(1);
@@ -282,8 +305,19 @@ void OGLGraphicsEngine::CompileShaders()
 		exit(1);
 	};
 
+	if (!ReadFile(pTextVSFileName, textvs)) {
+		exit(1);
+	};
+	if (!ReadFile(pTextFSFileName, textfs)) {
+		exit(1);
+	};
+
+
 	AddShader(mNormalShaderProg, vs.c_str(), GL_VERTEX_SHADER);
 	AddShader(mNormalShaderProg, fs.c_str(), GL_FRAGMENT_SHADER);
+
+	AddShader(mText2DShaderID, textvs.c_str(), GL_VERTEX_SHADER);
+	AddShader(mText2DShaderID, textfs.c_str(), GL_FRAGMENT_SHADER);
 
 	GLint Success = 0;
 	GLchar ErrorLog[1024] = { 0 };
@@ -305,6 +339,26 @@ void OGLGraphicsEngine::CompileShaders()
 		int hi;
 		std::cin >> hi;
 	}
+
+	glLinkProgram(mText2DShaderID);
+	glGetProgramiv(mText2DShaderID, GL_LINK_STATUS, &Success);
+	if (Success == 0) {
+		glGetProgramInfoLog(mText2DShaderID, sizeof(ErrorLog), NULL, ErrorLog);
+		fprintf(stderr, "Error linking shader program for Text: '%s'\n", ErrorLog);
+		int hi;
+		std::cin >> hi;
+	}
+
+	glValidateProgram(mText2DShaderID);
+	glGetProgramiv(mText2DShaderID, GL_VALIDATE_STATUS, &Success);
+	if (!Success) {
+		glGetProgramInfoLog(mText2DShaderID, sizeof(ErrorLog), NULL, ErrorLog);
+		fprintf(stderr, "Invalid shader program for Text: '%s'\n", ErrorLog);
+		int hi;
+		std::cin >> hi;
+	}
+
+
 
 	glUseProgram(mNormalShaderProg);
 }

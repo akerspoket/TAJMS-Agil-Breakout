@@ -7,6 +7,21 @@
 
 
 using namespace std;
+
+struct TextVertex
+{
+	vec2 position;
+	vec2 texCoord;
+
+	TextVertex(vec2 pPosition, vec2 pTexCoord)
+	{
+		position = pPosition;
+		texCoord = pTexCoord;
+	}
+	TextVertex()
+	{}
+};
+
 struct Vertex
 {
 	vec3 position;
@@ -28,7 +43,7 @@ public:
 	~ObjLoader(void);
 	
 	vector<Vertex> LoadModel(const char* fileName);
-
+	vector<TextVertex> LoadTextVertices(const char* text, int x, int y, int size);
 	vector<Vertex> LoadObj(string fileName, vec3 pScale);
 	void LoadTGA();
 	//vector<Material> materials;
