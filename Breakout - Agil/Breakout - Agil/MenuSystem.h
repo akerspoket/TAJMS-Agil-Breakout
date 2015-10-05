@@ -1,6 +1,8 @@
 #pragma once
 #include "System.h"
 
+
+
 class MenuSystem :
 	public System
 {
@@ -16,7 +18,9 @@ public:
 	virtual void OnEvent(Event* pEvent);
 
 private:
-	void CheckMenuInput();
+	int mCurrentButton;
+	int mMinButton;
+	int mMaxButton;
 
 };
 
