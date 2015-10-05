@@ -187,6 +187,7 @@
     <ClInclude Include="PhysicSystem.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="ScoreSystem.h" />
+    <ClInclude Include="ScoreValueComponent.h" />
     <ClInclude Include="SoundCollisionComponent.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="SoundSystem.h" />
