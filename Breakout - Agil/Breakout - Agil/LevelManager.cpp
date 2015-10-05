@@ -1,4 +1,5 @@
 #include "LevelManager.h"
+#include "EventManager.h"
 #include "EntityManager.h"
 #include "StorageShelf.h"
 #include "TransformComponent.h"
@@ -334,6 +335,13 @@ void LevelManager::GenerateWorld(string pWorldName)
 		}
 	}
 
+
+	// This is where the score for the map is set. Should be read properly when loading map..
+	unordered_map<string, void*> payload;
+	int* score = new int();
+	*score = 1000;
+	payload["score"] = (void*)score;
+	EventManager::GetInstance()->BroadcastEvent("SetScore", payload);
 
 
 
