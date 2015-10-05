@@ -3,7 +3,8 @@
 #include "LevelManager.h"
 #include "EntityManager.h"
 #include "ComponentTable.h"
-
+#include "ScoreValueComponent.h"
+#include "StorageShelf.h"
 
 ScoreSystem::ScoreSystem()
 {
@@ -23,6 +24,7 @@ void ScoreSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("SetScore", this);
+	mEventManager->Subscribe("Collision", this);
 }
 void ScoreSystem::Start() 
 {
@@ -50,5 +52,19 @@ void ScoreSystem::OnEvent(Event* pEvent)
 	if (pEvent->mID == "SetScore")
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
+	}
+
+	else if (pEvent->mID == "Collision")
+	{
+		int value = 0;
+		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID1"], SoundCollisionType))
+		{
+			value += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID1"])->value;
+		}
+		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID2"], SoundCollisionType))
+		{
+			value  += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
+		}
+		mScore -= value;
 	}
 }
