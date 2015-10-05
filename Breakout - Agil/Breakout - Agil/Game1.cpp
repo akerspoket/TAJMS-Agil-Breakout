@@ -8,7 +8,7 @@
 #include "VelocitySystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
-
+#include "ScoreSystem.h"
 
 
 Game1::Game1()
@@ -29,6 +29,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	RenderSystem* tRender = new RenderSystem("RenderSystem");
 	TriggerSystem* tTrigger = new TriggerSystem("TriggerSystem");
 	SoundSystem* tSound = new SoundSystem("SoundSystem");
+	ScoreSystem* tScore = new ScoreSystem("ScoreSystem");
 	
 	tRender->Initialize();
 	tRender->Initialize(pWin);
@@ -38,6 +39,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tPhysics->Initialize();
 	tTrigger->Initialize();
 	tSound->Initialize();
+	tScore->Initialize();
 
 
 	mSystems.push_back(tInput);
@@ -46,6 +48,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tPhysics);
 	mSystems.push_back(tTrigger);
 	mSystems.push_back(tSound);
+	mSystems.push_back(tScore);
 	mSystems.push_back(tRender);
 
 
