@@ -41,7 +41,7 @@ int OGLGraphicsEngine::InitGlew(SDL_Window* pWND)
 	CompileShaders();
 	//InitGraphics(45.0f, 600.0f, 800.0f, 0.1f, 100, 13.0f);
 	//int result = SDL_GL_SetSwapInterval(1); //Laggs really much if vsync is active, should be something better
-	InitText2D();
+
 
 	return 1;
 }
@@ -59,11 +59,13 @@ void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWid
 	mWVPBufferID = AddUniform(mNormalShaderProg, "gProj");
 	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.projection);
 
+	mTransMatricesUniformID = AddUniform(mNormalShaderProg, "gTransMatrices");
+	//glUniformMatrix4fv(mUniforms[mTransMatricesUniformID], 1, GL_FALSE, (float*)&mWVPBuffer.world);
+
 	//För instanceDraw
 	mTransBuffer = CreateVertexBuffer(nullptr, 0);
-
-
-
+	InitText2D();
+	CreateText("Hejsan", 200, 600, 100);
 
 }
 
@@ -133,7 +135,8 @@ int OGLGraphicsEngine::CreateTexture(const char *pFileName)
 			&width, &height, 0,
 			SOIL_LOAD_RGBA
 			);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ht_map);//kanske dra in alpha i andra gl_RGB //2048 är widith å height
+	const char* res = SOIL_last_result();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ht_map);//kanske dra in alpha i andra gl_RGB //2048 är widith å height
 	SOIL_free_image_data(ht_map);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -148,7 +151,7 @@ int OGLGraphicsEngine::CreateTexture(const char *pFileName)
 void OGLGraphicsEngine::InitText2D() {
 
 	// Initialize texture
-	mText2DTextureID = CreateTexture("Letters.png");
+	mText2DTextureID = CreateTexture("Textures/Letters.png");
 
 	// Initialize VBO
 	glGenBuffers(1, &mText2DVertexBufferID);
@@ -200,18 +203,26 @@ void OGLGraphicsEngine::RenderFrame()
 		DrawObjects(mVertexBufferID, mInstanceMatricesTemp, i%2);
 		mInstanceMatricesTemp.clear();
 	}
-	
+
+}
 
 
-
+int OGLGraphicsEngine::CreateText(const char* pText, int x, int y, int size)
+{
+	if (prevScore != "Hejsan")
+	{
+		mTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
+		mtextID = CreateObjectBuffer(mTextVertices.data(), mTextVertices.size()*sizeof(TextVertex), mTextVertices.size());
+		prevScore = "Hejsan";
+		return mtextID;
+	}
 }
 
 void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
 	glUseProgram(mNormalShaderProg);
-	GLuint tTempTexLoc = glGetUniformLocation(mNormalShaderProg, "TextureSampler");
 
-	glUniform1i(tTempTexLoc, 0);
+	GLuint tTransLoc1 = glGetUniformLocation(mNormalShaderProg, "gTransMatrices");
 
 
 	glActiveTexture(GL_TEXTURE0);
@@ -222,31 +233,50 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 	GLuint tPosLoc = glGetAttribLocation(mNormalShaderProg, "Position");
 	GLuint tTexLoc = glGetAttribLocation(mNormalShaderProg, "TexCoord");
 	GLuint tNormLoc = glGetAttribLocation(mNormalShaderProg, "Normal");
-	GLuint tTransLoc = glGetAttribLocation(mNormalShaderProg, "Translation");
+	//GLuint tTransLoc = glGetAttribLocation(mNormalShaderProg, "Translation");
 	glEnableVertexAttribArray(tPosLoc);
 	glEnableVertexAttribArray(tTexLoc);
-	glEnableVertexAttribArray(tTransLoc);
+	//glEnableVertexAttribArray(tTransLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[pMeshType].BufferHandle);
 	glVertexAttribPointer(tPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	glVertexAttribPointer(tTexLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	glVertexAttribPointer(tNormLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(5 * sizeof(float)));
-	glBindBuffer(GL_ARRAY_BUFFER, mBuffers[mTransBuffer]);
-	for (size_t i = 0; i < 4; i++)
+	for (int i = 0; i < pInstanceBufferData.size(); i++)
 	{
-		glEnableVertexAttribArray(tTransLoc + i);
-		glVertexAttribPointer(tTransLoc +i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)*i));
-		glVertexAttribDivisor(tTransLoc + i, 1);
-	}	
-	glDrawArraysInstanced(GL_TRIANGLES, 0, mObjectBuffers[pMeshType].NumberOfIndices, pInstanceBufferData.size());
+		glUniformMatrix4fv(tTransLoc1, 1, GL_FALSE, (float*)&pInstanceBufferData[i]);
+		glDrawArrays(GL_TRIANGLES, 0, mObjectBuffers[pMeshType].NumberOfIndices);
+	}
+	//glDrawArraysInstanced(GL_TRIANGLES, 0, mObjectBuffers[pMeshType].NumberOfIndices, pInstanceBufferData.size());
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
-	glDisableVertexAttribArray(4);
-	glDisableVertexAttribArray(5);
-	glDisableVertexAttribArray(6);
+	//glDisableVertexAttribArray(3);
+	//glDisableVertexAttribArray(4);
+	//glDisableVertexAttribArray(5);
+	//glDisableVertexAttribArray(6);
 
 	glUseProgram(mText2DShaderID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mTextures[mText2DTextureID]);
+	// Set our "myTextureSampler" sampler to user Texture Unit 0
+	glUniform1i(mText2DUniformID, 0);
+	
+	glEnableVertexAttribArray(mVertexPosition_screenspaceID);
+	glEnableVertexAttribArray(mVertexUVID);
+	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[mtextID].BufferHandle);
+	glVertexAttribPointer(mVertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
+	glVertexAttribPointer(mVertexUVID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2*sizeof(float)));
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	// Draw call
+	glDrawArrays(GL_TRIANGLES, 0, mTextVertices.size());
+	
+	glDisable(GL_BLEND);
+	
+	glDisableVertexAttribArray(mVertexPosition_screenspaceID);
+	glDisableVertexAttribArray(mVertexUVID);
 
 
 }
@@ -288,6 +318,7 @@ void OGLGraphicsEngine::AddShader(GLuint ShaderProgram, const char* pShaderText,
 void OGLGraphicsEngine::CompileShaders()
 {
 	mNormalShaderProg = glCreateProgram();
+	mText2DShaderID = glCreateProgram();
 
 	if (mNormalShaderProg == 0) {
 		fprintf(stderr, "Error creating shader program\n");
@@ -340,6 +371,7 @@ void OGLGraphicsEngine::CompileShaders()
 		std::cin >> hi;
 	}
 
+
 	glLinkProgram(mText2DShaderID);
 	glGetProgramiv(mText2DShaderID, GL_LINK_STATUS, &Success);
 	if (Success == 0) {
@@ -349,6 +381,7 @@ void OGLGraphicsEngine::CompileShaders()
 		std::cin >> hi;
 	}
 
+
 	glValidateProgram(mText2DShaderID);
 	glGetProgramiv(mText2DShaderID, GL_VALIDATE_STATUS, &Success);
 	if (!Success) {
@@ -357,6 +390,8 @@ void OGLGraphicsEngine::CompileShaders()
 		int hi;
 		std::cin >> hi;
 	}
+
+
 
 
 

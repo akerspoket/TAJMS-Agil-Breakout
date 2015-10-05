@@ -52,6 +52,7 @@ public:
 	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
 	int CreateTexture(const char *pFileName);
 	int CreateObject(string pMeshName);
+	int CreateText(const char* pText, int x, int y, int size);
 	void EndDraw();
 	void printText2D(const char * text, int x, int y, int size);
 	glm::mat4x4 mProjMat;
@@ -75,6 +76,11 @@ private:
 	void InitText2D();
 	void cleanupText2D();
 
+	string prevScore;
+	vector<TextVertex> mTextVertices;
+	vector<GLuint> mTextBuffers;
+	int mtextID;
+
 	vector<GLuint> mTextures;
 
 	int mTextureID;
@@ -92,7 +98,7 @@ private:
 
 	//Temp things only for testing withouth rest
 	vector<InstanceBufferType> mInstanceMatricesTemp;
-
+	GLuint mTransMatricesUniformID;
 
 
 	GLuint mText2DTextureID;              // Texture containing the font
