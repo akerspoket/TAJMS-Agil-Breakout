@@ -1,6 +1,8 @@
 #include "SoundSystem.h"
 #include "EventManager.h"
-
+#include "StorageShelf.h"
+#include "ComponentTable.h"
+#include "SoundCollisionComponent.h"
 
 SoundSystem::SoundSystem()
 {
@@ -32,6 +34,7 @@ void SoundSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("Sound", this);
+	mEventManager->Subscribe("Collision", this);
 	////LinuxSOundTest=)
 #ifdef LinuxSound
 	unsigned int tID;
@@ -78,5 +81,25 @@ void SoundSystem::OnEvent(Event * pEvent)
 		mSoundEngine->PlaySound(tSoundID);
 #endif
 		
+	}
+
+	if (pEventID == "Collision")
+	{
+		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID1"], SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(*(EntityID*)pEvent->mPayload["ID1"])->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
+		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID2"], SoundCollisionType))
+		{
+			unsigned int* tSoundIDptr = new unsigned int();
+			*tSoundIDptr = GetComponent<SoundCollisionComponent>(*(EntityID*)pEvent->mPayload["ID2"])->SoundID;
+			EventManager::Payload tPayload;
+			tPayload["SoundID"] = tSoundIDptr;
+			mEventManager->BroadcastEvent("Sound", tPayload);
+		}
 	}
 }

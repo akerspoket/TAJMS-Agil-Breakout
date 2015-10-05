@@ -12,8 +12,8 @@
 #include "SoundCollisionComponent.h"
 #include "TextFileReader.h"
 #include "ComponentTable.h"
-#include <iostream>
 #include "GraphicsInterface.h"
+#include <iostream>
 #include "ScoreValueComponent.h"
 
 #include "SoundEngine.h"
