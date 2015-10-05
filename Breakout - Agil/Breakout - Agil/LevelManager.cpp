@@ -14,6 +14,7 @@
 #include "ComponentTable.h"
 #include <iostream>
 #include "GraphicsInterface.h"
+#include "ScoreValueComponent.h"
 
 #include "SoundEngine.h"
 using namespace std;
@@ -176,6 +177,7 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 	tLabel = new LabelComponent();
 	tSoundColl = new SoundCollisionComponent();
+	ScoreValueComponent* tScoreValue = new ScoreValueComponent();
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
 	tLabel->mLabel = Label::Box;
@@ -184,13 +186,13 @@ void LevelManager::Initialize()
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("test2in1pic");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 
-
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
 	tBlockBlueprint[CollisionType] = tColl;
 	tBlockBlueprint[LabelType] = tLabel;
 	tBlockBlueprint[SoundCollisionType] = tSoundColl;
+	tBlockBlueprint[ScoreValueType] = tScoreValue;
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
@@ -323,6 +325,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
 				tTrans->mPosition.y = t_forLoopI - i;
+
+				//set value of the blocks. Should be read from file
+				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
 			}
 			else if (mLevelTextVector[i].at(j) == 'G')
 			{
