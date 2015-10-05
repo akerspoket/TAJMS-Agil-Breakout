@@ -33,7 +33,6 @@ void ScoreSystem::Start()
 void ScoreSystem::Update(double pDeltaTime) 
 {
 	//Draw the score
-	cout << mScore << endl;
 
 }
 void ScoreSystem::Pause() 
@@ -66,5 +65,6 @@ void ScoreSystem::OnEvent(Event* pEvent)
 			value  += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
 		}
 		mScore -= value;
+		//cout << "Your score is:" << mScore << endl;
 	}
 }
