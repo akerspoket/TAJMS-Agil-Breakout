@@ -13,12 +13,14 @@
 TriggerSystem::TriggerSystem()
 {
 	mCreateNextLevel = true;
+	mDegenerateWorld = true;
 	mCurrentLevel = -1;
 }
 
 TriggerSystem::TriggerSystem(string pName):System(pName)
 {
 	mCreateNextLevel = true;
+	mDegenerateWorld = true;
 	mCurrentLevel = -1;
 }
 
@@ -32,6 +34,8 @@ void TriggerSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("CollideWithBottom", this);
 	mEventManager->Subscribe("CollideWithGoalBlock", this);
+	mEventManager->Subscribe("DegenerateWorld", this);
+	mEventManager->Subscribe("RestartWorld", this);
 	mEventManager->Subscribe("LaunchButtonPressed", this);
 
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
@@ -55,6 +59,12 @@ void TriggerSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntMan->GetLastEntity();
 
+	//degenerate world, can be set from events incomming
+	if (mDegenerateWorld)
+	{
+		LevelManager::GetInstance()->DegenerateWorld();
+		mDegenerateWorld = false;
+	}
 	
 
 	switch (GameStateClass::GetInstance()->GetGameState())
@@ -143,7 +153,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		//no balls active
 		if (mNumOfBallsActive < 1)
 		{
-			LevelManager::GetInstance()->DegenerateWorld();
+			mDegenerateWorld = true;
 
 			//DEBUG
 #ifdef _DEBUG
@@ -157,15 +167,14 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		mNumOfGoalBlocksActive--;
 		if (mNumOfGoalBlocksActive < 1)
 		{
-			LevelManager::GetInstance()->DegenerateWorld();
+			mCreateNextLevel = true;
+			mDegenerateWorld = true;
 
 			//DEBUG
 #ifdef _DEBUG
 			cout << "You won the level, loading next!" << endl;
 #endif
 			//END DEBUG
-
-			mCreateNextLevel = true;
 		}
 	}
 
@@ -182,5 +191,17 @@ void TriggerSystem::OnEvent(Event* pEvent)
 				GetComponent<VelocityComponent>(i)->mSpeed = 12;
 			}
 		}
+	}
+
+	else if (pEventID == "DegenerateWorld")
+	{
+		mDegenerateWorld = true;
+	}
+
+	else if (pEventID == "RestartWorld")
+	{
+		mDegenerateWorld = true;
+		mCreateNextLevel = true;
+		mCurrentLevel--;
 	}
 }

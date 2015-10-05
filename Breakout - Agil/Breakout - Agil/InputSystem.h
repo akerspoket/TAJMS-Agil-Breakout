@@ -29,5 +29,6 @@ private:
 	void MoveRight(EntityID pEntityID);
 	void MoveLeft(EntityID pEntityID);
 	void StandStill(EntityID pEntityID);
+	
 };
 

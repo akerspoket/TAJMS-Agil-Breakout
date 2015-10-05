@@ -2,21 +2,25 @@
 enum ButtonName
 {
 	/////MenyMeny
-	Start,
-	Option,
-	Highscore,
-	Tutorial,
-	Quit,
+	MainStart,
+	MainOption,
+	MainHighscore,
+	MainTutorial,
+	MainQuit,
 	//////PauseMeny
-	Resume,
-	PauseQuit,
+	PauseResume,
+	PauseRestartLevel,
+	PauseQuitToMainMenu,
+	/////DeathMenu
+	DeathRestartLevel,
+	DeathQuitToMainMenu,
 
 };
 struct MenyButtonComponent
 {
 	MenyButtonComponent()
 	{
-		mButtonName = Start;
+		mButtonName = MainStart;
 	}
 	ButtonName mButtonName;
 };

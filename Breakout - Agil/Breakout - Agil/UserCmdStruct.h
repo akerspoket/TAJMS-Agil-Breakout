@@ -11,6 +11,7 @@ struct UserCmd
 	bool mUpArrowPressed;
 	bool mDownArrowPressed;
 	bool mSpaceButtonPressed;
+	bool mEnterButtonPressed;
 };
 
 static UserCmd gUserCmd;

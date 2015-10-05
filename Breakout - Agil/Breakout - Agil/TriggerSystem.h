@@ -20,6 +20,7 @@ private:
 	int mNumOfBallsActive;
 	int mNumOfGoalBlocksActive;
 	bool mCreateNextLevel;
+	bool mDegenerateWorld;
 	int mCurrentLevel;
 	vector<string> mMapNames;
 };
