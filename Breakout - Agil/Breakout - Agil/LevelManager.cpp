@@ -15,7 +15,7 @@
 #include "GraphicsInterface.h"
 #include <iostream>
 #include "ScoreValueComponent.h"
-
+#include "MenyButtonComponent.h"
 #include "SoundEngine.h"
 using namespace std;
 
@@ -64,6 +64,8 @@ void LevelManager::Initialize()
 	VelocityComponent* tVelocity = new VelocityComponent();
 	CollisionComponent* tColl = new CollisionComponent();
 	SoundCollisionComponent* tSoundColl = new SoundCollisionComponent();
+	MenyButtonComponent* tMenButComp = new MenyButtonComponent();
+	AttachedComponent* tAttachComp = new AttachedComponent();
 
 	////////set component values
 	////////we ignore this and use the initialization values for test
@@ -291,11 +293,34 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
 
+	
+	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");//prov
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 	tMenuButtonBlock[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("MenuButtonBlock", tMenuButtonBlock);
+
+	/////MenuPointer
+	EntityFactory::EntityBlueprint tMenuPtrBlueprint;
+
+	tTrans = new TransformComponent();
+	tAttachComp = new AttachedComponent();
+	tMesh = new MeshComponent();
+	tLabel = new LabelComponent();
+
+
+	tMenuPtrBlueprint[TransformType] = tTrans;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tAttachComp->relPos = vec3(-2, 0, 0);
+	tMenuPtrBlueprint[AttachedType] = tAttachComp;
+	tMenuPtrBlueprint[MeshType] = tMesh;
+	tLabel->mLabel = Label::MenuPointer;
+	tMenuPtrBlueprint[LabelType] = tLabel;
+	
+	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
+
 
 
 }
@@ -303,21 +328,100 @@ void LevelManager::GenerateMainMenu()
 {
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = MainMenu;
+	tMenButComp->mButtonName = MainStart;
+	tTrans->mPosition = vec3(0, 8, 8);
+
+
+
+	EntityID tPointerID = mEntityFactory->CreateEntity("MenuPointer");
+	AttachedComponent* tAttComp = GetComponent<AttachedComponent>(tPointerID);
+	tAttComp->attachedTo = tNewID;
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = MainMenu;
+	tMenButComp->mButtonName = MainOption;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, 4, 8);
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = MainMenu;
+	tMenButComp->mButtonName = MainHighscore;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, 0, 8);
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = MainMenu;
+	tMenButComp->mButtonName = MainTutorial;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, -4, 8);
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = MainMenu;
+	tMenButComp->mButtonName = MainQuit;
+	tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -8, 8);
+
 }
+
 
 void LevelManager::GenerateDeathScreen()
 {
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition = vec3(0, 8, 8);
+	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = DeathMenu;
+	tMenButComp->mButtonName = DeathRestartLevel;
+	tTrans->mPosition = vec3(0, 2, 8);
+
+	EntityID tPointerID = mEntityFactory->CreateEntity("MenuPointer");
+	AttachedComponent* tAttComp = GetComponent<AttachedComponent>(tPointerID);
+	tAttComp->attachedTo = tNewID;
+
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = DeathMenu;
+	tMenButComp->mButtonName = DeathQuitToMainMenu;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, -2, 8);
+
 }
 
 void LevelManager::GeneratePauseScreen()
 {
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
-	tTrans->mPosition = vec3(8, 8, 8);
+	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = PauseMenu;
+	tMenButComp->mButtonName = PauseResume;
+	tTrans->mPosition = vec3(0, 4, 8);
+
+
+	EntityID tPointerID = mEntityFactory->CreateEntity("MenuPointer");
+	AttachedComponent* tAttComp = GetComponent<AttachedComponent>(tPointerID);
+	tAttComp->attachedTo = tNewID;
+
+
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = PauseMenu;
+	tMenButComp->mButtonName = PauseRestartLevel;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, 0, 8);
+
+	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	tMenButComp->mButtonBelong = PauseMenu;
+	tMenButComp->mButtonName = PauseQuitToMainMenu;
+	tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, -4, 8);
 }
 void LevelManager::GenerateWorld(string pWorldName)
 {
@@ -403,6 +507,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//		tTrans->mPosition.y = margin*j; 
 	//	}
 
+
+
+
 	//////////////////////////BALL////////////////////
 
 
@@ -450,7 +557,22 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 }
 
-void LevelManager::DegenerateWorld()
+void LevelManager::DegenerateMenu()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, MenyButtonType))
+		{
+			tEntManager->RemoveEntity(i);
+		}
+	}
+}
+
+void LevelManager::DegenerateEverything()
 {
 	EntityManager* pEntManager = pEntManager->GetInstance();
 	int tMaxEnt = pEntManager->GetLastEntity();

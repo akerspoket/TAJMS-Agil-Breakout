@@ -7,20 +7,21 @@
 #include "VelocityComponent.h"
 #include "StorageShelf.h"
 #include "GameState.h"
+#include "MenyButtonComponent.h"
 
 
 
 TriggerSystem::TriggerSystem()
 {
 	mCreateNextLevel = true;
-	mDegenerateWorld = true;
+	mDegenerateWorld = false;
 	mCurrentLevel = -1;
 }
 
 TriggerSystem::TriggerSystem(string pName):System(pName)
 {
 	mCreateNextLevel = true;
-	mDegenerateWorld = true;
+	mDegenerateWorld = false;
 	mCurrentLevel = -1;
 }
 
@@ -38,11 +39,14 @@ void TriggerSystem::Initialize()
 	mEventManager->Subscribe("RestartWorld", this);
 	mEventManager->Subscribe("LaunchButtonPressed", this);
 	mEventManager->Subscribe("GenerateWorld", this);
+	mEventManager->Subscribe("DegeneratePauseMenu", this);
+	mEventManager->Subscribe("GenerateMenu", this);
 
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
 	//LevelManager* tLevelManager = tLevelManager->GetInstance();
 	//tLevelManager->GenerateWorld("Levels/Level1.txt");
+	tLevelManager->GenerateMainMenu();
 
 	//add levels here
 	mMapNames.push_back("Levels/Level1.txt");
@@ -63,10 +67,28 @@ void TriggerSystem::Update(double pDeltaTime)
 	//degenerate world, can be set from events incomming
 	if (mDegenerateWorld)
 	{
-		LevelManager::GetInstance()->DegenerateWorld();
+		LevelManager::GetInstance()->DegenerateEverything();
 		mDegenerateWorld = false;
 	}
-	
+	if (mGenerateMenu)
+	{
+
+		switch ((mGenerateMenu - 1))
+		{
+		case MainMenu:
+			LevelManager::GetInstance()->GenerateMainMenu();
+			break;
+		case PauseMenu:
+			LevelManager::GetInstance()->GeneratePauseScreen();
+			break;
+		case DeathMenu:
+			LevelManager::GetInstance()->GenerateDeathScreen();
+			break;
+		default:
+			break;
+		}
+		mGenerateMenu = 0;
+	}
 
 	switch (GameStateClass::GetInstance()->GetGameState())
 	{
@@ -213,5 +235,31 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		mDegenerateWorld = true;
 		mCreateNextLevel = true;
 		mCurrentLevel--;
+	}
+
+	else if (pEventID == "DegeneratePauseMenu")
+	{
+		LevelManager::GetInstance()->DegenerateMenu();
+	}
+	else if (pEventID  == "GenerateMenu")
+	{
+		int tMenuID = *(int*)pEvent->mPayload["MenuID"];
+
+		//set next menu to be loaded, but do + 1 for bool check on 0
+		switch (tMenuID)
+		{
+		case MainMenu:
+			mGenerateMenu = MainMenu + 1;
+			break;
+		case PauseMenu:
+			mGenerateMenu = PauseMenu + 1;
+			break;
+		case DeathMenu:
+			mGenerateMenu = DeathMenu + 1;
+			break;
+		default:
+			break;
+		}
+	
 	}
 }

@@ -48,13 +48,13 @@ bool Game1::Initialize(SDL_Window* pWin)
 	//set systems to game here
 	mSystems.push_back(tInput);
 	mSystems.push_back(tVel);
-	mSystems.push_back(tAtt);
 	mSystems.push_back(tPhysics);
 	mSystems.push_back(tTrigger);
+	mSystems.push_back(tAtt);
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
-	mSystems.push_back(tRender);
 	mSystems.push_back(tMenu);
+	mSystems.push_back(tRender);
 	
 	GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);
 

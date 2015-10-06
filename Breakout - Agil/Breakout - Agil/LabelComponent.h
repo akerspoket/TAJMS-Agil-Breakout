@@ -8,6 +8,7 @@ enum Label
 	Ball,
 	GoalBlock,
 	BottomArea,
+	MenuPointer,
 };
 
 struct LabelComponent

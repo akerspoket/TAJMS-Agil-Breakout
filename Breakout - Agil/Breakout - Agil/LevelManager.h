@@ -11,7 +11,8 @@ public:
 
 	void Initialize();
 	void GenerateWorld(string pWorldName);
-	void DegenerateWorld();
+	void DegenerateMenu();
+	void DegenerateEverything();
 	void AnalyzeText(string pTextToCheck);
 	void GenerateMainMenu();
 	void GenerateDeathScreen();
