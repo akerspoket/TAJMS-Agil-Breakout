@@ -3,6 +3,8 @@
 #include "System.h"
 #include <unordered_map>
 
+#include <vector> //needed for linux
+
 using namespace std;
 
 class EventManager

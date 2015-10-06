@@ -18,7 +18,6 @@ public:
 
 private:
 	std::vector<System*> mSystems;
-
-
+	
 };
 

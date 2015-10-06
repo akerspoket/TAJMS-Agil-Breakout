@@ -19,5 +19,6 @@ public:
 private:
 	GraphicsInterface* mGraphicsInterface;
 	int mTempTextId;
+	int mScore; //stored twice. Nice
 };
 

@@ -6,6 +6,7 @@
 
 typedef int EntityID;
 
+
 //if more then 16 component-types, need to change the table from short->int
 //if you add component add code to CreateEntity function in EntityFactory
 enum ComponentType
@@ -19,6 +20,8 @@ enum ComponentType
 	VelocityForceType = 0x40,
 	SoundCollisionType = 0x80,
 	AttachedType = 0x100,
+	ScoreValueType = 0x200,
+	MenyButtonType = 0x400,
 };
 
 // 0x01 ==   1 == "00000001"
@@ -30,4 +33,9 @@ enum ComponentType
 // 0x40 ==  64 == "01000000"
 // 0x80 == 128 == "10000000"
 // 0x100 = 256 = "100000000"
+// 0x200
+// 0x400
+// 0x800
+// 0x1000
+// 0xetc
 // options == 0x01 | 0x08 | 0x10 == "00011001"

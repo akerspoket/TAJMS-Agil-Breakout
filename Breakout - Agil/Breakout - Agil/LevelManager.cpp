@@ -1,4 +1,5 @@
 #include "LevelManager.h"
+#include "EventManager.h"
 #include "EntityManager.h"
 #include "StorageShelf.h"
 #include "TransformComponent.h"
@@ -11,8 +12,9 @@
 #include "SoundCollisionComponent.h"
 #include "TextFileReader.h"
 #include "ComponentTable.h"
-#include <iostream>
 #include "GraphicsInterface.h"
+#include <iostream>
+#include "ScoreValueComponent.h"
 
 #include "SoundEngine.h"
 using namespace std;
@@ -61,35 +63,9 @@ void LevelManager::Initialize()
 	CollisionComponent* tColl = new CollisionComponent();
 	SoundCollisionComponent* tSoundColl = new SoundCollisionComponent();
 
-	////////set component values
-	////////we ignore this and use the initialization values for test
-	///////WARNINIG: We should call the graphic engine for loading a texture then
-	////////////return the ID To meshComponent
-	//tLabel->mLabel = Label::Pad;
-	//tColl->Dim = vec2(0.5, 0.5);
-	//EntityFactory::EntityBlueprint tPadBlueprint;
-	//tPadBlueprint[TransformType] = tTrans;
-	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/PadTex.dds");
-	//tPadBlueprint[MeshType] = tMesh;
-	//tPadBlueprint[LabelType] = tLabel;
-	//tPadBlueprint[CollisionType] = tColl;
-	//tPadBlueprint[TransformType] = tTrans;
-	//tPadBlueprint[VelocityType] = tVelocity;
-	//
-	//mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
-	///ska skapa en BluePrint
-
-
-	////Med Textfil
-
+	//////////////////////Creates pad entity blueprint fron text file
 	EntityFactory::EntityBlueprint tPadBlueprint;///////tPadBluePrint
-	//tTrans = new TransformComponent();
-	//tMesh = new MeshComponent();
-	//tLabel = new LabelComponent();
-	//tPhysic = new PhysicComponent();
-	//tVelocity = new VelocityComponent();
-	//tColl = new CollisionComponent();
 	string tBlueprintNamn = "";
 	vector<string> mEntitiyVector;
 	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
@@ -154,17 +130,6 @@ void LevelManager::Initialize()
 	tPadBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
-	/////ska skapa en BluePrint
-
-
-
-
-
-
-
-
-
-
 
 	/////////////////////////////////BLOCK///////////////////
 	EntityFactory::EntityBlueprint tBlockBlueprint;
@@ -175,6 +140,7 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 	tLabel = new LabelComponent();
 	tSoundColl = new SoundCollisionComponent();
+	ScoreValueComponent* tScoreValue = new ScoreValueComponent();
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
 	tLabel->mLabel = Label::Box;
@@ -183,13 +149,13 @@ void LevelManager::Initialize()
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("test2in1pic");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
 
-
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
 	tBlockBlueprint[VelocityType] = tVelocity;
 	tBlockBlueprint[CollisionType] = tColl;
 	tBlockBlueprint[LabelType] = tLabel;
 	tBlockBlueprint[SoundCollisionType] = tSoundColl;
+	tBlockBlueprint[ScoreValueType] = tScoreValue;
 
 	mEntityFactory->RegisterEntityTemplate("Block", tBlockBlueprint);
 
@@ -214,8 +180,6 @@ void LevelManager::Initialize()
 	tBallBlueprint[MeshType] = tMesh;
 	tBallBlueprint[LabelType] = tLabel;
 	tBallBlueprint[CollisionType] = tColl;
-
-	
 
 	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 
@@ -284,15 +248,6 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
-	
-	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
-	//tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
-	//tGraphicsInterFace->CreateObject("Box.obj");
-
-
-	//tGraphicsInterFace->CreateTexture(L"namn.dds");
-	//tGraphicsInterFace->CreateObject("Box.obj");
-
 
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
@@ -312,6 +267,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 		t_forLooPJ = mLevelTextVector[2].size();
 	}
 	
+	int* tScore = new int();
+
 	for (size_t i = 0; i < t_forLoopI; i++)
 	{
 		for (size_t j = 0; j < t_forLooPJ; j++)
@@ -322,6 +279,11 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
 				tTrans->mPosition.y = t_forLoopI - i;
+
+				//set value of the blocks. Should be read from file
+				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
+				//Max score is the sum of the score of each block
+				*tScore += 50;
 			}
 			else if (mLevelTextVector[i].at(j) == 'G')
 			{
@@ -335,53 +297,18 @@ void LevelManager::GenerateWorld(string pWorldName)
 	}
 
 
+	// This is where the score for the map is set. Should be read properly when loading map..
+	unordered_map<string, void*> payload;
+	payload["score"] = (void*)tScore;
+	EventManager::GetInstance()->BroadcastEvent("SetScore", payload);
 
-
-	
-	/////////////////////BLOCKS//////////////////////
-	//
-	//int blockX = 10;
-	//int blockY = 5;
-
-	////Space between blocks. Should probably be expanded to account for block sizes
-	////Hard-coded until we can read from proper level file
-	//float margin = 1;
-
-	//for (int i = 0; i < blockX; i++)
-	//	for (int j = 0; j < blockY; j++)
-	//	{
-	//		tNewID = mEntityFactory->CreateEntity("Block");
-	//		tTrans = GetComponent<TransformComponent>(tNewID);
-	//		tTrans->mPosition.x = margin*i;
-	//		tTrans->mPosition.y = margin*j; 
-	//	}
 
 	//////////////////////////BALL////////////////////
-
-
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
 	AttachedComponent* tAtt = GetComponent<AttachedComponent>(tNewID);
 	tAtt->attachedTo = tPaddID;
 	tAtt->relPos = vec3(0, 1, 0);
-
-	//tTrans = GetComponent<TransformComponent>(tNewID);
-	//tTrans->mPosition.x = -2;
-	//tTrans->mPosition.y = -1;
-
-	//VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	//tVel->mSpeed = 8.0f;
-	//vec3 tStartDirection = vec3(1.0f, 2.0f, 0.0f).Normalize();
-	//tVel->mDirection.x = tStartDirection.x;
-	//tVel->mDirection.y = tStartDirection.y;
-	//tVel->mDirection.z = tStartDirection.z;
-
-
-	////////////////////GOAL//////////////////////////
-	//tNewID = mEntityFactory->CreateEntity("GoalBlock");
-	//GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
-	//ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
-	//GetComponent<LabelComponent>(tNewID)->mLabel = Label::GoalBlock;
 
 
 	//////////////////TOP BOT WALL///////////////////

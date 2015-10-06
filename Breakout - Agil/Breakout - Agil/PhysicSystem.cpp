@@ -9,6 +9,7 @@
 #include "SoundCollisionComponent.h"
 #include "AttachedComponent.h"
 #include "LabelComponent.h"
+#include "GameState.h"
 
 #include <cmath> //needed for linux... come on!
 
@@ -49,12 +50,7 @@ void PhysicSystem::AABBvsAABB(EntityID pEntityID1, EntityID pEntityID2, Collisio
 	{
 		return;
 	}
-	/*if (abs(pTrans1->mPosition.z - pTrans2->mPosition.z) > (pColl1->X + pColl2->X))  //for the Z, don't think we will use it?
-	{
-		return false;
-	}*/
 
-	//handle collisison
 }
 
 void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pColl1, TransformComponent* pTrans1, CollisionComponent* pColl2, TransformComponent* pTrans2)
@@ -201,30 +197,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 
 				
-				//pSphereTrans->mPosition = pSphereTrans->mPrevPosition;
 
-				//if (ComponentTable::GetInstance()->HasComponent(pEntityID1, VelocityType))
-				//{
-				//	VelocityComponent* tVel2 = GetComponent<VelocityComponent>(pEntityID1);
-				//	float tDot = tVel2->mDirection*tVel->mDirection;
-				//	if (tDot > 0.0f)
-				//	{
-				//		//Force component
-				//		ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
-
-				//		//need to check if already have force
-
-
-				//		VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
-				//		tVelForceComp->mEndValue = tVel->mSpeed;
-				//		tVelForceComp->mType = ByValue;
-				//		tVelForceComp->mIncrease = false;
-				//		tVelForceComp->mAmount = -0.09f;
-
-				//		//Increase speed
-				//		tVel->mSpeed *= 2;
-				//	}
-				//}
 			}
 
 		}
@@ -267,23 +240,15 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			}
 		}
 
-		//send sound event
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, SoundCollisionType))
-		{
-			unsigned int* tSoundIDptr = new unsigned int();
-			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID1)->SoundID;
-			EventManager::Payload tPayload;
-			tPayload["SoundID"] = tSoundIDptr;
-			mEventManager->BroadcastEvent("Sound", tPayload);
-		}
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID2, SoundCollisionType))
-		{
-			unsigned int* tSoundIDptr = new unsigned int();
-			*tSoundIDptr = GetComponent<SoundCollisionComponent>(pEntityID2)->SoundID;
-			EventManager::Payload tPayload;
-			tPayload["SoundID"] = tSoundIDptr;
-			mEventManager->BroadcastEvent("Sound", tPayload);
-		}
+		//Broadcast that there was a collision
+		unordered_map<string, void*> payload;
+		EntityID* id1 = new EntityID();
+		*id1 = pEntityID1;
+		payload["ID1"] = id1;
+		EntityID* id2 = new EntityID();
+		*id2 = pEntityID2;
+		payload["ID2"] = id2;
+		mEventManager->BroadcastEvent("Collision", payload);
 		
 		//remove block
 		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
@@ -346,62 +311,43 @@ void PhysicSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
-	//update position with force
-	//for (int i = 0; i < tMaxEnt; i++)
-	//{
-
-	//	//Ensure that relevant components exist
-	//	short tFlags = VelocityForceType | TransformType;
-	//	if (tCompTable->HasComponent(i, tFlags))
-	//	{
-	//		TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-	//		VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
-
-	//		if (tVelForce->mType == ForceType::ByValue)
-	//		{
-	//			tTrans->mPosition += tTrans->mPosition.Normalize() * tVelForce->mAmount * (float)pDeltaTime;
-	//		}
-	//		else if (tVelForce->mType == ForceType::Percentage)
-	//		{
-	//			tTrans->mPosition = tTrans->mPosition * tVelForce->mAmount * (float)pDeltaTime;
-	//		}
-
-	//		//we don't set previous position to position here... should move this code into same loop
-	//		
-
-	//		//check if reached goal on the velocity
-	//		
-
-	//		//DEBUG
-	//		if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
-	//			cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
-	//		//END DEBUG
-	//	}
-	//}
-
-
-	//checking static collisions, not counting in their moved distance as a box
-	for (int i = 0; i < tMaxEnt; i++)
+	switch (GameStateClass::GetInstance()->GetGameState())
 	{
-		if (tCompTable->HasComponent(i, CollisionType | TransformType))
+	case MenuScreen:
+		break;
+	case GameScreen:
+		//checking static collisions, not counting in their moved distance as a box
+		for (int i = 0; i < tMaxEnt; i++)
 		{
-			CollisionComponent* tColl1 = GetComponent<CollisionComponent>(i);
-			TransformComponent* tTrans1 = GetComponent<TransformComponent>(i);
-
-			for (int k = i + 1; k < tMaxEnt; k++)
+			if (tCompTable->HasComponent(i, CollisionType | TransformType))
 			{
-				if (tCompTable->HasComponent(k, CollisionType | TransformType))
+				CollisionComponent* tColl1 = GetComponent<CollisionComponent>(i);
+				TransformComponent* tTrans1 = GetComponent<TransformComponent>(i);
+
+				for (int k = i + 1; k < tMaxEnt; k++)
 				{
-					CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
-					TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
+					if (tCompTable->HasComponent(k, CollisionType | TransformType))
+					{
+						CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
+						TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
 
-					//Handles everything about collision
-					HandleCollision(i, k, tColl1, tTrans1, tColl2, tTrans2);
+						//Handles everything about collision
+						HandleCollision(i, k, tColl1, tTrans1, tColl2, tTrans2);
 
+					}
 				}
 			}
 		}
+		break;
+	case DeathScreen:
+		break;
+	case PauseScreen:
+		break;
+	default:
+		break;
 	}
+
+	
 }
 
 void PhysicSystem::Pause()

@@ -6,7 +6,7 @@
 #include "ComponentTable.h"
 #include "TransformComponent.h"
 #include "MeshComponent.h"
-
+#include "GameState.h"
 
 
 RenderSystem::RenderSystem()
@@ -26,6 +26,7 @@ void RenderSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
+	mEventManager->Subscribe("DrawScore", this);
 
 
 
@@ -48,6 +49,12 @@ void RenderSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
+	
+	switch (GameStateClass::GetInstance()->GetGameState())
+	{
+	case MenuScreen:
+	break;
+	case GameScreen:
 	for (int i = 0; i < tMaxEnt; i++)
 	{
 		short tFlags = MeshType | TransformType;
@@ -62,6 +69,17 @@ void RenderSystem::Update(double pDeltaTime)
 	}
 	mGraphicsInterface->DrawThisText("Score: 0", vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->EndDraw();
+	break;
+	case DeathScreen:
+	break;
+	case PauseScreen:
+		mGraphicsInterface->EndDraw();
+	break;
+	default:
+	break;
+	}
+
+	
 }
 void RenderSystem::Pause()
 {
@@ -74,4 +92,8 @@ void RenderSystem::Stop()
 void RenderSystem::OnEvent(Event* pEvent)
 {
 
+	if (pEvent->mID == "score")
+	{
+		mScore = *(int*)pEvent->mPayload["score"];
+	}
 }

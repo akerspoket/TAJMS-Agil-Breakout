@@ -1,0 +1,140 @@
+				//pSphereTrans->mPosition = pSphereTrans->mPrevPosition;
+
+				//if (ComponentTable::GetInstance()->HasComponent(pEntityID1, VelocityType))
+				//{
+				//	VelocityComponent* tVel2 = GetComponent<VelocityComponent>(pEntityID1);
+				//	float tDot = tVel2->mDirection*tVel->mDirection;
+				//	if (tDot > 0.0f)
+				//	{
+				//		//Force component
+				//		ComponentTable::GetInstance()->AddComponent(pEntityID2, VelocityForceType);
+
+				//		//need to check if already have force
+
+
+				//		VelocityForceComponent* tVelForceComp = GetComponent<VelocityForceComponent>(pEntityID2);
+				//		tVelForceComp->mEndValue = tVel->mSpeed;
+				//		tVelForceComp->mType = ByValue;
+				//		tVelForceComp->mIncrease = false;
+				//		tVelForceComp->mAmount = -0.09f;
+
+				//		//Increase speed
+				//		tVel->mSpeed *= 2;
+				//	}
+				//}
+
+					/*if (abs(pTrans1->mPosition.z - pTrans2->mPosition.z) > (pColl1->X + pColl2->X))  //for the Z, don't think we will use it?
+	{
+		return false;
+	}*/
+
+	//handle collisison
+
+		//update position with force
+	//for (int i = 0; i < tMaxEnt; i++)
+	//{
+
+	//	//Ensure that relevant components exist
+	//	short tFlags = VelocityForceType | TransformType;
+	//	if (tCompTable->HasComponent(i, tFlags))
+	//	{
+	//		TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+	//		VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+	//		if (tVelForce->mType == ForceType::ByValue)
+	//		{
+	//			tTrans->mPosition += tTrans->mPosition.Normalize() * tVelForce->mAmount * (float)pDeltaTime;
+	//		}
+	//		else if (tVelForce->mType == ForceType::Percentage)
+	//		{
+	//			tTrans->mPosition = tTrans->mPosition * tVelForce->mAmount * (float)pDeltaTime;
+	//		}
+
+	//		//we don't set previous position to position here... should move this code into same loop
+	//		
+
+	//		//check if reached goal on the velocity
+	//		
+
+	//		//DEBUG
+	//		if (GetComponent<LabelComponent>(i)->mLabel == Label::Pad)
+	//			cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+	//		//END DEBUG
+	//	}
+	//}
+
+
+	
+					//Update speed with force if needed (SHOULD PROBABLY NOT BE DONE HERE)
+					//if (tCompTable->HasComponent(i, VelocityForceType))
+					//{
+					//	VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
+
+					//	//update position
+					//	if (tVelForce->mType == ForceType::ByValue)
+					//	{
+					//		//tTrans->mPosition += tVel->mDirection * tVelForce->mAmount * (float)pDeltaTime* (float)pDeltaTime * 0.5f;
+					//		tVel->mSpeed += tVelForce->mAmount * (float)pDeltaTime;
+					//	}
+					//	else if (tVelForce->mType == ForceType::Percentage)
+					//	{
+					//		tVel->mSpeed *= tVelForce->mAmount * (float)pDeltaTime;
+					//		//tTrans->mPosition = tVel->mDirection * tVel->mSpeed * tVelForce->mAmount * (float)pDeltaTime;
+					//	}
+
+					//	//update speed
+					//	if ((tVel->mSpeed > tVelForce->mEndValue) == tVelForce->mIncrease)
+					//	{
+					//		tVel->mSpeed = tVelForce->mEndValue;
+					//		tCompTable->RemoveComponent(i, VelocityForceType);
+					//	}
+
+					//}
+
+					//DEBUG
+					//if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+					//	cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
+
+					//END DEBUG
+
+
+					
+
+	
+	/////////////////////BLOCKS//////////////////////
+	//
+	//int blockX = 10;
+	//int blockY = 5;
+
+	////Space between blocks. Should probably be expanded to account for block sizes
+	////Hard-coded until we can read from proper level file
+	//float margin = 1;
+
+	//for (int i = 0; i < blockX; i++)
+	//	for (int j = 0; j < blockY; j++)
+	//	{
+	//		tNewID = mEntityFactory->CreateEntity("Block");
+	//		tTrans = GetComponent<TransformComponent>(tNewID);
+	//		tTrans->mPosition.x = margin*i;
+	//		tTrans->mPosition.y = margin*j; 
+	//	}
+
+
+	
+	//tTrans = GetComponent<TransformComponent>(tNewID);
+	//tTrans->mPosition.x = -2;
+	//tTrans->mPosition.y = -1;
+
+	//VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
+	//tVel->mSpeed = 8.0f;
+	//vec3 tStartDirection = vec3(1.0f, 2.0f, 0.0f).Normalize();
+	//tVel->mDirection.x = tStartDirection.x;
+	//tVel->mDirection.y = tStartDirection.y;
+	//tVel->mDirection.z = tStartDirection.z;
+
+
+	////////////////////GOAL//////////////////////////
+	//tNewID = mEntityFactory->CreateEntity("GoalBlock");
+	//GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
+	//ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
+	//GetComponent<LabelComponent>(tNewID)->mLabel = Label::GoalBlock;
