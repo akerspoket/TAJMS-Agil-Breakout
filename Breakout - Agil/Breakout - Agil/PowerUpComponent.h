@@ -7,6 +7,12 @@ enum PowerUpType
 	SpeedUp = 0x01,
 };
 
+//enum PowerUpTimerLocation
+//{
+//	SpeedUpTimerLocation,
+//	NumPowerUps,
+//};
+
 struct PowerUpComponent
 {
 	PowerUpComponent()
@@ -15,7 +21,7 @@ struct PowerUpComponent
 	}
 
 	short powerUps;
-	float timers[1];
+	//float timers[NumPowerUps];
 
 	bool HasPowerUp(short pMask)
 	{

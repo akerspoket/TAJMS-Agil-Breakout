@@ -15,6 +15,8 @@
 #include "GraphicsInterface.h"
 #include <iostream>
 #include "ScoreValueComponent.h"
+#include "PowerUpComponent.h"
+
 #include "MenyButtonComponent.h"
 #include "SoundEngine.h"
 using namespace std;
@@ -224,7 +226,7 @@ void LevelManager::Initialize()
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(30,0.2f);
-
+	
 
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
@@ -407,7 +409,7 @@ void LevelManager::GeneratePauseScreen()
 }
 void LevelManager::GenerateWorld(string pWorldName)
 {
-	
+
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	EntityID tPaddID = tNewID;
@@ -416,6 +418,19 @@ void LevelManager::GenerateWorld(string pWorldName)
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
+	/////TEST ADDING SPEEDUP POWERUP////////
+	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	unordered_map<string, void*> pupPayload;
+	EntityID* entID = new EntityID();
+	*entID = tNewID;
+	pupPayload["EntityID"] = entID;
+	short* mask = new short();
+	*mask = SpeedUp;
+	pupPayload["mask"] = mask;
+	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//////END TEST/////////////////
+
+	//////////////////BLOCKS/////////////////////
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
 	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
