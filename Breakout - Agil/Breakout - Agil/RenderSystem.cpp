@@ -67,7 +67,8 @@ void RenderSystem::Update(double pDeltaTime)
 			mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, tTrans, 1);
 		}
 	}
-	mGraphicsInterface->DrawThisText("Score: 0", vec2(0,800-25),25,mTempTextId);
+	
+	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->EndDraw();
 	break;
 	case DeathScreen:
@@ -92,7 +93,7 @@ void RenderSystem::Stop()
 void RenderSystem::OnEvent(Event* pEvent)
 {
 
-	if (pEvent->mID == "score")
+	if (pEvent->mID == "DrawScore")
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
 	}
