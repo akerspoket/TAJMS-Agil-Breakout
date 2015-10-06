@@ -190,6 +190,7 @@
     <ClInclude Include="OGLGraphicsEngine.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
+    <ClInclude Include="PowerUpComponent.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="ScoreSystem.h" />
     <ClInclude Include="ScoreValueComponent.h" />
