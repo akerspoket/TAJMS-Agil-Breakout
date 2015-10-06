@@ -7,6 +7,7 @@ GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
 	mObjLoader = new ObjLoader();
+	mSentence.maxLength = 60;
 }
 
 
@@ -50,7 +51,21 @@ void GraphicsEngine::InitD3D()
 	pBackBuffer->Release();
 	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
 
-
+	D3D11_RASTERIZER_DESC rastDesc;
+	ZeroMemory(&rastDesc, sizeof(rastDesc));
+	rastDesc.FillMode = D3D11_FILL_SOLID;
+	rastDesc.CullMode = D3D11_CULL_NONE;
+	rastDesc.FrontCounterClockwise = false;
+	rastDesc.DepthBias = 0;
+	rastDesc.DepthBiasClamp = 0.0f;
+	rastDesc.SlopeScaledDepthBias = 0.0f;
+	rastDesc.DepthClipEnable = false;
+	rastDesc.ScissorEnable = false;
+	rastDesc.MultisampleEnable = true;
+	rastDesc.AntialiasedLineEnable = false;
+	ID3D11RasterizerState* tRastHandle;
+	res = dev->CreateRasterizerState(&rastDesc, &tRastHandle);
+	devcon->RSSetState(tRastHandle);
 	//DepthBuffer THINGIES
 	D3D11_TEXTURE2D_DESC dbdesc;
 	ZeroMemory(&dbdesc, sizeof(dbdesc));
@@ -92,6 +107,28 @@ void GraphicsEngine::InitD3D()
 	viewport.MaxDepth = 1.0f;
 
 	devcon->RSSetViewports(1, &viewport);
+
+	//For Transparancy
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
+	ZeroMemory(&rtbd, sizeof(rtbd));
+
+	rtbd.BlendEnable = true;
+	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+	rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	rtbd.RenderTargetWriteMask = 0x0f;
+
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	dev->CreateBlendState(&blendDesc, &mBlendState);
+
 }
 
 void GraphicsEngine::CleanD3D()
@@ -143,7 +180,14 @@ void GraphicsEngine::InitPipeline()
 	};
 	CreateShader(VertexShader, &mVertexShader->ShaderHandle, L"VertexShader.hlsl", "VShader", &mVertexShader->InputLayout, ied, ARRAYSIZE(ied));
 	CreateShader(PixelShader, &mPixelShader, L"PixelShader.hlsl", "PShader", nullptr,NULL,0);
+	D3D11_INPUT_ELEMENT_DESC textIED[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 
+	};
+	CreateShader(VertexShader, &mTextVertexShader->ShaderHandle, L"TextVertexShader.hlsl", "main", &mTextVertexShader->InputLayout, textIED, ARRAYSIZE(textIED));
+	CreateShader(PixelShader, &mTextPixelShader, L"TextPixelShader.hlsl", "main", nullptr, NULL, 0);
 	SetActiveShader(VertexShader,mVertexShader);
 	SetActiveShader(PixelShader, mPixelShader);
 }
@@ -195,7 +239,7 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	////Ladda In texture
 	HRESULT hr;
 	mCubesTexture = 0;
-	hr = CreateDDSTextureFromFile(dev, L"test2in1pic.dds", nullptr, &mCubesTexture);
+	hr = CreateDDSTextureFromFile(dev, L"Textures/Letters.dds", nullptr, &mCubesTexture); //set alpha value
 	if (FAILED(hr))
 	{
 		return;
@@ -208,10 +252,10 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	texSamDesc.MipLODBias = 0;
 	texSamDesc.MaxAnisotropy = 1;
 	texSamDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	texSamDesc.BorderColor[0] = 1.0f;
-	texSamDesc.BorderColor[1] = 1.0f;
-	texSamDesc.BorderColor[2] = 1.0f;
-	texSamDesc.BorderColor[3] = 1.0f;
+	texSamDesc.BorderColor[0] = 0.0f;
+	texSamDesc.BorderColor[1] = 0.0f;
+	texSamDesc.BorderColor[2] = 0.0f;
+	texSamDesc.BorderColor[3] = 0.0f;
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
 	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
 
@@ -222,8 +266,24 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 		return;
 	}
 
-	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
+	//devcon->PSSetShaderResources(0, 1, &mCubesTexture);
 	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
+	SetActiveShader(PixelShader, mTextPixelShader);
+	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
+	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
+	SetActiveShader(PixelShader, mPixelShader);
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(TextVertex) * mSentence.maxLength * 6; //Times 6 since each char needs 6 vertices
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	res = dev->CreateBuffer(&bd, NULL, &mSentence.vertexDescription);
+	if (res != S_OK)
+	{
+		cout << "Couldnt initiate text buffer";
+	}
+
 
 }
 
@@ -231,7 +291,6 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 
 void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
-
 
 	mInstanceBuffer = pInstanceBufferData;
 	mVertexBufferID = 0;
@@ -261,10 +320,11 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 	
 	devcon->DrawInstanced(mObjectBuffers[pMeshType].numberOfIndices, mInstanceBuffer.size(), 0, 0);
 	
-
+	
 }
 void GraphicsEngine::EndDraw()
 {
+	DrawThisText("PQR", vec2(400, 400), 100,0);
 	swapchain->Present(1, 0);
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
@@ -309,7 +369,7 @@ bool GraphicsEngine::SetActiveShader(ShaderType pType, void* oShaderHandle)
 	{
 		VertexShaderComponents* tVS = (VertexShaderComponents*)oShaderHandle;
 		devcon->VSSetShader(tVS->ShaderHandle, 0, 0);
-		devcon->IASetInputLayout(mVertexShader->InputLayout);
+		devcon->IASetInputLayout(tVS->InputLayout);
 	}break;
 	case GraphicsEngine::PixelShader:
 	{
@@ -441,13 +501,49 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	int retValue = CreateObjectBuffer(bd, tVertices.size());
 	PushToDevice(mObjectBuffers[retValue].vertexDescription, tVertices.data(), bd.ByteWidth);
-	CreateText("HEJSAN", vec2(0, 0), 0);
 
 	return retValue;
 }
 
-vector<Vertex> GraphicsEngine::CreateText(string pText, vec2 pPosition, float pSize)
+void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID)
 {
+	SetActiveShader(VertexShader, mTextVertexShader);
+	SetActiveShader(PixelShader, mTextPixelShader);
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
+	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
+	unsigned int strides[1];
+	unsigned int offsets[1];
+	ID3D11Buffer* bufferPointers[1];
+	if (pText != mSentence.text)
+	{
+		mSentence.text = pText;
+		CreateText(&mSentence, pPosition, pSize);
+	}
+	strides[0] = sizeof(TextVertex);
+
+
+	offsets[0] = 0;
+
+	bufferPointers[0] = mSentence.vertexDescription;
+
+	devcon->IASetVertexBuffers(0, 1, bufferPointers, strides, offsets);
+	//devcon->IASetIndexBuffer(mObjectBuffers[pMeshType].indexDescription, DXGI_FORMAT_R32_UINT, 0);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	devcon->Draw(mSentence.numberOfIndices, 0);
+	devcon->OMSetBlendState(0, 0, 0xffffffff);
+	SetActiveShader(VertexShader, mVertexShader);
+	SetActiveShader(PixelShader, mPixelShader);
+}
+
+void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize)
+{
+	vector<TextVertex> tTextVertices;
+	tTextVertices = mObjLoader->LoadTextVertices(pText->text.c_str(), pPosition.x, pPosition.y, pSize);
+
+	PushToDevice(pText->vertexDescription, tTextVertices.data(), tTextVertices.size() * sizeof(TextVertex));
+	pText->numberOfIndices = tTextVertices.size();
 	
 }
 #endif

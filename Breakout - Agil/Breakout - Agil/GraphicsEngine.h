@@ -36,12 +36,6 @@ struct MatrixBufferType
 	XMMATRIX projection;
 };
 
-struct MovementBufferType
-{
-	float time;
-	XMFLOAT3 filler;
-};
-
 struct ObjectBufferType
 {
 	ID3D11Buffer* vertexDescription;
@@ -66,6 +60,13 @@ private:
 	{
 		ID3D11VertexShader* ShaderHandle;
 		ID3D11InputLayout * InputLayout;
+	};
+	struct SentenceType
+	{
+		string text;
+		ID3D11Buffer* vertexDescription;
+		unsigned int numberOfIndices;
+		unsigned int maxLength;
 	};
 public:
 	GraphicsEngine();
@@ -93,6 +94,8 @@ public:
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateTexture(const wchar_t *pFileName);
 	void EndDraw();
+	void CreateNewText();
+	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 
 private:
 
@@ -109,12 +112,16 @@ private:
 	bool PushToDevice(int pBufferID, void* pDataStart, unsigned int pSize, unsigned int pRegister, ShaderType pType);
 	bool PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsigned int pSize);
 	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, unsigned int pNumberOfVertices);
-	vector<Vertex> CreateText(string pText, vec2 pPosition, float pSize);
+	void CreateText(SentenceType* pText, vec2 pPosition, float pSize);
 	//Variables
 	ID3D11PixelShader* mPixelShader;
+	ID3D11PixelShader* mTextPixelShader;
 	VertexShaderComponents* mVertexShader = new VertexShaderComponents;
+	VertexShaderComponents* mTextVertexShader = new VertexShaderComponents;
 	vector< ObjectBufferType> mObjectBuffers;
 	vector< ID3D11Buffer*> mBuffers;
+	
+	ID3D11BlendState* mBlendState;
 	MatrixBufferType tBufferInfo;
 	int mVertexBufferID;
 	int mIndexBufferID;
@@ -128,6 +135,8 @@ private:
 	ID3D11SamplerState* mCubesTexSamplerState;
 
 	ObjLoader* mObjLoader;
+
+	SentenceType mSentence;
 };
 
 #endif

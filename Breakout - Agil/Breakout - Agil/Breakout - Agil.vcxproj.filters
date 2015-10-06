@@ -248,6 +248,8 @@
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="PixelShader.hlsl" />
+    <FxCompile Include="TextPixelShader.hlsl" />
+    <FxCompile Include="TextVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="davai.png">
@@ -266,6 +268,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Textures\GoalTexture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Letters.DDS">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
