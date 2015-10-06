@@ -15,6 +15,7 @@ struct PowerUpComponent
 	}
 
 	short powerUps;
+	float timers[1];
 
 	bool HasPowerUp(short pMask)
 	{
