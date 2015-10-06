@@ -15,6 +15,7 @@
 #include "GraphicsInterface.h"
 #include <iostream>
 #include "ScoreValueComponent.h"
+#include "PowerUpComponent.h"
 
 #include "SoundEngine.h"
 using namespace std;
@@ -257,6 +258,19 @@ void LevelManager::GenerateWorld(string pWorldName)
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
+	/////TEST ADDING SPEEDUP POWERUP////////
+	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	unordered_map<string, void*> pupPayload;
+	EntityID* entID = new EntityID();
+	*entID = tNewID;
+	pupPayload["EntityID"] = entID;
+	short* mask = new short();
+	*mask = SpeedUp;
+	pupPayload["mask"] = mask;
+	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//////END TEST/////////////////
+
+	//////////////////BLOCKS/////////////////////
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
 	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
