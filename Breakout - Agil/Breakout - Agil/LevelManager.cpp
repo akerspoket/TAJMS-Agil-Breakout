@@ -63,35 +63,9 @@ void LevelManager::Initialize()
 	CollisionComponent* tColl = new CollisionComponent();
 	SoundCollisionComponent* tSoundColl = new SoundCollisionComponent();
 
-	////////set component values
-	////////we ignore this and use the initialization values for test
-	///////WARNINIG: We should call the graphic engine for loading a texture then
-	////////////return the ID To meshComponent
-	//tLabel->mLabel = Label::Pad;
-	//tColl->Dim = vec2(0.5, 0.5);
-	//EntityFactory::EntityBlueprint tPadBlueprint;
-	//tPadBlueprint[TransformType] = tTrans;
-	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(L"Textures/PadTex.dds");
-	//tPadBlueprint[MeshType] = tMesh;
-	//tPadBlueprint[LabelType] = tLabel;
-	//tPadBlueprint[CollisionType] = tColl;
-	//tPadBlueprint[TransformType] = tTrans;
-	//tPadBlueprint[VelocityType] = tVelocity;
-	//
-	//mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
-	///ska skapa en BluePrint
-
-
-	////Med Textfil
-
+	//////////////////////Creates pad entity blueprint fron text file
 	EntityFactory::EntityBlueprint tPadBlueprint;///////tPadBluePrint
-	//tTrans = new TransformComponent();
-	//tMesh = new MeshComponent();
-	//tLabel = new LabelComponent();
-	//tPhysic = new PhysicComponent();
-	//tVelocity = new VelocityComponent();
-	//tColl = new CollisionComponent();
 	string tBlueprintNamn = "";
 	vector<string> mEntitiyVector;
 	mEntitiyVector = TextFileReader::ReadTextFile("Entities/Pad.txt");
@@ -156,17 +130,6 @@ void LevelManager::Initialize()
 	tPadBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("Padda", tPadBlueprint);
 
-	/////ska skapa en BluePrint
-
-
-
-
-
-
-
-
-
-
 
 	/////////////////////////////////BLOCK///////////////////
 	EntityFactory::EntityBlueprint tBlockBlueprint;
@@ -217,8 +180,6 @@ void LevelManager::Initialize()
 	tBallBlueprint[MeshType] = tMesh;
 	tBallBlueprint[LabelType] = tLabel;
 	tBallBlueprint[CollisionType] = tColl;
-
-	
 
 	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 
@@ -287,15 +248,6 @@ void LevelManager::Initialize()
 
 void LevelManager::GenerateWorld(string pWorldName)
 {
-	
-	//GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
-	//tGraphicsInterFace->CreateTexture(L"test2in1pic.dds");
-	//tGraphicsInterFace->CreateObject("Box.obj");
-
-
-	//tGraphicsInterFace->CreateTexture(L"namn.dds");
-	//tGraphicsInterFace->CreateObject("Box.obj");
-
 
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
@@ -351,52 +303,12 @@ void LevelManager::GenerateWorld(string pWorldName)
 	EventManager::GetInstance()->BroadcastEvent("SetScore", payload);
 
 
-
-	
-	/////////////////////BLOCKS//////////////////////
-	//
-	//int blockX = 10;
-	//int blockY = 5;
-
-	////Space between blocks. Should probably be expanded to account for block sizes
-	////Hard-coded until we can read from proper level file
-	//float margin = 1;
-
-	//for (int i = 0; i < blockX; i++)
-	//	for (int j = 0; j < blockY; j++)
-	//	{
-	//		tNewID = mEntityFactory->CreateEntity("Block");
-	//		tTrans = GetComponent<TransformComponent>(tNewID);
-	//		tTrans->mPosition.x = margin*i;
-	//		tTrans->mPosition.y = margin*j; 
-	//	}
-
 	//////////////////////////BALL////////////////////
-
-
 	tNewID = mEntityFactory->CreateEntity("Ball");
 	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
 	AttachedComponent* tAtt = GetComponent<AttachedComponent>(tNewID);
 	tAtt->attachedTo = tPaddID;
 	tAtt->relPos = vec3(0, 1, 0);
-
-	//tTrans = GetComponent<TransformComponent>(tNewID);
-	//tTrans->mPosition.x = -2;
-	//tTrans->mPosition.y = -1;
-
-	//VelocityComponent* tVel = GetComponent<VelocityComponent>(tNewID);
-	//tVel->mSpeed = 8.0f;
-	//vec3 tStartDirection = vec3(1.0f, 2.0f, 0.0f).Normalize();
-	//tVel->mDirection.x = tStartDirection.x;
-	//tVel->mDirection.y = tStartDirection.y;
-	//tVel->mDirection.z = tStartDirection.z;
-
-
-	////////////////////GOAL//////////////////////////
-	//tNewID = mEntityFactory->CreateEntity("GoalBlock");
-	//GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, 0, 0);
-	//ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
-	//GetComponent<LabelComponent>(tNewID)->mLabel = Label::GoalBlock;
 
 
 	//////////////////TOP BOT WALL///////////////////

@@ -61,37 +61,6 @@ void VelocitySystem::Update(double pDeltaTime)
 					//Update position with velocity
 					tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
 
-					//Update speed with force if needed (SHOULD PROBABLY NOT BE DONE HERE)
-					//if (tCompTable->HasComponent(i, VelocityForceType))
-					//{
-					//	VelocityForceComponent* tVelForce = GetComponent<VelocityForceComponent>(i);
-
-					//	//update position
-					//	if (tVelForce->mType == ForceType::ByValue)
-					//	{
-					//		//tTrans->mPosition += tVel->mDirection * tVelForce->mAmount * (float)pDeltaTime* (float)pDeltaTime * 0.5f;
-					//		tVel->mSpeed += tVelForce->mAmount * (float)pDeltaTime;
-					//	}
-					//	else if (tVelForce->mType == ForceType::Percentage)
-					//	{
-					//		tVel->mSpeed *= tVelForce->mAmount * (float)pDeltaTime;
-					//		//tTrans->mPosition = tVel->mDirection * tVel->mSpeed * tVelForce->mAmount * (float)pDeltaTime;
-					//	}
-
-					//	//update speed
-					//	if ((tVel->mSpeed > tVelForce->mEndValue) == tVelForce->mIncrease)
-					//	{
-					//		tVel->mSpeed = tVelForce->mEndValue;
-					//		tCompTable->RemoveComponent(i, VelocityForceType);
-					//	}
-
-					//}
-
-					//DEBUG
-					//if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
-					//	cout << "Position for pad is: " << tTrans->mPosition.x << " " << tTrans->mPosition.y << endl;
-
-					//END DEBUG
 				}
 			}
 		}
