@@ -26,6 +26,7 @@ void RenderSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
+	mEventManager->Subscribe("DrawScore", this);
 
 
 
@@ -89,4 +90,8 @@ void RenderSystem::Stop()
 void RenderSystem::OnEvent(Event* pEvent)
 {
 
+	if (pEvent->mID == "score")
+	{
+		mScore = *(int*)pEvent->mPayload["score"];
+	}
 }

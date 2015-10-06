@@ -33,7 +33,9 @@ void ScoreSystem::Start()
 void ScoreSystem::Update(double pDeltaTime) 
 {
 	//Draw the score
-
+	unordered_map<string, void*> payload;
+	payload["score"] = &mScore;
+	mEventManager->BroadcastEvent("DrawScore", payload);
 }
 void ScoreSystem::Pause() 
 {
