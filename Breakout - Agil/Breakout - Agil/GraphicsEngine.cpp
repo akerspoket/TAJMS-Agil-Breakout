@@ -7,7 +7,6 @@ GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
 	mObjLoader = new ObjLoader();
-	mSentence.maxLength = 60;
 }
 
 
@@ -272,17 +271,6 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
 	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
 	SetActiveShader(PixelShader, mPixelShader);
-	ZeroMemory(&bd, sizeof(bd));
-
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(TextVertex) * mSentence.maxLength * 6; //Times 6 since each char needs 6 vertices
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	res = dev->CreateBuffer(&bd, NULL, &mSentence.vertexDescription);
-	if (res != S_OK)
-	{
-		cout << "Couldnt initiate text buffer";
-	}
 
 
 }
@@ -291,7 +279,8 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 
 void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
-
+	SetActiveShader(VertexShader, mVertexShader);
+	SetActiveShader(PixelShader, mPixelShader);
 	mInstanceBuffer = pInstanceBufferData;
 	mVertexBufferID = 0;
 	devcon->PSSetShaderResources(0, 1, &mTextureBuffers[pTextureBuffer]);
@@ -324,7 +313,6 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 }
 void GraphicsEngine::EndDraw()
 {
-	DrawThisText("PQR", vec2(400, 400), 100,0);
 	swapchain->Present(1, 0);
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
@@ -505,6 +493,31 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	return retValue;
 }
 
+int GraphicsEngine::CreateNewText(int pMaxCharacters)
+{
+	SentenceType tSentence;
+	tSentence.maxLength = pMaxCharacters;
+	tSentence.text = "";
+	tSentence.size = 0;
+	tSentence.numberOfIndices = 0;
+	tSentence.position = vec2(0, 0);
+	
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(TextVertex) * tSentence.maxLength * 6; //Times 6 since each char needs 6 vertices
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	HRESULT res = dev->CreateBuffer(&bd, NULL, &tSentence.vertexDescription);
+	if (res != S_OK)
+	{
+		cout << "Couldnt initiate text buffer";
+	}
+	mSentences.push_back(tSentence);
+	return mSentences.size() - 1;
+}
+
 void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID)
 {
 	SetActiveShader(VertexShader, mTextVertexShader);
@@ -515,26 +528,27 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 	unsigned int strides[1];
 	unsigned int offsets[1];
 	ID3D11Buffer* bufferPointers[1];
-	if (pText != mSentence.text)
+	if (pText != mSentences[pSentenceID].text || pPosition != mSentences[pSentenceID].position || pSize != mSentences[pSentenceID].size)
 	{
-		mSentence.text = pText;
-		CreateText(&mSentence, pPosition, pSize);
+		mSentences[pSentenceID].text = pText;
+		mSentences[pSentenceID].position = pPosition;
+		mSentences[pSentenceID].size = pSize;
+		CreateText(&mSentences[pSentenceID], pPosition, pSize);
 	}
 	strides[0] = sizeof(TextVertex);
 
 
 	offsets[0] = 0;
 
-	bufferPointers[0] = mSentence.vertexDescription;
+	bufferPointers[0] = mSentences[pSentenceID].vertexDescription;
 
 	devcon->IASetVertexBuffers(0, 1, bufferPointers, strides, offsets);
 	//devcon->IASetIndexBuffer(mObjectBuffers[pMeshType].indexDescription, DXGI_FORMAT_R32_UINT, 0);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	devcon->Draw(mSentence.numberOfIndices, 0);
+	devcon->Draw(mSentences[pSentenceID].numberOfIndices, 0);
 	devcon->OMSetBlendState(0, 0, 0xffffffff);
-	SetActiveShader(VertexShader, mVertexShader);
-	SetActiveShader(PixelShader, mPixelShader);
+
 }
 
 void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize)

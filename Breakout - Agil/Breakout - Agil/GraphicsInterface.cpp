@@ -137,3 +137,13 @@ int GraphicsInterface::GetTextureID(TextureNames pName)
 	}
 	return 1;
 }
+
+int GraphicsInterface::CreateText(int pMaxCharacters)
+{
+	int retValue = mGraphicsEngine->CreateNewText(pMaxCharacters);
+	return retValue;
+}
+void GraphicsInterface::DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID)
+{
+	mGraphicsEngine->DrawThisText(pText, pPosition, pSize, pSentenceID);
+}

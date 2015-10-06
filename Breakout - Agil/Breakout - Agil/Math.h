@@ -67,6 +67,11 @@ struct vec2
 		float length = Abs();
 		return vec2(x / length, y / length);
 	}
+	//Comparizon
+	bool operator !=(vec2 v)
+	{
+		return v.x != x || v.y != y;
+	}
 };
 
 

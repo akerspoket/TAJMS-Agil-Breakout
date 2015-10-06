@@ -18,5 +18,6 @@ public:
 
 private:
 	GraphicsInterface* mGraphicsInterface;
+	int mTempTextId;
 };
 

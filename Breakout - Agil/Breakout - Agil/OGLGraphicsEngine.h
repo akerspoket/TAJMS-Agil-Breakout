@@ -22,6 +22,8 @@ struct TextType
 	int numberOfIndices;
 	int bufferHandleID;
 	string text;
+	vec2 position;
+	float size;
 };
 
 struct MatrixBufferType
@@ -60,10 +62,11 @@ public:
 	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
 	int CreateTexture(const char *pFileName);
 	int CreateObject(string pMeshName);
-	int CreateText(const char* pText, int x, int y, int size, int pIndex);
+	int CreateText(string pText, vec2 pPosition, int size, int pIndex);
 	void EndDraw();
-	void ChangeObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, int pIndex);
-	void printText2D(const char * text, int x, int y, int size);
+	void ChangeTextBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, GLuint pIndex);
+	int CreateNewText(int pMaxCharacters);
+	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 	glm::mat4x4 mProjMat;
 
 	vector< Vertex >Vertices;

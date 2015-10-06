@@ -65,7 +65,6 @@ void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWid
 	//För instanceDraw
 	mTransBuffer = CreateVertexBuffer(nullptr, 0);
 	InitText2D();
-	CreateText("Hejsan", 200, 600, 100, -1);
 
 }
 
@@ -109,11 +108,10 @@ int OGLGraphicsEngine::CreateObjectBuffer(void* pDataStart, int pDataSize,int pN
 	return mObjectBuffers.size() - 1;
 }
 
-void OGLGraphicsEngine::ChangeObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, int pIndex)
+void OGLGraphicsEngine::ChangeTextBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, GLuint pIndex)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[pIndex].BufferHandle);
+	glBindBuffer(GL_ARRAY_BUFFER, pIndex);
 	glBufferData(GL_ARRAY_BUFFER, pDataSize, pDataStart, GL_STATIC_DRAW);
-	mObjectBuffers[pIndex].NumberOfIndices = pNumberOfIndices;
 }
 
 
@@ -215,26 +213,19 @@ void OGLGraphicsEngine::RenderFrame()
 }
 
 
-int OGLGraphicsEngine::CreateText(const char* pText, int x, int y, int size, int pIndex) //sätt pIndex = -1 om ni inte har skapat en text innan annars pIndex = idt ni fick första gången ni körde
+int OGLGraphicsEngine::CreateText(string pText, vec2 pPosition, int size, int pIndex) 
 {
 	TextType tTextType;
 	vector<TextVertex> tTextVertices;
-	if (pIndex < 0 || mTextTypeBuffer[pIndex].text != pText)
-	{
-		tTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
-		tTextType.numberOfIndices = tTextVertices.size();
-		tTextType.bufferHandleID = CreateObjectBuffer(tTextVertices.data(), tTextVertices.size()*sizeof(TextVertex), tTextVertices.size());
-		tTextType.text = pText;
-		mTextTypeBuffer.push_back(tTextType);
-		return mTextTypeBuffer.size()-1;
-	}
-	else
-	{
-		tTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
-		ChangeObjectBuffer(tTextVertices.data(), tTextVertices.size()*sizeof(TextVertex), tTextVertices.size(), mTextTypeBuffer[pIndex].bufferHandleID);
-		mTextTypeBuffer[pIndex].text = pText;
-		return pIndex;
-	}
+
+	tTextVertices = mObjLoader->LoadTextVertices(pText.c_str(), pPosition.x, pPosition.y, size);
+	mTextTypeBuffer[pIndex].numberOfIndices = tTextVertices.size();
+	mTextTypeBuffer[pIndex].size = size;
+	mTextTypeBuffer[pIndex].position = pPosition;
+	mTextTypeBuffer[pIndex].text = pText;
+	ChangeTextBuffer(tTextVertices.data(), tTextVertices.size()*sizeof(TextVertex), tTextVertices.size(), mTextTypeBuffer[pIndex].bufferHandleID);
+
+	return pIndex;
 }
 
 void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
@@ -278,11 +269,6 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 
 
 }
-
-
-
-
-
 
 void OGLGraphicsEngine::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
@@ -446,10 +432,7 @@ int OGLGraphicsEngine::CreateObject(string pMeshName)
 }
 
 void OGLGraphicsEngine::EndDraw()
-{
-	
-
-	DrawText(0);
+{	
 	SDL_GL_SwapWindow(mWindow);
 	glClearColor(0.0f, 0.2f, 0.4f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -465,7 +448,7 @@ void OGLGraphicsEngine::DrawText(int pTextID)
 
 	glEnableVertexAttribArray(mVertexPosition_screenspaceID);
 	glEnableVertexAttribArray(mVertexUVID);
-	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[mTextTypeBuffer[pTextID].bufferHandleID].BufferHandle);
+	glBindBuffer(GL_ARRAY_BUFFER, mTextTypeBuffer[pTextID].bufferHandleID);
 	glVertexAttribPointer(mVertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
 	glVertexAttribPointer(mVertexUVID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2 * sizeof(float)));
 
@@ -481,4 +464,49 @@ void OGLGraphicsEngine::DrawText(int pTextID)
 	glDisableVertexAttribArray(mVertexPosition_screenspaceID);
 	glDisableVertexAttribArray(mVertexUVID);
 
+}
+
+int OGLGraphicsEngine::CreateNewText(int pMaxCharacters)
+{
+	TextType tText;
+	GLuint tTempBuffer;
+	glGenBuffers(1, &tTempBuffer);
+	tText.bufferHandleID = tTempBuffer;
+	tText.numberOfIndices = 0;
+	tText.position = vec2(0, 0);
+	tText.size = 0;
+	tText.text = "";
+	mTextTypeBuffer.push_back(tText);
+	return mTextTypeBuffer.size() - 1;
+}
+void OGLGraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID)
+{
+	if (pText != mTextTypeBuffer[pSentenceID].text || pPosition != mTextTypeBuffer[pSentenceID].position || pSize != mTextTypeBuffer[pSentenceID].size)
+	{
+		CreateText(pText, pPosition, pSize, pSentenceID);
+	}
+	glUseProgram(mText2DShaderID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mTextures[mText2DTextureID]);
+	// Set our "myTextureSampler" sampler to user Texture Unit 0
+	glUniform1i(mText2DUniformID, 0);
+
+	glEnableVertexAttribArray(mVertexPosition_screenspaceID);
+	glEnableVertexAttribArray(mVertexUVID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mTextTypeBuffer[pSentenceID].bufferHandleID);
+	glVertexAttribPointer(mVertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
+	glVertexAttribPointer(mVertexUVID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2 * sizeof(float)));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_ONE, GL_ONE);
+
+	// Draw call
+	glDrawArrays(GL_TRIANGLES, 0, mTextTypeBuffer[pSentenceID].numberOfIndices);
+
+	glDisable(GL_BLEND);
+
+	glDisableVertexAttribArray(mVertexPosition_screenspaceID);
+	glDisableVertexAttribArray(mVertexUVID);
 }

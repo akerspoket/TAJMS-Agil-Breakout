@@ -34,6 +34,7 @@ void RenderSystem::Initialize(SDL_Window* pWin)
 {
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
 	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -13.0f, pWin);
+	mTempTextId = mGraphicsInterface->CreateText(60);
 }
 
 
@@ -59,6 +60,7 @@ void RenderSystem::Update(double pDeltaTime)
 			mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, tTrans, 1);
 		}
 	}
+	mGraphicsInterface->DrawThisText("Score: 0", vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->EndDraw();
 }
 void RenderSystem::Pause()

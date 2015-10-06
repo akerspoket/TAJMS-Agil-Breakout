@@ -32,6 +32,8 @@ public:
 	void DrawInstancedObjects(unsigned int pMeshType, unsigned int pMaterialID, TransformComponent pTransformMatrices[], int pNumberOfInstances); //Draws pNumberofInstances of pMeshType
 	int GetTextureID(TextureNames pName);
 	int CreateTexture(string pTextureName);
+	int CreateText(int pMaxCharacters);
+	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 	void EndDraw(); //Call this at the end of drawing multiple objects
 	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos, SDL_Window* pWin);
 

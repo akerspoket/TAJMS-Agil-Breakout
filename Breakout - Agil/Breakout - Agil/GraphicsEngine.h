@@ -67,6 +67,8 @@ private:
 		ID3D11Buffer* vertexDescription;
 		unsigned int numberOfIndices;
 		unsigned int maxLength;
+		vec2 position;
+		float size;
 	};
 public:
 	GraphicsEngine();
@@ -79,7 +81,6 @@ public:
 	ID3D11RenderTargetView *backbuffer;  
 	ID3D11Texture2D *mDepthBuffer;
 	ID3D11DepthStencilView *mDepthView;
-
 
 	XMMATRIX mTranslationMatrices[5];
 	
@@ -94,7 +95,7 @@ public:
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateTexture(const wchar_t *pFileName);
 	void EndDraw();
-	void CreateNewText();
+	int CreateNewText(int pMaxCharacters);
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 
 private:
@@ -136,7 +137,7 @@ private:
 
 	ObjLoader* mObjLoader;
 
-	SentenceType mSentence;
+	vector<SentenceType> mSentences;
 };
 
 #endif
