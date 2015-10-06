@@ -1,0 +1,9 @@
+ID:
+PowerPickedUp
+Payload:
+{
+  "EntityID" -> EntityID
+  "mask" -> short
+}
+
+
