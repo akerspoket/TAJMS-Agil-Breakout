@@ -18,5 +18,6 @@ public:
 
 private:
 	int mScore;
+	void SendScore();
 };
 

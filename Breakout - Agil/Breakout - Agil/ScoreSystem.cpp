@@ -33,9 +33,7 @@ void ScoreSystem::Start()
 void ScoreSystem::Update(double pDeltaTime) 
 {
 	//Draw the score
-	unordered_map<string, void*> payload;
-	payload["score"] = &mScore;
-	mEventManager->BroadcastEvent("DrawScore", payload);
+
 }
 void ScoreSystem::Pause() 
 {
@@ -53,6 +51,8 @@ void ScoreSystem::OnEvent(Event* pEvent)
 	if (pEvent->mID == "SetScore")
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
+		SendScore();
+		//cout << "Your score is:" << mScore << endl;
 	}
 
 	else if (pEvent->mID == "Collision")
@@ -67,6 +67,17 @@ void ScoreSystem::OnEvent(Event* pEvent)
 			value  += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
 		}
 		mScore -= value;
+
+		SendScore();
 		//cout << "Your score is:" << mScore << endl;
 	}
+}
+
+void ScoreSystem::SendScore()
+{
+	unordered_map<string, void*> payload;
+	int* tInt = new int();
+	*tInt = mScore;
+	payload["score"] = tInt;
+	mEventManager->BroadcastEvent("DrawScore", payload);
 }
