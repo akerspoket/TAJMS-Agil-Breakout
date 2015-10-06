@@ -17,6 +17,13 @@
 
 using namespace std;
 
+struct TextType
+{
+	int numberOfIndices;
+	int bufferHandleID;
+	string text;
+};
+
 struct MatrixBufferType
 {
 	glm::mat4 world;
@@ -49,11 +56,13 @@ public:
 	void CompileShaders();
 	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
+	void DrawText(int pTextID);
 	int CreateObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices);
 	int CreateTexture(const char *pFileName);
 	int CreateObject(string pMeshName);
-	int CreateText(const char* pText, int x, int y, int size);
+	int CreateText(const char* pText, int x, int y, int size, int pIndex);
 	void EndDraw();
+	void ChangeObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, int pIndex);
 	void printText2D(const char * text, int x, int y, int size);
 	glm::mat4x4 mProjMat;
 
@@ -81,6 +90,8 @@ private:
 	vector<GLuint> mTextBuffers;
 	int mtextID;
 
+
+	vector<TextType> mTextTypeBuffer;
 	vector<GLuint> mTextures;
 
 	int mTextureID;

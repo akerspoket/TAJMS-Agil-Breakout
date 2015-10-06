@@ -65,7 +65,7 @@ void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWid
 	//För instanceDraw
 	mTransBuffer = CreateVertexBuffer(nullptr, 0);
 	InitText2D();
-	CreateText("Hejsan", 200, 600, 100);
+	CreateText("Hejsan", 200, 600, 100, -1);
 
 }
 
@@ -108,6 +108,14 @@ int OGLGraphicsEngine::CreateObjectBuffer(void* pDataStart, int pDataSize,int pN
 	mObjectBuffers.push_back(tBT);
 	return mObjectBuffers.size() - 1;
 }
+
+void OGLGraphicsEngine::ChangeObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, int pIndex)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[pIndex].BufferHandle);
+	glBufferData(GL_ARRAY_BUFFER, pDataSize, pDataStart, GL_STATIC_DRAW);
+	mObjectBuffers[pIndex].NumberOfIndices = pNumberOfIndices;
+}
+
 
 int OGLGraphicsEngine::AddUniform(GLuint pShader, const GLchar* pName)
 {
@@ -207,19 +215,31 @@ void OGLGraphicsEngine::RenderFrame()
 }
 
 
-int OGLGraphicsEngine::CreateText(const char* pText, int x, int y, int size)
+int OGLGraphicsEngine::CreateText(const char* pText, int x, int y, int size, int pIndex) //sätt pIndex = -1 om ni inte har skapat en text innan annars pIndex = idt ni fick första gången ni körde
 {
-	if (prevScore != "Hejsan")
+	TextType tTextType;
+	vector<TextVertex> tTextVertices;
+	if (pIndex < 0 || mTextTypeBuffer[pIndex].text != pText)
 	{
-		mTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
-		mtextID = CreateObjectBuffer(mTextVertices.data(), mTextVertices.size()*sizeof(TextVertex), mTextVertices.size());
-		prevScore = "Hejsan";
-		return mtextID;
+		tTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
+		tTextType.numberOfIndices = tTextVertices.size();
+		tTextType.bufferHandleID = CreateObjectBuffer(tTextVertices.data(), tTextVertices.size()*sizeof(TextVertex), tTextVertices.size());
+		tTextType.text = pText;
+		mTextTypeBuffer.push_back(tTextType);
+		return mTextTypeBuffer.size()-1;
+	}
+	else
+	{
+		tTextVertices = mObjLoader->LoadTextVertices(pText, x, y, size);
+		ChangeObjectBuffer(tTextVertices.data(), tTextVertices.size()*sizeof(TextVertex), tTextVertices.size(), mTextTypeBuffer[pIndex].bufferHandleID);
+		mTextTypeBuffer[pIndex].text = pText;
+		return pIndex;
 	}
 }
 
 void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer)
 {
+
 	glUseProgram(mNormalShaderProg);
 
 	GLuint tTransLoc1 = glGetUniformLocation(mNormalShaderProg, "gTransMatrices");
@@ -255,28 +275,6 @@ void OGLGraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pI
 	//glDisableVertexAttribArray(5);
 	//glDisableVertexAttribArray(6);
 
-	glUseProgram(mText2DShaderID);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mTextures[mText2DTextureID]);
-	// Set our "myTextureSampler" sampler to user Texture Unit 0
-	glUniform1i(mText2DUniformID, 0);
-	
-	glEnableVertexAttribArray(mVertexPosition_screenspaceID);
-	glEnableVertexAttribArray(mVertexUVID);
-	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[mtextID].BufferHandle);
-	glVertexAttribPointer(mVertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
-	glVertexAttribPointer(mVertexUVID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2*sizeof(float)));
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	// Draw call
-	glDrawArrays(GL_TRIANGLES, 0, mTextVertices.size());
-	
-	glDisable(GL_BLEND);
-	
-	glDisableVertexAttribArray(mVertexPosition_screenspaceID);
-	glDisableVertexAttribArray(mVertexUVID);
 
 
 }
@@ -449,7 +447,38 @@ int OGLGraphicsEngine::CreateObject(string pMeshName)
 
 void OGLGraphicsEngine::EndDraw()
 {
+	
+
+	DrawText(0);
 	SDL_GL_SwapWindow(mWindow);
 	glClearColor(0.0f, 0.2f, 0.4f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OGLGraphicsEngine::DrawText(int pTextID)
+{
+	glUseProgram(mText2DShaderID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mTextures[mText2DTextureID]);
+	// Set our "myTextureSampler" sampler to user Texture Unit 0
+	glUniform1i(mText2DUniformID, 0);
+
+	glEnableVertexAttribArray(mVertexPosition_screenspaceID);
+	glEnableVertexAttribArray(mVertexUVID);
+	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[mTextTypeBuffer[pTextID].bufferHandleID].BufferHandle);
+	glVertexAttribPointer(mVertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
+	glVertexAttribPointer(mVertexUVID, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2 * sizeof(float)));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_ONE, GL_ONE);
+
+	// Draw call
+	glDrawArrays(GL_TRIANGLES, 0, mTextTypeBuffer[pTextID].numberOfIndices);
+
+	glDisable(GL_BLEND);
+
+	glDisableVertexAttribArray(mVertexPosition_screenspaceID);
+	glDisableVertexAttribArray(mVertexUVID);
+
 }
