@@ -237,6 +237,7 @@
     <Image Include="test2in1pic.dds" />
     <Image Include="test2in1pic.png" />
     <Image Include="Textures\GoalTexture.png" />
+    <Image Include="Textures\Letters.png" />
     <Image Include="Textures\Letters.DDS" />
   </ItemGroup>
   <ItemGroup>

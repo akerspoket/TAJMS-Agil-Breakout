@@ -270,6 +270,9 @@
     <Image Include="Textures\GoalTexture.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Textures\Letters.png">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="Textures\Letters.DDS">
       <Filter>Resource Files</Filter>
     </Image>
