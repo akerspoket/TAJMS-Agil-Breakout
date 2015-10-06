@@ -20,7 +20,10 @@ PowerUpSystem::~PowerUpSystem()
 {
 }
 
-void PowerUpSystem::Initialize(){}
+void PowerUpSystem::Initialize()
+{
+	EventManager::GetInstance()->Subscribe("PowerUpPickedUp", this);
+}
 void PowerUpSystem::Start(){}
 void PowerUpSystem::Update(double pDeltaTime)
 {
@@ -28,4 +31,13 @@ void PowerUpSystem::Update(double pDeltaTime)
 }
 void PowerUpSystem::Pause(){}
 void PowerUpSystem::Stop(){}
-void PowerUpSystem::OnEvent(Event* pEvent){}
+void PowerUpSystem::OnEvent(Event* pEvent)
+{
+	EntityManager* tEntMan = tEntMan->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+
+	if (pEvent->mID == "PowerUpPickedUp")
+	{
+
+	}
+}
