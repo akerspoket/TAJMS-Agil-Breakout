@@ -2,7 +2,7 @@
 #include "System.h"
 
 
-class PowerUpSystem:System
+class PowerUpSystem:public System
 {
 public:
 	PowerUpSystem();
