@@ -33,6 +33,7 @@ void MenuSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("Input", this);
+	mEventManager->Subscribe("Lost", this);
 }
 
 void MenuSystem::Start()
@@ -111,6 +112,7 @@ void MenuSystem::OnEvent(Event * pEvent)
 			////2Quit
 			GameStateClass* tGameStateClass = GameStateClass::GetInstance();
 			EventManager::Payload tPayload;
+			int* tMapID = nullptr;
 
 			switch (mCurrentButton)
 			{
@@ -119,6 +121,10 @@ void MenuSystem::OnEvent(Event * pEvent)
 				cout << "Starting game.." << endl;
 #endif // DEBUG
 				tGameStateClass->SetGameState(GameScreen);
+				tMapID = new int();
+				*tMapID = 0;
+				tPayload["MapID"] = tMapID;
+				EventManager::GetInstance()->BroadcastEvent("GenerateWorld", tPayload);
 				break;
 			case MainOption:
 				break;
@@ -145,23 +151,44 @@ void MenuSystem::OnEvent(Event * pEvent)
 				break;
 			case PauseQuitToMainMenu:
 #ifdef _DEBUG
-				cout << "Quitting to main menu.." << endl;
+				cout << "Quitting to main menu from pause.." << endl;
 #endif // DEBUG
+				EventManager::GetInstance()->BroadcastEvent("DegenerateWorld", tPayload);
 				GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);
 				mCurrentButton = MainStart;
 				mMinButton = MainStart;
 				mMaxButton = MainQuit;
 				break;
 			case DeathRestartLevel:
+#ifdef _DEBUG
+				cout << "Restarting level from deathscreen.." << endl;
+#endif // DEBUG
+				EventManager::GetInstance()->BroadcastEvent("RestartWorld", tPayload);
+				GameStateClass::GetInstance()->SetGameState(GameState::GameScreen);
 				break;
 			case DeathQuitToMainMenu:
+#ifdef _DEBUG
+				cout << "Quitting to main menu from deathscreen.." << endl;
+#endif // DEBUG
+				GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);
+				mCurrentButton = MainStart;
+				mMinButton = MainStart;
+				mMaxButton = MainQuit;
 				break;
 			default:
 				break;
 			}
 		}
-		
-
+	}
+	else if(pEvent->mID == "Lost")
+	{
+#ifdef _DEBUG
+		cout << "Death screen.." << endl;
+#endif // DEBUG
+		GameStateClass::GetInstance()->SetGameState(GameState::DeathScreen);
+		mCurrentButton = DeathRestartLevel;
+		mMinButton = DeathRestartLevel;
+		mMaxButton = DeathQuitToMainMenu;
 	}
 	//change here on input
 }

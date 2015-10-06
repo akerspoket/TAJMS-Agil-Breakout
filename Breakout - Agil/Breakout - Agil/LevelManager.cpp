@@ -47,6 +47,8 @@ void LevelManager::AnalyzeText(string pTextToCheck)
 
 }
 
+
+
 void LevelManager::Initialize()
 {
 	GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
@@ -283,8 +285,40 @@ void LevelManager::Initialize()
 	//tWall2Blueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
+	//////////////////////MenuButtonBlock///////////////
+	EntityFactory::EntityBlueprint tMenuButtonBlock;
+
+	tTrans = new TransformComponent();
+	tMesh = new MeshComponent();
+
+	tMenuButtonBlock[TransformType] = tTrans;
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");//prov
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tMenuButtonBlock[MeshType] = tMesh;
+	mEntityFactory->RegisterEntityTemplate("MenuButtonBlock", tMenuButtonBlock);
+
+
+}
+void LevelManager::GenerateMainMenu()
+{
+	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, -8, 8);
 }
 
+void LevelManager::GenerateDeathScreen()
+{
+	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(0, 8, 8);
+}
+
+void LevelManager::GeneratePauseScreen()
+{
+	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
+	tTrans->mPosition = vec3(8, 8, 8);
+}
 void LevelManager::GenerateWorld(string pWorldName)
 {
 	

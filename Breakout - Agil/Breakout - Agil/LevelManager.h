@@ -13,6 +13,9 @@ public:
 	void GenerateWorld(string pWorldName);
 	void DegenerateWorld();
 	void AnalyzeText(string pTextToCheck);
+	void GenerateMainMenu();
+	void GenerateDeathScreen();
+	void GeneratePauseScreen();
 private:
 	LevelManager();
 	~LevelManager();

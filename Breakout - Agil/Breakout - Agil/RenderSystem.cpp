@@ -51,6 +51,7 @@ void RenderSystem::Update(double pDeltaTime)
 	switch (GameStateClass::GetInstance()->GetGameState())
 	{
 	case MenuScreen:
+		mGraphicsInterface->EndDraw();
 	break;
 	case GameScreen:
 		for (int i = 0; i < tMaxEnt; i++)
@@ -68,6 +69,7 @@ void RenderSystem::Update(double pDeltaTime)
 		mGraphicsInterface->EndDraw();
 	break;
 	case DeathScreen:
+		mGraphicsInterface->EndDraw();
 	break;
 	case PauseScreen:
 		mGraphicsInterface->EndDraw();

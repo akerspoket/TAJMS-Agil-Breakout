@@ -37,6 +37,7 @@ void TriggerSystem::Initialize()
 	mEventManager->Subscribe("DegenerateWorld", this);
 	mEventManager->Subscribe("RestartWorld", this);
 	mEventManager->Subscribe("LaunchButtonPressed", this);
+	mEventManager->Subscribe("GenerateWorld", this);
 
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
@@ -154,6 +155,8 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		if (mNumOfBallsActive < 1)
 		{
 			mDegenerateWorld = true;
+			EventManager::Payload tPayload;
+			EventManager::GetInstance()->BroadcastEvent("Lost", tPayload);
 
 			//DEBUG
 #ifdef _DEBUG
@@ -196,6 +199,13 @@ void TriggerSystem::OnEvent(Event* pEvent)
 	else if (pEventID == "DegenerateWorld")
 	{
 		mDegenerateWorld = true;
+	}
+
+	else if (pEventID == "GenerateWorld")
+	{
+		int mapID = *(int*)pEvent->mPayload["MapID"];
+		mCurrentLevel = mapID - 1;
+		mCreateNextLevel = true;
 	}
 
 	else if (pEventID == "RestartWorld")
