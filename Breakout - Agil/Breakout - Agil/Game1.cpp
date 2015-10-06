@@ -6,9 +6,11 @@
 #include "TriggerSystem.h"
 #include "SoundSystem.h"
 #include "VelocitySystem.h"
+#include "MenuSystem.h"
 #include "StorageShelf.h"
 #include "PhysicComponent.h"
 #include "ScoreSystem.h"
+#include "GameState.h"
 
 
 Game1::Game1()
@@ -30,6 +32,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	TriggerSystem* tTrigger = new TriggerSystem("TriggerSystem");
 	SoundSystem* tSound = new SoundSystem("SoundSystem");
 	ScoreSystem* tScore = new ScoreSystem("ScoreSystem");
+	MenuSystem* tMenu = new MenuSystem("MenuSystem");
 	
 	tRender->Initialize();
 	tRender->Initialize(pWin);
@@ -40,8 +43,9 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tTrigger->Initialize();
 	tSound->Initialize();
 	tScore->Initialize();
+	tMenu->Initialize();
 
-
+	//set systems to game here
 	mSystems.push_back(tInput);
 	mSystems.push_back(tVel);
 	mSystems.push_back(tAtt);
@@ -50,6 +54,10 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
 	mSystems.push_back(tRender);
+	mSystems.push_back(tMenu);
+	
+	GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);
+
 
 
 	
@@ -72,7 +80,7 @@ void Game1::Run()
 			}
 		}
 
-		//mGraphicsEngine->RenderFrame();
+		//update systems based on gamestate
 		for (auto sys : mSystems)
 		{
 			sys->Update(tDeltaTimeSecond);

@@ -156,4 +156,11 @@ namespace NativeTests
 
 
 	};
+	TEST_CLASS(UnitTest2)
+	{
+		TEST_METHOD(MenyTester)
+		{
+
+		}
+	};
 }

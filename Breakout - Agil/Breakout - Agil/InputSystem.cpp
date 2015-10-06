@@ -4,7 +4,8 @@
 #include "LabelComponent.h"
 #include "VelocityComponent.h"
 #include "ComponentTable.h"
-#include "StorageShelf.h"
+#include "UserCmdStruct.h"
+#include "GameState.h"
 
 using namespace std;
 
@@ -51,6 +52,22 @@ void InputSystem::CheckKeyboard()
 	{
 		gUserCmd.mRightArrowPressed = false;
 	}
+	if (mKeyState[SDL_SCANCODE_UP])
+	{
+		gUserCmd.mUpArrowPressed = true;
+	}
+	else
+	{
+		gUserCmd.mUpArrowPressed = false;
+	}
+	if (mKeyState[SDL_SCANCODE_DOWN])
+	{
+		gUserCmd.mDownArrowPressed = true;
+	}
+	else
+	{
+		gUserCmd.mDownArrowPressed = false;
+	}
 	if (mKeyState[SDL_SCANCODE_A])
 	{
 		gUserCmd.mKeysPressed.push_back('a');
@@ -58,6 +75,18 @@ void InputSystem::CheckKeyboard()
 	if (mKeyState[SDL_SCANCODE_D])
 	{
 		gUserCmd.mKeysPressed.push_back('d');
+	}
+	if (mKeyState[SDL_SCANCODE_P])
+	{
+		gUserCmd.mKeysPressed.push_back('p');
+	}
+	if (mKeyState[SDL_SCANCODE_W])
+	{
+		gUserCmd.mKeysPressed.push_back('w');
+	}
+	if (mKeyState[SDL_SCANCODE_S])
+	{
+		gUserCmd.mKeysPressed.push_back('s');
 	}
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
@@ -71,6 +100,78 @@ void InputSystem::CheckKeyboard()
 	else
 	{
 		gUserCmd.mSpaceButtonPressed = false;
+	}
+	if(mKeyState[SDL_SCANCODE_RETURN])
+	{
+		gUserCmd.mEnterButtonPressed = true;
+	}
+	else
+	{
+		gUserCmd.mEnterButtonPressed = false;
+	}
+}
+void EnterPressCheck()
+{
+	////Enterpressing
+	if (gUserCmd.mEnterButtonPressed && !gLastUserCmd.mEnterButtonPressed)
+	{
+		EventManager::Payload tPayload;
+		string* tString = new string();
+		*tString = "ENTER";
+		tPayload["KeyPressed"] = tString;
+		EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
+	}
+}
+
+void UpDownPressCheck()
+{
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
+
+	bool moveUp = gUserCmd.mUpArrowPressed && !gLastUserCmd.mUpArrowPressed;
+	bool moveDown = gUserCmd.mDownArrowPressed && !gLastUserCmd.mDownArrowPressed;
+
+
+
+	for (size_t i = 0; i < tVectorInput; i++)
+	{
+		bool t_Found = false;
+		for (size_t k = 0; k < tVectorLastInput; k++)
+		{
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
+			{
+				t_Found = true;
+				k = tVectorLastInput;
+			}
+		}
+		if (!t_Found)
+		{
+			if (gUserCmd.mKeysPressed[i] == 'w')
+			{
+				moveUp = true;
+			}
+			else if (gUserCmd.mKeysPressed[i] == 's')
+			{
+				moveDown = true;
+			}
+		}
+	}
+
+	if (moveUp && !moveDown)
+	{
+		EventManager::Payload tPayload;
+		string* tString = new string();
+		*tString = "UP";
+		tPayload["KeyPressed"] = tString;
+		EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
+	}
+	else if (moveDown && !moveUp)
+	{
+		EventManager::Payload tPayload;
+		string* tString = new string();
+		*tString = "DOWN";
+		tPayload["KeyPressed"] = tString;
+		EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
 	}
 }
 
@@ -104,23 +205,13 @@ void InputSystem::StandStill(EntityID pEntityID)
 	tVel->mDirection = vec3(0.0f, 0.0f, 0.0f);
 }
 
-void InputSystem::HandleInput(EntityID pEntityID)
+void InputSystem::PadInput(EntityID pEntityID)
 {
 	int tVectorInput = gUserCmd.mKeysPressed.size();
-	if (gUserCmd.mLeftArrowPressed == gUserCmd.mRightArrowPressed )
-	{
-		StandStill(pEntityID);
-	}
-	else if (gUserCmd.mLeftArrowPressed == true)
-	{
-		MoveLeft(pEntityID);
-		//cout << "<--";
-	}
-	else if (gUserCmd.mRightArrowPressed == true)
-	{
-		MoveRight(pEntityID);
-		//cout << "-->";
-	}
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
+
+	bool moveLeft = gUserCmd.mLeftArrowPressed;
+	bool moveRight = gUserCmd.mRightArrowPressed;
 
 	if (gUserCmd.mSpaceButtonPressed)
 	{
@@ -128,67 +219,148 @@ void InputSystem::HandleInput(EntityID pEntityID)
 		EventManager::GetInstance()->BroadcastEvent("LaunchButtonPressed", tPayLoad);
 	}
 
-		
-
-
 	for (size_t i = 0; i < tVectorInput; i++)
 	{
-		if (gUserCmd.mKeysPressed[i] == 'a' && gUserCmd.mLeftArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'a')
 		{
-			MoveLeft(pEntityID);
-			//cout << "A";//Move to the left CODE PLEASE!
+			moveLeft = true;
 		}
-		if (gUserCmd.mKeysPressed[i] == 'd' && gUserCmd.mRightArrowPressed == false)
+		if (gUserCmd.mKeysPressed[i] == 'd')
 		{
-			MoveRight(pEntityID);
-			//cout << "D";//Déplacer vers la droite CODE S'IL VOUS PLAÎT !
+			moveRight = true;
 		}
 	}
 
+	if (moveLeft == moveRight )
+	{
+		StandStill(pEntityID);
+	}
+	else if (moveLeft)
+	{
+		MoveLeft(pEntityID);
+	}
+	else if (moveRight)
+	{
+		MoveRight(pEntityID);
+	}
+	
+	
+	
 }
+
+void InputSystem::GameInput()
+{
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
+	for (size_t i = 0; i < tVectorInput; i++)
+	{
+		bool t_Found = false;
+		for (size_t k = 0; k < tVectorLastInput; k++)
+		{
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
+			{
+				t_Found = true;
+				k = tVectorLastInput;
+			}
+		}
+		if (!t_Found)
+		{
+			if (gUserCmd.mKeysPressed[i] == 'p')
+			{
+				EventManager::Payload tPayload;
+				string* tString = new string();
+				*tString = "PAUSE";
+				tPayload["KeyPressed"] = tString;
+				EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
+			}
+		}
+	}
+}
+
+void InputSystem::PauseInput()
+{
+	int tVectorInput = gUserCmd.mKeysPressed.size();
+	int tVectorLastInput = gLastUserCmd.mKeysPressed.size();
+
+	
+
+	for (size_t i = 0; i < tVectorInput; i++)
+	{
+		bool t_Found = false;
+		for (size_t k = 0; k < tVectorLastInput; k++)
+		{
+			if (gUserCmd.mKeysPressed[i] == gLastUserCmd.mKeysPressed[k])
+			{
+				t_Found = true;
+				k = tVectorLastInput;
+			}
+		}
+		if (!t_Found)
+		{
+			if (gUserCmd.mKeysPressed[i] == 'p')
+			{
+				EventManager::Payload tPayload;
+				string* tString = new string();
+				*tString = "UNPAUSE";
+				tPayload["KeyPressed"] = tString;
+				EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
+			}
+		}
+	}
+
+	UpDownPressCheck();
+	EnterPressCheck();
+}
+
+void InputSystem::MenuInput()
+{
+	UpDownPressCheck();
+	EnterPressCheck();
+}
+
 void InputSystem::Update(double pDeltaTime)
 {
 	mKeyState = SDL_GetKeyboardState(NULL);
 	CheckKeyboard();
-	//HandleInput();
 
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
-	for (int i = 0; i < tMaxEnt; i++)
-	{
-		if (tCompTable->HasComponent(i, ComponentType::LabelType))
-		{
-			LabelComponent* tLabel = GetComponent<LabelComponent>(i);
+	
 
-			if (tLabel->mLabel == Label::Pad)
+
+	switch (GameStateClass::GetInstance()->GetGameState())
+	{
+	case MenuScreen:
+		MenuInput();
+		break;
+	case GameScreen:
+		for (int i = 0; i < tMaxEnt; i++)
+		{
+			if (tCompTable->HasComponent(i, ComponentType::LabelType))
 			{
-				//find input we want to check for TODO:: maybe fix input into bit array?
-				HandleInput(i);
+				LabelComponent* tLabel = GetComponent<LabelComponent>(i);
+
+				if (tLabel->mLabel == Label::Pad)
+				{
+					//find input we want to check for TODO:: maybe fix input into bit array?
+					PadInput(i);
+				}
 			}
 		}
+
+		GameInput();
+		break;
+	case DeathScreen:
+		break;
+	case PauseScreen:
+		PauseInput();
+		break;
+	default:
+		break;
 	}
-
-
-	//cout << "running input system";
-	//EventManager::Payload tPayload;
-	//tPayload["test"] = MessageInt(5);
-
- //	void* tDebugData = malloc(4);
-	//void* tDebugData2 = malloc(4);
-	//*(int*)tDebugData = 4;
-	//*(int*)tDebugData2 = 5;
-
-	////memcpy(tDebugData, &data, 4);
-	////memcpy(tDebugData2, &data2, 4);
-	//tPayload["Debugdata"] = tDebugData;
-	//tPayload["Test"] = tDebugData2;
-	//cout << "Sending event";
-	//mEventManager->BroadcastEvent("DebugTest", tPayload);
-	//cout << "event sent, resuming input system update";
-
-
+	gLastUserCmd = gUserCmd;
 
 
 }

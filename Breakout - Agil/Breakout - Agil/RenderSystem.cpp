@@ -6,7 +6,7 @@
 #include "ComponentTable.h"
 #include "TransformComponent.h"
 #include "MeshComponent.h"
-
+#include "GameState.h"
 
 
 RenderSystem::RenderSystem()
@@ -47,19 +47,36 @@ void RenderSystem::Update(double pDeltaTime)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
-	for (int i = 0; i < tMaxEnt; i++)
+	
+	switch (GameStateClass::GetInstance()->GetGameState())
 	{
-		short tFlags = MeshType | TransformType;
-		if (tCompTable->HasComponent(i, tFlags))
-		{ //Teststuff
-			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
-			tTrans->mPosition.z = 8;
-			//mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
-			mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, tTrans, 1);
+	case MenuScreen:
+	break;
+	case GameScreen:
+		for (int i = 0; i < tMaxEnt; i++)
+		{
+			short tFlags = MeshType | TransformType;
+			if (tCompTable->HasComponent(i, tFlags))
+			{ //Teststuff
+				TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+				MeshComponent* tMesh = GetComponent<MeshComponent>(i);
+				tTrans->mPosition.z = 8;
+				//mGraphicsInterface->DrawInstancedObjects(testMesh.mMeshID, testMesh.mMaterialID, tTrans, 1);
+				mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, tTrans, 1);
+			}
 		}
+		mGraphicsInterface->EndDraw();
+	break;
+	case DeathScreen:
+	break;
+	case PauseScreen:
+		mGraphicsInterface->EndDraw();
+	break;
+	default:
+	break;
 	}
-	mGraphicsInterface->EndDraw();
+
+	
 }
 void RenderSystem::Pause()
 {

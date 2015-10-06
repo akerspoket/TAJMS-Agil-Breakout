@@ -2,6 +2,7 @@
 
 #include <math.h> //needed for linux
 
+
 struct vec2
 {
 	//Member Variables
