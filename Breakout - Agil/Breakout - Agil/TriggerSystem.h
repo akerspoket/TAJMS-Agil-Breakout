@@ -21,6 +21,7 @@ private:
 	int mNumOfGoalBlocksActive;
 	bool mCreateNextLevel;
 	bool mDegenerateWorld;
+	int mGenerateMenu;
 	int mCurrentLevel;
 	vector<string> mMapNames;
 };

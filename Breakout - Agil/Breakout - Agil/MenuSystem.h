@@ -16,11 +16,12 @@ public:
 	virtual void Pause();
 	virtual void Stop();
 	virtual void OnEvent(Event* pEvent);
+	
 
 private:
 	int mCurrentButton;
 	int mMinButton;
 	int mMaxButton;
-
+	void FindEntityIDForButton();
 };
 

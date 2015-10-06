@@ -318,6 +318,7 @@ void InputSystem::MenuInput()
 	EnterPressCheck();
 }
 
+
 void InputSystem::Update(double pDeltaTime)
 {
 	mKeyState = SDL_GetKeyboardState(NULL);
@@ -353,6 +354,7 @@ void InputSystem::Update(double pDeltaTime)
 		GameInput();
 		break;
 	case DeathScreen:
+		MenuInput();
 		break;
 	case PauseScreen:
 		PauseInput();

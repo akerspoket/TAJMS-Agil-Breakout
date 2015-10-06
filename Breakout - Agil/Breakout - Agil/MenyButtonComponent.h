@@ -16,11 +16,20 @@ enum ButtonName
 	DeathQuitToMainMenu,
 
 };
+
+enum ButtonMenuBelonging
+{
+	MainMenu,
+	PauseMenu,
+	DeathMenu,
+};
+
 struct MenyButtonComponent
 {
 	MenyButtonComponent()
 	{
-		mButtonName = MainStart;
+		mButtonBelong = MainMenu;
 	}
+	ButtonMenuBelonging mButtonBelong;
 	ButtonName mButtonName;
 };
