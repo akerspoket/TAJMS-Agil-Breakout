@@ -315,6 +315,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 		t_forLooPJ = mLevelTextVector[2].size();
 	}
 	
+	int* tScore = new int();
+
 	for (size_t i = 0; i < t_forLoopI; i++)
 	{
 		for (size_t j = 0; j < t_forLooPJ; j++)
@@ -328,6 +330,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 				//set value of the blocks. Should be read from file
 				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
+				//Max score is the sum of the score of each block
+				*tScore += 50;
 			}
 			else if (mLevelTextVector[i].at(j) == 'G')
 			{
@@ -343,9 +347,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	// This is where the score for the map is set. Should be read properly when loading map..
 	unordered_map<string, void*> payload;
-	int* score = new int();
-	*score = 1000;
-	payload["score"] = (void*)score;
+	payload["score"] = (void*)tScore;
 	EventManager::GetInstance()->BroadcastEvent("SetScore", payload);
 
 
