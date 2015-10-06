@@ -13,6 +13,7 @@
 #include "AttachedComponent.h"
 #include "ScoreValueComponent.h"
 #include "MenyButtonComponent.h"
+#include "PowerUpComponent.h"
 
 #include <string.h> //needed for linux
 
@@ -108,6 +109,11 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		{
 			memcpy(GetComponent<MenyButtonComponent>(tNewEntityID), iter->second, sizeof(MenyButtonComponent));
 		}
+		else if (iter->first == ComponentType::PowerUpType)
+		{
+			memcpy(GetComponent<PowerUpComponent>(tNewEntityID), iter->second, sizeof(PowerUpComponent));
+		}
+
 
 	}
 

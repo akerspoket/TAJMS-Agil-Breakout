@@ -22,6 +22,7 @@ enum ComponentType
 	AttachedType = 0x100,
 	ScoreValueType = 0x200,
 	MenyButtonType = 0x400,
+	PowerUpType = 0x800,
 };
 
 // 0x01 ==   1 == "00000001"
