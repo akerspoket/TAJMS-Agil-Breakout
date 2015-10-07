@@ -17,5 +17,8 @@ public:
 	void Stop();
 	void OnEvent(Event* pEvent);
 
+private:
+	//void RemovePower(EntityID id, short pMask);
+
 };
 

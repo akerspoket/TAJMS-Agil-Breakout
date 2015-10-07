@@ -39,6 +39,7 @@ void VelocitySystem::Update(double pDeltaTime)
 	int tMaxEnt = tEntManager->GetLastEntity();
 
 
+
 	switch (GameStateClass::GetInstance()->GetGameState())
 	{
 	case MenuScreen:
