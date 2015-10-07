@@ -112,7 +112,7 @@ int OGLGraphicsEngine::CreateObjectBuffer(void* pDataStart, int pDataSize,int pN
 void OGLGraphicsEngine::ChangeObjectBuffer(void* pDataStart, int pDataSize, int pNumberOfIndices, int pIndex)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, mObjectBuffers[pIndex].BufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, pDataSize, pDataStart, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, pDataSize, pDataStart, GL_STATIC_DRAW); 
 	mObjectBuffers[pIndex].NumberOfIndices = pNumberOfIndices;
 }
 
