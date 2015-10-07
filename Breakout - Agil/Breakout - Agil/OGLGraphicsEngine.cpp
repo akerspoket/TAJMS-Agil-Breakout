@@ -421,6 +421,14 @@ int OGLGraphicsEngine::CreateObject(string pMeshName)
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
 	}
+	else if (pMeshName == "Object/Background.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(40.0f, 40.0f, 0.2f));
+	}
+	else if (pMeshName == "Object/SideWall.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 30.0f, 0.02f));
+	}
 	else
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));

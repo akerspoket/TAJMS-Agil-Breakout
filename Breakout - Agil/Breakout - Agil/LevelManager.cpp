@@ -150,8 +150,8 @@ void LevelManager::Initialize()
 	tLabel->mLabel = Label::Box;
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("test2in1pic");///Här ska vi byta textur!!
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/BoxTexture2");///Här ska vi byta textur!!
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Chest.obj");
 
 	tBlockBlueprint[TransformType] = tTrans;
 	tBlockBlueprint[MeshType] = tMesh;
@@ -213,39 +213,41 @@ void LevelManager::Initialize()
 	tGoalBlockBlueprint[CollisionType] = tColl;
 	tGoalBlockBlueprint[SoundCollisionType] = tSoundColl;
 	mEntityFactory->RegisterEntityTemplate("GoalBlock", tGoalBlockBlueprint);
-	////////////////////SIDE WALL///////////////////////////
+	////////////////////TOP-BOT WALL///////////////////////////
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
 	tTrans = new TransformComponent();
+
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(30,0.2f);
-	
+
+
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
 	tWallBlueprint[SoundCollisionType] = tSoundColl;
 	//tWallBlueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("HorWall", tWallBlueprint);
 
-	///////////////////TOP-BOT WALL////////////////
+	///////////////////SIDE WALL////////////////
 	EntityFactory::EntityBlueprint tWall2Blueprint;
 
 	tTrans = new TransformComponent();
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
-
+	tMesh = new MeshComponent();
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
-	tColl->Dim = vec2(0.2f, 30.0f);
-
+	tColl->Dim = vec2(1.5f, 30.0f);
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/SideWall.obj");
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
 	tWall2Blueprint[SoundCollisionType] = tSoundColl;
-	//tWall2Blueprint[MeshType] = tMesh;
+	tWall2Blueprint[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
 	//////////////////////MenuButtonBlock///////////////
@@ -283,7 +285,16 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
 
 
-
+	//////Background
+	EntityFactory::EntityBlueprint tBackgroundBlueprint;
+	tMesh = new MeshComponent();
+	tTrans = new TransformComponent();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Background.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");
+	tTrans->mPosition = vec3(0,0,10);
+	tBackgroundBlueprint[MeshType] = tMesh;
+	tBackgroundBlueprint[TransformType] = tTrans;
+	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
 }
 void LevelManager::GenerateMainMenu()
 {
@@ -417,7 +428,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
 				tTrans->mPosition.y = t_forLoopI - i;
-
+				tTrans->mPosition.z = 8;
 				//set value of the blocks. Should be read from file
 				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
 				//Max score is the sum of the score of each block
@@ -429,6 +440,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans = GetComponent<TransformComponent>(tNewID);
 				tTrans->mPosition.x = j - (float)t_forLooPJ / 2;
 				tTrans->mPosition.y = t_forLoopI - i;
+				tTrans->mPosition.z = 8;
 
 			}
 		}
@@ -461,10 +473,16 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	/////////////////SIDE WALLS/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("VerWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(t_forLooPJ / 2 + 1, 0, 8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(t_forLooPJ / 2 + 3, 0, 8);
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/LeftSideBeach");
 
 	tNewID = mEntityFactory->CreateEntity("VerWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-t_forLooPJ / 2 - 1, 0, 8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(-t_forLooPJ / 2 - 3, 0, 8);
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/RightSideBeach");
+
+	/////////////////BACKGROUND/////////////////////////
+	tNewID = mEntityFactory->CreateEntity("BackgroundBlock");
+	
 
 }
 

@@ -167,9 +167,6 @@
     <ClInclude Include="Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MeshComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -278,6 +275,12 @@
     <ClInclude Include="MenyButtonComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ScoreSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsInterface.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game1.h">
@@ -337,6 +340,27 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Textures\Letters.DDS">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Background.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\RightSideBeach.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\RightSideBeach.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\LeftSideBeach.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\LeftSideBeach.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\BoxTexture2.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

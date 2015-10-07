@@ -245,9 +245,16 @@
     <Image Include="davai.png" />
     <Image Include="test2in1pic.dds" />
     <Image Include="test2in1pic.png" />
+    <Image Include="Textures\Background.dds" />
+    <Image Include="Textures\Background.png" />
+    <Image Include="Textures\BoxTexture2.png" />
     <Image Include="Textures\GoalTexture.png" />
+    <Image Include="Textures\LeftSideBeach.dds" />
+    <Image Include="Textures\LeftSideBeach.png" />
     <Image Include="Textures\Letters.png" />
     <Image Include="Textures\Letters.DDS" />
+    <Image Include="Textures\RightSideBeach.dds" />
+    <Image Include="Textures\RightSideBeach.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />
