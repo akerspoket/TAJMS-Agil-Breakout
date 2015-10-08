@@ -44,7 +44,7 @@ public:
 	
 	vector<Vertex> LoadModel(const char* fileName);
 	vector<TextVertex> LoadTextVertices(const char* text, int x, int y, int size);
-	vector<Vertex> LoadObj(string fileName, vec3 pScale);
+	vector<Vertex> LoadObj(string fileName, vec3 pScale, bool pDirectX);
 	void LoadTGA();
 	//vector<Material> materials;
 	void LoadMaterial(const char* materialFileName);
