@@ -7,6 +7,7 @@
 
 #include "VelocityComponent.h"
 #include "TransformComponent.h"
+#include "LabelComponent.h"
 #include "GameState.h"
 
 VelocitySystem::VelocitySystem()
@@ -60,7 +61,10 @@ void VelocitySystem::Update(double pDeltaTime)
 					VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
 					//Update position with velocity
 					tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
+					if (GetComponent <LabelComponent>(i)->mLabel == Label::Ball)
+					{
 
+					}
 				}
 			}
 		}

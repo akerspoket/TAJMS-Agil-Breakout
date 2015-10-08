@@ -42,6 +42,8 @@ void TriggerSystem::Initialize()
 	mEventManager->Subscribe("DegeneratePauseMenu", this);
 	mEventManager->Subscribe("GenerateMenu", this);
 
+	mEventManager->Subscribe("DEBUG", this);
+
 	LevelManager* tLevelManager = tLevelManager->GetInstance();
 	tLevelManager->Initialize();
 	//LevelManager* tLevelManager = tLevelManager->GetInstance();
@@ -212,8 +214,19 @@ void TriggerSystem::OnEvent(Event* pEvent)
 			{
 				tCompTable->RemoveComponent(i, AttachedType);
 				tCompTable->AddComponent(i, VelocityType);
-				GetComponent<VelocityComponent>(i)->mDirection = vec3(1, 1, 0).Normalize();
+				GetComponent<VelocityComponent>(i)->mDirection = vec3(1, 1, 0).Normalized();
 				GetComponent<VelocityComponent>(i)->mSpeed = 12;
+			}
+		}
+	}
+	else if (pEventID == "DEBUG")
+	{
+		for (int i = 0; i < tMaxEnt; i++)
+		{
+			short pMask = LabelType;
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			{
+				GetComponent<VelocityComponent>(i)->mSpeed = 1.2;
 			}
 		}
 	}
