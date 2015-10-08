@@ -144,7 +144,7 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 	tLabel = new LabelComponent();
 	tSoundColl = new SoundCollisionComponent();
-	ScoreValueComponent* tScoreValue = new ScoreValueComponent();
+	ScoreValueComponent* tScoreValue = new ScoreValueComponent();//lägga högst upp????????????????
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
 	tLabel->mLabel = Label::Box;
@@ -479,6 +479,13 @@ void LevelManager::DegenerateMenu()
 		if (tCompTable->HasComponent(i, MenyButtonType))
 		{
 			tEntManager->RemoveEntity(i);
+		}
+		else if (tCompTable->HasComponent(i, LabelType))
+		{
+			if(GetComponent<LabelComponent>(i)->mLabel == Label::MenuPointer)
+			{
+				tEntManager->RemoveEntity(i);
+			}
 		}
 	}
 }
