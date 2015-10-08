@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 #include "ComponentTable.h"
+#include <algorithm>
 
 #include <vector> //needed for linux
 
@@ -48,5 +49,11 @@ void EntityManager::RemoveEntity(int pEntityID)
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	tCompTable->RemoveEntity(pEntityID);
 
-	mFreeEntitySlots.push_back(pEntityID);
+	std::list<EntityID>::iterator findIter = std::find(mFreeEntitySlots.begin(), mFreeEntitySlots.end(), pEntityID);
+	
+	if (findIter == mFreeEntitySlots.end())
+	{
+		mFreeEntitySlots.push_back(pEntityID);
+	}
+	
 }
