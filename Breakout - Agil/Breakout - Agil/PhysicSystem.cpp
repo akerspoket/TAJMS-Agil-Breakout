@@ -77,7 +77,8 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 			float distance = collision.Abs();
 
 			collision = collision * (1 / distance);
-			vec2 tDir = vec3toVec2(ballVel->mDirection);
+			//vec2 tDir = vec3toVec2(ballVel->mDirection); //physically correct thingy
+			vec2 tDir = vec2(0, -1); //gameplay thingy
 			float aci = tDir*collision;
 			float bci = 0;
 
@@ -161,20 +162,20 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 
 
-				//if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
-				//{
-				//	SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
-				//}
-				//else
+				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				{
+					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+				}
+				else
 
 				tVel->mDirection.x *= -1;
 
 				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
 				{
 					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
-					tVel->mDirection.y = mMinAngle;
-					tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
-					tVel->mDirection.Normalize();
+					//tVel->mDirection.y = mMinAngle;
+					//tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
+					//tVel->mDirection.Normalize();
 				}
 
 

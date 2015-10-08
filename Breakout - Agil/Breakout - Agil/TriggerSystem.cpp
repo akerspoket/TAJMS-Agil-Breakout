@@ -18,7 +18,7 @@ TriggerSystem::TriggerSystem()
 	mCurrentLevel = -1;
 }
 
-TriggerSystem::TriggerSystem(string pName):System(pName)
+TriggerSystem::TriggerSystem(string pName) :System(pName)
 {
 	mCreateNextLevel = true;
 	mDegenerateWorld = false;
@@ -226,7 +226,12 @@ void TriggerSystem::OnEvent(Event* pEvent)
 			short pMask = LabelType;
 			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
 			{
-				GetComponent<VelocityComponent>(i)->mSpeed = 1.2;
+				if (GetComponent<VelocityComponent>(i)->mSpeed == 12)
+				{
+					GetComponent<VelocityComponent>(i)->mSpeed = 1.2;
+				}
+				else
+					GetComponent<VelocityComponent>(i)->mSpeed = 12;
 			}
 		}
 	}
@@ -254,7 +259,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 	{
 		LevelManager::GetInstance()->DegenerateMenu();
 	}
-	else if (pEventID  == "GenerateMenu")
+	else if (pEventID == "GenerateMenu")
 	{
 		int tMenuID = *(int*)pEvent->mPayload["MenuID"];
 
@@ -273,6 +278,6 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		default:
 			break;
 		}
-	
+
 	}
 }

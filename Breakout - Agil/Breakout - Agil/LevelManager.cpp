@@ -104,7 +104,7 @@ void LevelManager::Initialize()
 			//int tXColl=;
 			//int tYColl=;
 
-			tColl->Dim = vec2(1, 0.5);
+			tColl->Dim = vec2(2.5, 1);
 			tPadBlueprint[CollisionType] = tColl;
 		}
 		else if (mEntitiyVector[i].compare("xMesh") == 0)
@@ -458,7 +458,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
 	AttachedComponent* tAtt = GetComponent<AttachedComponent>(tNewID);
 	tAtt->attachedTo = tPaddID;
-	tAtt->relPos = vec3(0, 1, 0);
+	tAtt->relPos = vec3(0, 1.3, 0);
 
 
 	//////////////////TOP BOT WALL///////////////////

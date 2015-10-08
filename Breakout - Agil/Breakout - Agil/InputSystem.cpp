@@ -277,11 +277,12 @@ void InputSystem::GameInput()
 				tPayload["KeyPressed"] = tString;
 				EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
 			}
-		}
-		if (gUserCmd.mKeysPressed[i] == 'x')
-		{
-			unordered_map<string, void*> payload;
-			EventManager::GetInstance()->BroadcastEvent("DEBUG", payload);
+
+			if (gUserCmd.mKeysPressed[i] == 'x')
+			{
+				unordered_map<string, void*> payload;
+				EventManager::GetInstance()->BroadcastEvent("DEBUG", payload);
+			}
 		}
 	}
 }
