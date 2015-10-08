@@ -160,11 +160,11 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 
 
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
-				{
-					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
-				}
-				else
+				//if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				//{
+				//	SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+				//}
+				//else
 				{
 					tVel->mDirection.x *= -1;
 				}
