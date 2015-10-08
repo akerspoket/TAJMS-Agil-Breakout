@@ -1,5 +1,5 @@
 #include "OGLGraphicsEngine.h"
-
+#define PIOGL 3.14159265359
 
 OGLGraphicsEngine::OGLGraphicsEngine()
 {
@@ -50,7 +50,7 @@ void OGLGraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight, float pWid
 {
 	mWVPBuffer.world = glm::mat4();
 	mWVPBuffer.view = glm::lookAt(glm::vec3(0.0f, 0.0f, pZPos),glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0, 1, 0));
-	mWVPBuffer.projection = glm::perspective(pFoVAngleY, pWidth / pHeight, pNear, pFar);
+	mWVPBuffer.projection = glm::perspective(pFoVAngleY * (float)PIOGL /180.0f, pWidth / pHeight, pNear, pFar);
 
 	mWVPBufferID = AddUniform(mNormalShaderProg, "gWorld");
 	glUniformMatrix4fv(mUniforms[mWVPBufferID], 1, GL_FALSE, (float*)&mWVPBuffer.world);
@@ -413,13 +413,21 @@ int OGLGraphicsEngine::CreateObject(string pMeshName)
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
 	}
-	else if (pMeshName == "Object/Pad.obj")
+	else if (pMeshName == "Object/Ship.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(2.0f, 0.5f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 1.0f));
+	}
+	else if (pMeshName == "Object/Chest.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.8f, 1.0f, 1.0f));
 	}
 	else if (pMeshName == "Object/Boll.obj")
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+	}
+	else if (pMeshName == "Object/MenuButton.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 1.0f, 0.5f));
 	}
 	else if (pMeshName == "Object/Background.obj")
 	{

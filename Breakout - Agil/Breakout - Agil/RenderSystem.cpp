@@ -34,7 +34,7 @@ void RenderSystem::Initialize()
 void RenderSystem::Initialize(SDL_Window* pWin)
 {
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
-	mGraphicsInterface->Initialize(45.0f, 600.0f, 800.0f, 0.1f, 100, -13.0f, pWin);
+	mGraphicsInterface->Initialize(90.0f, 600.0f, 800.0f, 0.1f, 100, -4.0f, pWin);
 	mTempTextId = mGraphicsInterface->CreateText(60);
 }
 
