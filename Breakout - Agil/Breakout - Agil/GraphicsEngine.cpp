@@ -1,6 +1,6 @@
 #ifdef _WIN32
 #include "GraphicsEngine.h"
-
+#define PI 3.14159265359
 
 //MASTER
 GraphicsEngine::GraphicsEngine()
@@ -228,7 +228,7 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 
 	tBufferInfo.world = XMMatrixTranspose(XMMatrixIdentity());
 	tBufferInfo.view = XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, pZPos)), XMLoadFloat3(&XMFLOAT3(0, 0, 1)), XMLoadFloat3(&XMFLOAT3(0, 1, 0))));
-	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(pFoVAngleY, pWidth / pHeight, pNear, pFar));  //XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
+	tBufferInfo.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(pFoVAngleY*PI/180.0f, pWidth / pHeight, pNear, pFar));  //XMMatrixPerspectiveFovLH(45.0f, 600.0f / 800.0f, 0.1f, 100));
 	PushToDevice(mWVPBufferID.bufferID, &tBufferInfo, sizeof(tBufferInfo), mWVPBufferID.reg,VertexShader);
 	HRESULT res;
 
@@ -468,13 +468,21 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f,1.0f,1.0f));
 	}
-	else if (pMeshName == "Object/Pad.obj")
+	else if (pMeshName == "Object/Ship.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(2.0f, 0.5f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 1.0f));
+	}
+	else if (pMeshName == "Object/Chest.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.8f, 1.0f, 1.0f));
 	}
 	else if (pMeshName == "Object/Boll.obj")
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+	}
+	else if (pMeshName == "Object/MenuButton.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 1.0f, 0.5f));
 	}
 	else if (pMeshName == "Object/Background.obj")
 	{

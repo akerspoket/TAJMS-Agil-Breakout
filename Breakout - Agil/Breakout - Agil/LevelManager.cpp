@@ -202,10 +202,10 @@ void LevelManager::Initialize()
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.mp3", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
-	tColl->Dim = vec2(0.5, 0.5);
+	tColl->Dim = vec2(2.5, 0.5);
 	tLabel->mLabel = Label::GoalBlock;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/GoalTexture");///Här ska vi byta textur!!
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");///Här ska vi byta textur!!
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
 	tGoalBlockBlueprint[MeshType] = tMesh;
 	tGoalBlockBlueprint[VelocityType] = tVelocity;
@@ -259,8 +259,8 @@ void LevelManager::Initialize()
 	
 	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");//prov
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Block.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");//Will be changed later for each specific button
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/MenuButton.obj");
 	tMenuButtonBlock[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("MenuButtonBlock", tMenuButtonBlock);
 
