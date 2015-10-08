@@ -129,10 +129,18 @@ struct vec3
 	{
 		return sqrt(x*x + y*y + z*z);
 	}
-	vec3 Normalize()
+	vec3 Normalized()
 	{
 		float length = Abs();
 		return vec3(x / length, y / length, z / length);
+	}
+	void Normalize()
+	{
+		float length = Abs();
+		vec3 normVec = vec3(x / length, y / length, z / length);
+		x = normVec.x;
+		y = normVec.y;
+		z = normVec.z;
 	}
 };
 

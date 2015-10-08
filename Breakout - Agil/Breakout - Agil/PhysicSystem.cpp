@@ -19,7 +19,7 @@ PhysicSystem::PhysicSystem()
 
 }
 
-PhysicSystem::PhysicSystem(string pName):System(pName)
+PhysicSystem::PhysicSystem(string pName) :System(pName)
 {
 }
 
@@ -32,6 +32,8 @@ void PhysicSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
+
+	mMinAngle = 0.4;
 }
 
 void PhysicSystem::Start()
@@ -73,7 +75,7 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 			vec2 tPadSpherePos = vec3toVec2(pTrans1->mPosition) + tPadSphereOffset;
 			vec2 collision = tBallPos - tPadSpherePos;
 			float distance = collision.Abs();
-			
+
 			collision = collision * (1 / distance);
 			vec2 tDir = vec3toVec2(ballVel->mDirection);
 			float aci = tDir*collision;
@@ -84,22 +86,21 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 
 			tDir += collision*(0 - aci);
 			tDir -= collision*(bcf - 0);
-				
-			float tMinAngle = 0.3;
-			if (tDir.y < tMinAngle) //exit angle too low
+
+			if (tDir.y < mMinAngle) //exit angle too low
 			{
 				float tExitX = 1;
 				if (tDir.x < 0)
 					tExitX = -1;
-				tDir = vec2(tExitX, tMinAngle).Normalize();
+				tDir = vec2(tExitX, mMinAngle).Normalize();
 			}
 
 			ballVel->mDirection = vec2toVec3(tDir);
-		
+
 		}
 	}
 
-	
+
 }
 
 //from https://studiofreya.com/3d-math-and-physics/sphere-vs-aabb-collision-detection-test/
@@ -150,8 +151,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 //		cout << "Collision happened! ComponentID that collided:" << pEntityID1 << " and " << pEntityID2 << endl;
 //#endif
 		//END DEBUG
-		
-		
+
+
 
 		if (abs(tNormDir.x) > abs(tNormDir.y))
 		{
@@ -165,9 +166,17 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				//	SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 				//}
 				//else
+
+				tVel->mDirection.x *= -1;
+
+				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
 				{
-					tVel->mDirection.x *= -1;
+					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+					tVel->mDirection.y = mMinAngle;
+					tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
+					tVel->mDirection.Normalize();
 				}
+
 
 
 				if (tNormDir.x > 0)
@@ -192,11 +201,11 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					//move out with the difference from old and edge position out
 					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
 				}
-				
-				
 
 
-				
+
+
+
 
 			}
 
@@ -249,7 +258,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		*id2 = pEntityID2;
 		payload["ID2"] = id2;
 		mEventManager->BroadcastEvent("Collision", payload);
-		
+
 		//remove block
 		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
 		{
@@ -347,7 +356,7 @@ void PhysicSystem::Update(double pDeltaTime)
 		break;
 	}
 
-	
+
 }
 
 void PhysicSystem::Pause()

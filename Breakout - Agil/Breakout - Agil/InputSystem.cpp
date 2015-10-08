@@ -88,6 +88,10 @@ void InputSystem::CheckKeyboard()
 	{
 		gUserCmd.mKeysPressed.push_back('s');
 	}
+	if (mKeyState[SDL_SCANCODE_X])
+	{
+		gUserCmd.mKeysPressed.push_back('x'); //sEXy debug button
+	}
 	if (mKeyState[SDL_SCANCODE_ESCAPE])
 	{
 		cout << "Stäng av programmet";
@@ -273,6 +277,11 @@ void InputSystem::GameInput()
 				tPayload["KeyPressed"] = tString;
 				EventManager::GetInstance()->BroadcastEvent("Input", tPayload);
 			}
+		}
+		if (gUserCmd.mKeysPressed[i] == 'x')
+		{
+			unordered_map<string, void*> payload;
+			EventManager::GetInstance()->BroadcastEvent("DEBUG", payload);
 		}
 	}
 }
