@@ -16,8 +16,13 @@ ObjLoader::~ObjLoader(void)
 }
 
 
-vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
+vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale, bool pDirectX)
 {
+	int directXFix=1;
+	if (pDirectX)
+	{
+		directXFix = -1; //To inverte x coordinates for some fucking crazy reason....
+	}
 	vector<unsigned int> vertexIndices, texCoordIndices, normalIndices;
 	vector<vec3> temp_positions;
 	vector<vec2> temp_texCoords;
@@ -82,7 +87,7 @@ vector<Vertex> ObjLoader::LoadObj(string fileName, vec3 pScale)
 			Vertex currentVertex;
 			for (int i = 0; i < 3; i++)
 			{
-				currentVertex.position.x = temp_positions[vertexIndex[i]-1].x * pScale.x;
+				currentVertex.position.x = temp_positions[vertexIndex[i]-1].x * directXFix * pScale.x;
 				currentVertex.position.y = temp_positions[vertexIndex[i]-1].y* pScale.y;
 				currentVertex.position.z = temp_positions[vertexIndex[i]-1].z* pScale.z;
 				currentVertex.normal.x = temp_normals[normalIndex[i]-1].x;

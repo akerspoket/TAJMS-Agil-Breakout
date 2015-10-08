@@ -249,16 +249,25 @@
     <Image Include="Textures\Background.png" />
     <Image Include="Textures\BoxTexture2.png" />
     <Image Include="Textures\Exit.png" />
+    <Image Include="Textures\ExitButtonTexture.png" />
     <Image Include="Textures\GoalTexture.png" />
+    <Image Include="Textures\HighscoreButtonTexture.png" />
     <Image Include="Textures\LeftSideBeach.dds" />
     <Image Include="Textures\LeftSideBeach.png" />
     <Image Include="Textures\Letters.png" />
     <Image Include="Textures\Letters.DDS" />
+    <Image Include="Textures\MainMenuButtonTexture.png" />
+    <Image Include="Textures\OptionsButtonTexture.png" />
+    <Image Include="Textures\RestartLevelButtonTexture.png" />
+    <Image Include="Textures\ResumeButtonTexture.png" />
     <Image Include="Textures\RightSideBeach.dds" />
     <Image Include="Textures\RightSideBeach.png" />
     <Image Include="Textures\ShipTexture.png" />
     <Image Include="Textures\ShipTextureGoal.png" />
     <Image Include="Textures\Start.png" />
+    <Image Include="Textures\StartButtonTexture.dds" />
+    <Image Include="Textures\StartButtonTexture.png" />
+    <Image Include="Textures\TutorialButtonTexture.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

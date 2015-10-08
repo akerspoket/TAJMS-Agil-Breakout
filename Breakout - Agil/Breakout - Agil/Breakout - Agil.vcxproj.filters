@@ -52,6 +52,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{79a729ed-ed99-4070-8917-e53b1cc001ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\ButtonTextures">
+      <UniqueIdentifier>{8445d0c5-4db5-4eab-85ed-ebed596c4c58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -378,6 +381,33 @@
     </Image>
     <Image Include="Textures\ShipTextureGoal.png">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\ExitButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\HighscoreButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\MainMenuButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\OptionsButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\ResumeButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\TutorialButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\StartButtonTexture.dds">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\StartButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
+    </Image>
+    <Image Include="Textures\RestartLevelButtonTexture.png">
+      <Filter>Resource Files\ButtonTextures</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

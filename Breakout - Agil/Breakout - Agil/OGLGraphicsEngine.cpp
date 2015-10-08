@@ -411,35 +411,35 @@ int OGLGraphicsEngine::CreateObject(string pMeshName)
 	vector<Vertex> tVertices;
 	if (pMeshName == "Object/Block.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f), false);
 	}
 	else if (pMeshName == "Object/Ship.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 1.0f), false);
 	}
 	else if (pMeshName == "Object/Chest.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.8f, 1.0f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.8f, 1.0f, 1.0f), false);
 	}
 	else if (pMeshName == "Object/Boll.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f), false);
 	}
-	else if (pMeshName == "Object/MenuButton.obj")
+	else if (pMeshName == "Object/Button.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 1.0f, 0.5f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 2.0f, 0.5f), false);
 	}
 	else if (pMeshName == "Object/Background.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(40.0f, 40.0f, 0.2f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(40.0f, 40.0f, 0.2f), false);
 	}
 	else if (pMeshName == "Object/SideWall.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 30.0f, 0.02f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 30.0f, 0.02f), false);
 	}
 	else
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f));
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	int retValue = CreateObjectBuffer(tVertices.data(), sizeof(Vertex)*tVertices.size(), tVertices.size());

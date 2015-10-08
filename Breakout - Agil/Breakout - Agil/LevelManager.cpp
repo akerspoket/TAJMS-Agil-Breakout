@@ -260,7 +260,7 @@ void LevelManager::Initialize()
 	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");//Will be changed later for each specific button
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/MenuButton.obj");
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Button.obj");
 	tMenuButtonBlock[MeshType] = tMesh;
 	mEntityFactory->RegisterEntityTemplate("MenuButtonBlock", tMenuButtonBlock);
 
@@ -276,7 +276,7 @@ void LevelManager::Initialize()
 	tMenuPtrBlueprint[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
-	tAttachComp->relPos = vec3(-2, 0, 0);
+	tAttachComp->relPos = vec3(-3, 0, 0);
 	tMenuPtrBlueprint[AttachedType] = tAttachComp;
 	tMenuPtrBlueprint[MeshType] = tMesh;
 	tLabel->mLabel = Label::MenuPointer;
@@ -301,6 +301,7 @@ void LevelManager::GenerateMainMenu()
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/StartButtonTexture");
 	tMenButComp->mButtonBelong = MainMenu;
 	tMenButComp->mButtonName = MainStart;
 	tTrans->mPosition = vec3(0, 8, 8);
@@ -312,6 +313,7 @@ void LevelManager::GenerateMainMenu()
 	tAttComp->attachedTo = tNewID;
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/OptionsButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = MainMenu;
 	tMenButComp->mButtonName = MainOption;
@@ -319,6 +321,7 @@ void LevelManager::GenerateMainMenu()
 	tTrans->mPosition = vec3(0, 4, 8);
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/HighscoreButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = MainMenu;
 	tMenButComp->mButtonName = MainHighscore;
@@ -326,6 +329,7 @@ void LevelManager::GenerateMainMenu()
 	tTrans->mPosition = vec3(0, 0, 8);
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/TutorialButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = MainMenu;
 	tMenButComp->mButtonName = MainTutorial;
@@ -333,6 +337,7 @@ void LevelManager::GenerateMainMenu()
 	tTrans->mPosition = vec3(0, -4, 8);
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/ExitButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = MainMenu;
 	tMenButComp->mButtonName = MainQuit;
@@ -345,6 +350,7 @@ void LevelManager::GenerateMainMenu()
 void LevelManager::GenerateDeathScreen()
 {
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/RestartLevelButtonTexture");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = DeathMenu;
@@ -357,6 +363,7 @@ void LevelManager::GenerateDeathScreen()
 
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/ExitButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = DeathMenu;
 	tMenButComp->mButtonName = DeathQuitToMainMenu;
@@ -368,6 +375,7 @@ void LevelManager::GenerateDeathScreen()
 void LevelManager::GeneratePauseScreen()
 {
 	EntityID tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/ResumeButtonTexture");
 	TransformComponent* tTrans = GetComponent<TransformComponent>(tNewID);
 	MenyButtonComponent* tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = PauseMenu;
@@ -382,6 +390,7 @@ void LevelManager::GeneratePauseScreen()
 
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/RestartLevelButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = PauseMenu;
 	tMenButComp->mButtonName = PauseRestartLevel;
@@ -389,6 +398,7 @@ void LevelManager::GeneratePauseScreen()
 	tTrans->mPosition = vec3(0, 0, 8);
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/MainMenuButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = PauseMenu;
 	tMenButComp->mButtonName = PauseQuitToMainMenu;
