@@ -409,6 +409,9 @@
     <Image Include="Textures\RestartLevelButtonTexture.png">
       <Filter>Resource Files\ButtonTextures</Filter>
     </Image>
+    <Image Include="Textures\CanonBall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs">

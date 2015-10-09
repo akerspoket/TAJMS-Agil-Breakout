@@ -248,6 +248,7 @@
     <Image Include="Textures\Background.dds" />
     <Image Include="Textures\Background.png" />
     <Image Include="Textures\BoxTexture2.png" />
+    <Image Include="Textures\CanonBall.png" />
     <Image Include="Textures\Exit.png" />
     <Image Include="Textures\ExitButtonTexture.png" />
     <Image Include="Textures\GoalTexture.png" />

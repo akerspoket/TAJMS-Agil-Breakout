@@ -178,7 +178,7 @@ void LevelManager::Initialize()
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");//prov
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/CanonBall");//prov
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
 	tBallBlueprint[TransformType] = tTrans;
 	tBallBlueprint[MeshType] = tMesh;
@@ -274,7 +274,7 @@ void LevelManager::Initialize()
 
 
 	tMenuPtrBlueprint[TransformType] = tTrans;
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("davai");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/CanonBall");
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
 	tAttachComp->relPos = vec3(-3, 0, 0);
 	tMenuPtrBlueprint[AttachedType] = tAttachComp;
@@ -363,7 +363,7 @@ void LevelManager::GenerateDeathScreen()
 
 
 	tNewID = mEntityFactory->CreateEntity("MenuButtonBlock");
-	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/ExitButtonTexture");
+	GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/MainMenuButtonTexture");
 	tMenButComp = GetComponent<MenyButtonComponent>(tNewID);
 	tMenButComp->mButtonBelong = DeathMenu;
 	tMenButComp->mButtonName = DeathQuitToMainMenu;
