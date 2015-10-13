@@ -5,7 +5,7 @@
 enum PowerUpType
 {
 	SpeedUp = 0x01,
-	PUP2 = 0x02,
+	BallNet = 0x02,
 	PUP3 = 0x04,
 	PUP4 = 0x08,
 	PUP5 = 0x10,
@@ -14,7 +14,7 @@ enum PowerUpType
 enum PowerUpTimerLocation
 {
 	SpeedUpLoc,
-	PUP2Loc,
+	BallNetLoc,
 	PUP3Loc,
 	NumPowerUps,
 };

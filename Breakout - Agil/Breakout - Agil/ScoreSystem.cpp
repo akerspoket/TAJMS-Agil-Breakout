@@ -5,6 +5,7 @@
 #include "ComponentTable.h"
 #include "ScoreValueComponent.h"
 #include "StorageShelf.h"
+#include "PowerUpComponent.h"
 
 ScoreSystem::ScoreSystem()
 {
@@ -58,6 +59,9 @@ void ScoreSystem::OnEvent(Event* pEvent)
 	else if (pEvent->mID == "Collision")
 	{
 		int value = 0;
+		
+		
+		
 		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID1"], SoundCollisionType))
 		{
 			value += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID1"])->value;
@@ -66,9 +70,19 @@ void ScoreSystem::OnEvent(Event* pEvent)
 		{
 			value  += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
 		}
+
+		if (tCompTable->HasComponent(*(EntityID*)pEvent->mPayload["ID2"], PowerUpType))
+		{
+			if (GetComponent<PowerUpComponent>(*(EntityID*)pEvent->mPayload["ID2"])->HasPowerUp(BallNet))
+			{
+				value = 0;
+			}
+		}
+
 		mScore -= value;
 
 		SendScore();
+
 		//cout << "Your score is:" << mScore << endl;
 	}
 }

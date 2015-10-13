@@ -5,6 +5,7 @@
 #include "StorageShelf.h"
 #include "VelocityComponent.h"
 #include "PowerUpComponent.h"
+#include "LabelComponent.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -54,6 +55,27 @@ void PowerUpSystem::Update(double pDeltaTime)
 }
 void PowerUpSystem::Pause() {}
 void PowerUpSystem::Stop() {}
+void PowerUpSystem::BallNetPowerUp(float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->mLabel==Label::Ball)
+			{
+				GetComponent<PowerUpComponent>(i)->timers[BallNetLoc] = pTime;
+			}
+		}
+	}
+
+	//test
+	
+
+}
 void PowerUpSystem::OnEvent(Event* pEvent)
 {
 	EntityManager* tEntMan = tEntMan->GetInstance();
@@ -65,15 +87,26 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		short mask = *(short*)pEvent->mPayload["mask"];
   		float duration = *(float*)pEvent->mPayload["duration"];
 
+		//need to zero the memory 
+		if (!tCompTable->HasComponent(entID, PowerUpType))
+		{
+			*GetComponent<PowerUpComponent>(entID) = PowerUpComponent();
+		}
+		tCompTable->AddComponent(entID, PowerUpType);
+
 		GetComponent<PowerUpComponent>(entID)->AddPowerUp(mask);
 		
-		tCompTable->AddComponent(entID, PowerUpType);
+		
 
 		switch (mask)
 		{
 		case SpeedUp:
 			GetComponent<VelocityComponent>(entID)->mSpeed *= 3;
 			GetComponent<PowerUpComponent>(entID)->timers[SpeedUpLoc] = duration;
+			break;
+		case BallNet:
+			///hitta bollen o lägga på en powercompennt förhåven på den.
+			BallNetPowerUp(duration);
 			break;
 		}
 	}
@@ -92,6 +125,12 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 			{
 				GetComponent<VelocityComponent>(id)->mSpeed /= 3;
 				GetComponent<PowerUpComponent>(id)->RemovePowerUp(SpeedUp);
+			}
+			break;
+		case BallNetLoc:
+			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(BallNet))
+			{
+				GetComponent<PowerUpComponent>(id)->RemovePowerUp(BallNet);
 			}
 			break;
 	}
