@@ -76,6 +76,27 @@ void PowerUpSystem::BallNetPowerUp(float pTime)
 	
 
 }
+void PowerUpSystem::PiercingPowerUp(float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			{
+				GetComponent<PowerUpComponent>(i)->timers[Piercing] = pTime;
+			}
+		}
+	}
+
+	//test
+
+
+}
 void PowerUpSystem::OnEvent(Event* pEvent)
 {
 	EntityManager* tEntMan = tEntMan->GetInstance();
@@ -108,6 +129,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 			///hitta bollen o lägga på en powercompennt förhåven på den.
 			BallNetPowerUp(duration);
 			break;
+		case Piercing:
+			PiercingPowerUp(duration);
+			break;
 		}
 	}
 }
@@ -131,6 +155,12 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(BallNet))
 			{
 				GetComponent<PowerUpComponent>(id)->RemovePowerUp(BallNet);
+			}
+			break;
+		case Piercing:
+			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(Piercing))
+			{
+				GetComponent<PowerUpComponent>(id)->RemovePowerUp(Piercing);
 			}
 			break;
 	}

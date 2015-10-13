@@ -536,20 +536,36 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tAtt->attachedTo = tPaddID;
 	tAtt->relPos = vec3(0, 1.3, 0);
 
-	/////TEST ADDING SPEEDUP POWERUP////////
+	///////TEST ADDING Håven POWERUP////////
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload2;
+	//int* entID2 = new int(tNewID);
+	////*entID2 = tNewID;
+	//pupPayload2["EntityID"] = entID2;
+	//short* mask2 = new short();
+	//*mask2 = BallNet;
+	//pupPayload2["mask"] = mask2;
+	//float* duration2 = new float();
+	//*duration2 = 8;
+	//pupPayload2["duration"] = duration2;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
+	///////TEST ENDS//////////////////////////////////
+
+	/////TEST ADDING Piercing POWERUP////////
 	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
 	EventManager::Payload pupPayload2;
 	int* entID2 = new int(tNewID);
 	//*entID2 = tNewID;
 	pupPayload2["EntityID"] = entID2;
 	short* mask2 = new short();
-	*mask2 = BallNet;
+	*mask2 = Piercing;
 	pupPayload2["mask"] = mask2;
 	float* duration2 = new float();
 	*duration2 = 8;
 	pupPayload2["duration"] = duration2;
 	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
 	/////TEST ENDS//////////////////////////////////
+
 
 
 	//////////////////TOP BOT WALL///////////////////
