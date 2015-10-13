@@ -1,5 +1,6 @@
 #pragma once
 #include "System.h"
+#include "Constants.h"
 
 
 class PowerUpSystem:public System
@@ -18,7 +19,7 @@ public:
 	void OnEvent(Event* pEvent);
 
 private:
-	//void RemovePower(EntityID id, short pMask);
+	void RemovePower(EntityID id, short pMask);
 
 };
 

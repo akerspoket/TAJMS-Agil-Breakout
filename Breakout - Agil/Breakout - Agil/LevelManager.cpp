@@ -427,6 +427,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	short* mask = new short();
 	*mask = SpeedUp;
 	pupPayload["mask"] = mask;
+	float* duration = new float;
+	*duration = 2;
+	pupPayload["duration"] = duration;
 	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 	//////END TEST/////////////////
 

@@ -44,8 +44,7 @@ void PowerUpSystem::Update(double pDeltaTime)
 				//Check if timer ran out
 				if (tPup->timers[j] <= 0)
 				{
-					//Remove component
-
+					RemovePower(i, j);
 				}
 			}
 		}
@@ -67,31 +66,33 @@ void PowerUpSystem::OnEvent(Event* pEvent)
   		float duration = *(float*)pEvent->mPayload["duration"];
 
 		GetComponent<PowerUpComponent>(entID)->AddPowerUp(mask);
-		GetComponent<PowerUpComponent>(entID)->timers[SpeedUpLoc] = duration;;
+		
 		tCompTable->AddComponent(entID, PowerUpType);
 
 		switch (mask)
 		{
 		case SpeedUp:
 			GetComponent<VelocityComponent>(entID)->mSpeed *= 3;
+			GetComponent<PowerUpComponent>(entID)->timers[SpeedUpLoc] = duration;
 			break;
 		}
 	}
 }
 
-//void PowerUpSystem::RemovePower(EntityID id, short pMask)
-//{
-//	ComponentTable* tCompTable = tCompTable->GetInstance();
-//	GetComponent<PowerUpComponent>(id)->RemovePowerUp(pMask);
-//	GetComponent<PowerUpComponent>(id)->timers[pMask] = 0;
-//
-//	switch (pMask)
-//	{
-//
-//
-//
-//		case SpeedUpLoc:
-//
-//			break;
-//	}
-//}
+void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
+{
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	GetComponent<PowerUpComponent>(id)->timers[timerLocation] = 0;
+
+
+	switch (timerLocation)
+	{
+		case SpeedUpLoc:
+			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(SpeedUp))
+			{
+				GetComponent<VelocityComponent>(id)->mSpeed /= 3;
+				GetComponent<PowerUpComponent>(id)->RemovePowerUp(SpeedUp);
+			}
+			break;
+	}
+}

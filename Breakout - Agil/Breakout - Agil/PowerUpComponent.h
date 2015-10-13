@@ -48,7 +48,7 @@ struct PowerUpComponent
 	void RemovePowerUp(short pMask)
 	{
 		short tAnd = powerUps & pMask;
-
+		powerUps = powerUps ^ tAnd;
 	}
 };
 
