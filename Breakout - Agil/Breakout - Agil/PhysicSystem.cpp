@@ -67,7 +67,7 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 	if (rCollided)
 	{
 		//Special case if component is ball
-		if (GetComponent<LabelComponent>(pEntityID2)->mLabel == Label::Ball)
+		if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Label::Ball))
 		{
 			VelocityComponent* ballVel = GetComponent<VelocityComponent>(pEntityID2);
 			vec2 tPadSphereOffset = vec2(0, -5); //how large we want the sphere to be
@@ -162,7 +162,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 
 
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 				{
 					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 				}
@@ -170,7 +170,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 				tVel->mDirection.x *= -1;
 
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 				{
 					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
 					//tVel->mDirection.y = mMinAngle;
@@ -216,7 +216,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 			{
 				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 				{
 					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 				}
@@ -265,17 +265,17 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		{
 			LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
 
-			if (tLabel->mLabel == Label::Box)		//if AABB is label Box, we remove it
+			if (tLabel->HasLabel(Box))		//if AABB is label Box, we remove it
 			{
 				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
 			}
-			else if (tLabel->mLabel == Label::BottomArea)		//if bottom area, we lose
+			else if (tLabel->HasLabel(BottomArea))		//if bottom area, we lose
 			{
 				//not sure if we need to send any specific data here
 				std::unordered_map<string, void*> tPayLoad;
 				EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
 			}
-			else if (tLabel->mLabel == Label::GoalBlock)
+			else if (tLabel->HasLabel(GoalBlock))
 			{
 				//remove entity
 				EntityManager::GetInstance()->RemoveEntity(pEntityID1);

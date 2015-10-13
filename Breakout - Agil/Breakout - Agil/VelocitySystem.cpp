@@ -62,7 +62,7 @@ void VelocitySystem::Update(double pDeltaTime)
 					VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
 					//Update position with velocity
 					tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
-					if (GetComponent <LabelComponent>(i)->mLabel == Label::Ball)
+					if (GetComponent <LabelComponent>(i)->HasLabel(Ball))
 					{
 
 					}

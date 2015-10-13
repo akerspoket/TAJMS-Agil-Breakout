@@ -558,7 +558,7 @@ void LevelManager::DegenerateMenu()
 		}
 		else if (tCompTable->HasComponent(i, LabelType))
 		{
-			if(GetComponent<LabelComponent>(i)->mLabel == Label::MenuPointer)
+			if(GetComponent<LabelComponent>(i)->HasLabel(MenuPointer))
 			{
 				tEntManager->RemoveEntity(i);
 			}
