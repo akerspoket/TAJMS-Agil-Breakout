@@ -88,7 +88,7 @@ void LevelManager::Initialize()
 		else if (mEntitiyVector[i].compare("xLabel") == 0)
 		{
 			i++;
-			tLabel->mLabel = Label::Pad;
+			tLabel->AddLabel(Pad);
 			tPadBlueprint[LabelType] = tLabel;
 			///////////Kolla vilken label det är i LabelComponent
 		}
@@ -150,7 +150,7 @@ void LevelManager::Initialize()
 	ScoreValueComponent* tScoreValue = new ScoreValueComponent();//lägga högst upp????????????????
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
-	tLabel->mLabel = Label::Box;
+	tLabel->AddLabel(Box);
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/BoxTexture2");///Här ska vi byta textur!!
@@ -177,7 +177,7 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 
 	//We set the label here since it never changes
-	tLabel->mLabel = Label::Ball;
+	tLabel->AddLabel(Ball);
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
@@ -206,7 +206,7 @@ void LevelManager::Initialize()
 	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.mp3", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(2.5, 0.5);
-	tLabel->mLabel = Label::GoalBlock;
+	tLabel->AddLabel(GoalBlock);
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
@@ -282,7 +282,7 @@ void LevelManager::Initialize()
 	tAttachComp->relPos = vec3(-3, 0, 0);
 	tMenuPtrBlueprint[AttachedType] = tAttachComp;
 	tMenuPtrBlueprint[MeshType] = tMesh;
-	tLabel->mLabel = Label::MenuPointer;
+	tLabel->AddLabel(MenuPointer);
 	tMenuPtrBlueprint[LabelType] = tLabel;
 	
 	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
@@ -527,7 +527,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -10, 8);
 	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
 	LabelComponent* tLabel = GetComponent<LabelComponent>(tNewID);
-	tLabel->mLabel = Label::BottomArea;
+	tLabel->AddLabel(BottomArea);
 
 	/////////////////SIDE WALLS/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("VerWall");
