@@ -16,6 +16,7 @@
 #include <iostream>
 #include "ScoreValueComponent.h"
 #include "PowerUpComponent.h"
+#include "PowerUpContainComponent.h"
 
 #include "MenyButtonComponent.h"
 #include "SoundEngine.h"
@@ -297,6 +298,33 @@ void LevelManager::Initialize()
 	tBackgroundBlueprint[MeshType] = tMesh;
 	tBackgroundBlueprint[TransformType] = tTrans;
 	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
+
+
+	/////////DEBUG POWERUP/////////
+	EntityFactory::EntityBlueprint tPowerUpBlueprint;
+	tMesh = new MeshComponent();
+	tTrans = new TransformComponent();
+	tVelocity = new VelocityComponent();
+	tColl = new CollisionComponent();
+	PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
+	tTrans->mPosition = vec3(0, 0, 8);
+	tVelocity->mDirection = vec3(0, -1, 0);
+	tVelocity->mSpeed = 5;
+	tPupContain->duration = 2;
+	tPupContain->type = SpeedUp;
+	tColl->Dim = vec2(0.5, 0.5);
+	tColl->mType = Sphere;
+	tPowerUpBlueprint[MeshType] = tMesh;
+	tPowerUpBlueprint[TransformType] = tTrans;
+	tPowerUpBlueprint[VelocityType] = tVelocity;
+	tPowerUpBlueprint[PowerUpContainType] = tPupContain;
+	tPowerUpBlueprint[CollisionType] = tColl;
+	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
+
+
+
 }
 void LevelManager::GenerateMainMenu()
 {
@@ -409,7 +437,9 @@ void LevelManager::GeneratePauseScreen()
 }
 void LevelManager::GenerateWorld(string pWorldName)
 {
-
+	////////////////////DEBUG POWERUP//////////
+	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
+	float test = GetComponent<VelocityComponent>(tPupID)->mSpeed;
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	EntityID tPaddID = tNewID;

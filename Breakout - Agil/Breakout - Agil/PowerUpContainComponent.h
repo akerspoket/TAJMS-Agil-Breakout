@@ -11,6 +11,6 @@ public:
 	}
 
 	float duration;
-	PowerUpType type;
+	short type;
 };
 
