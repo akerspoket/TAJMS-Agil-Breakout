@@ -353,7 +353,7 @@ void InputSystem::Update(double pDeltaTime)
 			{
 				LabelComponent* tLabel = GetComponent<LabelComponent>(i);
 
-				if (tLabel->mLabel == Label::Pad)
+				if (tLabel->HasLabel(Pad))
 				{
 					//find input we want to check for TODO:: maybe fix input into bit array?
 					PadInput(i);

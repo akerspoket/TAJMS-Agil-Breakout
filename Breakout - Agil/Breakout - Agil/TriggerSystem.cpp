@@ -117,13 +117,11 @@ void TriggerSystem::Update(double pDeltaTime)
 		{
 			if (tCompTable->HasComponent(i, LabelType))
 			{
-				Label tLabel = GetComponent<LabelComponent>(i)->mLabel;
-
-				if (tLabel == Label::Ball)
+				if(GetComponent<LabelComponent>(i)->HasLabel(Ball))
 				{
 					mNumOfBallsActive++;
 				}
-				else if (tLabel == Label::GoalBlock)
+				else if (GetComponent<LabelComponent>(i)->HasLabel(GoalBlock))
 				{
 					mNumOfGoalBlocksActive++;
 				}
@@ -210,7 +208,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = AttachedType | LabelType;
-			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				tCompTable->RemoveComponent(i, AttachedType);
 				tCompTable->AddComponent(i, VelocityType);
@@ -224,7 +222,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = LabelType;
-			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				if (GetComponent<VelocityComponent>(i)->mSpeed == 12)
 				{
