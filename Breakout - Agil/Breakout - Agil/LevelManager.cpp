@@ -17,6 +17,7 @@
 #include "ScoreValueComponent.h"
 #include "PowerUpComponent.h"
 #include "PowerUpContainComponent.h"
+#include <random>
 
 #include "MenyButtonComponent.h"
 #include "SoundEngine.h"
@@ -59,7 +60,7 @@ void LevelManager::Initialize()
 	//TODO: TEST remove this when we load maps in a good way
 
 	/////////////PADDA///////////////
-	
+
 
 	TransformComponent* tTrans = new TransformComponent();
 	MeshComponent* tMesh = new MeshComponent();
@@ -119,7 +120,7 @@ void LevelManager::Initialize()
 			std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
 			const wchar_t* widecstr = widestr.c_str();
 			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);///Här ska vi byta textur!!
-			
+
 
 
 
@@ -227,8 +228,8 @@ void LevelManager::Initialize()
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
-	tColl->Dim = vec2(30,0.2f);
-	
+	tColl->Dim = vec2(30, 0.2f);
+
 
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
@@ -260,7 +261,7 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
 
-	
+
 	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");//Will be changed later for each specific button
@@ -285,7 +286,7 @@ void LevelManager::Initialize()
 	tMenuPtrBlueprint[MeshType] = tMesh;
 	tLabel->AddLabel(MenuPointer);
 	tMenuPtrBlueprint[LabelType] = tLabel;
-	
+
 	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
 
 
@@ -295,7 +296,7 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Background.obj");
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");
-	tTrans->mPosition = vec3(0,0,10);
+	tTrans->mPosition = vec3(0, 0, 10);
 	tBackgroundBlueprint[MeshType] = tMesh;
 	tBackgroundBlueprint[TransformType] = tTrans;
 	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
@@ -466,7 +467,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition = vec3(0, -8, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
-	
+
 	/////TEST ADDING SPEEDUP POWERUP////////
 	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
 	//unordered_map<string, void*> pupPayload;
@@ -492,8 +493,22 @@ void LevelManager::GenerateWorld(string pWorldName)
 	{
 		t_forLooPJ = mLevelTextVector[2].size();
 	}
-	
+
 	int* tScore = new int();
+
+
+	vector<short> possiblePups;
+	possiblePups.push_back(SpeedUp);
+	possiblePups.push_back(BallNet);
+
+	vector<float> pupDurations;
+	pupDurations.push_back(2); 
+	pupDurations.push_back(2);
+
+
+
+	float chanceOfPup = 20;
+	int max = 100 / chanceOfPup;
 
 	for (size_t i = 0; i < t_forLoopI; i++)
 	{
@@ -503,9 +518,21 @@ void LevelManager::GenerateWorld(string pWorldName)
 			{
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
-				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
+				tTrans->mPosition.x = j - (float)t_forLooPJ / 2;
 				tTrans->mPosition.y = t_forLoopI - i;
 				tTrans->mPosition.z = 8;
+
+				//see if block gets a pup
+				int hit = rand() % max;
+				if (hit == 1)
+				{
+					//block got pup. Determine which pup
+					int pupIndex = rand() % (possiblePups.size());
+					ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpContainType);
+					GetComponent<PowerUpContainComponenet>(tNewID)->type = possiblePups[pupIndex];
+					GetComponent<PowerUpContainComponenet>(tNewID)->duration = pupDurations[pupIndex];
+				}
+
 				//set value of the blocks. Should be read from file
 				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
 				//Max score is the sum of the score of each block
@@ -540,7 +567,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//////////////////TOP BOT WALL///////////////////
 	tNewID = mEntityFactory->CreateEntity("HorWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0,t_forLoopI+1,8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, t_forLoopI + 1, 8);
 
 	tNewID = mEntityFactory->CreateEntity("HorWall");
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -10, 8);
@@ -559,7 +586,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	/////////////////BACKGROUND/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("BackgroundBlock");
-	
+
 
 }
 
@@ -577,7 +604,7 @@ void LevelManager::DegenerateMenu()
 		}
 		else if (tCompTable->HasComponent(i, LabelType))
 		{
-			if(GetComponent<LabelComponent>(i)->HasLabel(MenuPointer))
+			if (GetComponent<LabelComponent>(i)->HasLabel(MenuPointer))
 			{
 				tEntManager->RemoveEntity(i);
 			}
