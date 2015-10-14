@@ -438,9 +438,16 @@ void LevelManager::GeneratePauseScreen()
 }
 
 
-void PoopLabels()
+void PoopLabels() //Silly method...put it in my bum now my bumholes numb and eats plums
 {
-	
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i > tMaxEnt; i++)
+	{
+		GetComponent<LabelComponent>(i)->mLabel = None;
+	}
 }
 void LevelManager::GenerateWorld(string pWorldName)
 {
