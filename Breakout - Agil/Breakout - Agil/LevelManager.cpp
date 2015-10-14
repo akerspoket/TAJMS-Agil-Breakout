@@ -300,28 +300,28 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
 
 
-	/////////DEBUG POWERUP/////////
-	EntityFactory::EntityBlueprint tPowerUpBlueprint;
-	tMesh = new MeshComponent();
-	tTrans = new TransformComponent();
-	tVelocity = new VelocityComponent();
-	tColl = new CollisionComponent();
-	PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
-	tTrans->mPosition = vec3(0, 0, 8);
-	tVelocity->mDirection = vec3(0, -1, 0);
-	tVelocity->mSpeed = 5;
-	tPupContain->duration = 2;
-	tPupContain->type = SpeedUp;
-	tColl->Dim = vec2(0.5, 0.5);
-	tColl->mType = Sphere;
-	tPowerUpBlueprint[MeshType] = tMesh;
-	tPowerUpBlueprint[TransformType] = tTrans;
-	tPowerUpBlueprint[VelocityType] = tVelocity;
-	tPowerUpBlueprint[PowerUpContainType] = tPupContain;
-	tPowerUpBlueprint[CollisionType] = tColl;
-	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
+	///////////DEBUG POWERUP/////////
+	//EntityFactory::EntityBlueprint tPowerUpBlueprint;
+	//tMesh = new MeshComponent();
+	//tTrans = new TransformComponent();
+	//tVelocity = new VelocityComponent();
+	//tColl = new CollisionComponent();
+	//PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
+	//tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
+	//tTrans->mPosition = vec3(0, 0, 8);
+	//tVelocity->mDirection = vec3(0, -1, 0);
+	//tVelocity->mSpeed = 5;
+	//tPupContain->duration = 2;
+	//tPupContain->type = SpeedUp;
+	//tColl->Dim = vec2(0.5, 0.5);
+	//tColl->mType = Sphere;
+	//tPowerUpBlueprint[MeshType] = tMesh;
+	//tPowerUpBlueprint[TransformType] = tTrans;
+	//tPowerUpBlueprint[VelocityType] = tVelocity;
+	//tPowerUpBlueprint[PowerUpContainType] = tPupContain;
+	//tPowerUpBlueprint[CollisionType] = tColl;
+	//mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
 
 
 

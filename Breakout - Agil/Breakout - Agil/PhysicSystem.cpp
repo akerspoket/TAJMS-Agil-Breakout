@@ -168,7 +168,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				}
 				else
 
-				tVel->mDirection.x *= -1;
+					tVel->mDirection.x *= -1;
 
 				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 				{
@@ -202,14 +202,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					//move out with the difference from old and edge position out
 					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
 				}
-
-
-
-
-
-
 			}
-
 		}
 		else
 		{
@@ -273,7 +266,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			{
 				//not sure if we need to send any specific data here
 				std::unordered_map<string, void*> tPayLoad;
-				EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
+				if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Ball))
+					EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
 			}
 			else if (tLabel->HasLabel(GoalBlock))
 			{

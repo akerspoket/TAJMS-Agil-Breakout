@@ -117,8 +117,6 @@ void TriggerSystem::Update(double pDeltaTime)
 		{
 			if (tCompTable->HasComponent(i, LabelType))
 			{
-				short tLabel = GetComponent<LabelComponent>(i)->mLabel;
-
 				if(GetComponent<LabelComponent>(i)->HasLabel(Ball))
 				{
 					mNumOfBallsActive++;
