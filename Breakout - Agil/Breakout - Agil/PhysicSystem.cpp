@@ -272,6 +272,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			else if (tLabel->HasLabel(GoalBlock))
 			{
 				//remove entity
+
 				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
 
 				//send event

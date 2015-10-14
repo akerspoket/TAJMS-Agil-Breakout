@@ -61,4 +61,5 @@ void ComponentTable::RemoveComponent(int pEntityID, short pMask)
 void ComponentTable::RemoveEntity(int pEntityID)
 {
 	mComponentTable[pEntityID] = 0;
+
 }

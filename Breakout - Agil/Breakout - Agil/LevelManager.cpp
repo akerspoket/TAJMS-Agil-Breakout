@@ -52,6 +52,7 @@ void LevelManager::AnalyzeText(string pTextToCheck)
 
 
 
+
 void LevelManager::Initialize()
 {
 	GraphicsInterface* tGraphicsInterFace = GraphicsInterface::GetSingleton();
@@ -435,8 +436,17 @@ void LevelManager::GeneratePauseScreen()
 	tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -4, 8);
 }
+
+
+void PoopLabels()
+{
+	
+}
 void LevelManager::GenerateWorld(string pWorldName)
 {
+
+	PoopLabels();
+
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
 	float test = GetComponent<VelocityComponent>(tPupID)->mSpeed;
