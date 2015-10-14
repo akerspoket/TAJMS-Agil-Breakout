@@ -6,6 +6,7 @@
 #include "VelocityComponent.h"
 #include "PowerUpComponent.h"
 #include "LabelComponent.h"
+#include "TransformComponent.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -26,11 +27,32 @@ void PowerUpSystem::Initialize()
 	EventManager::GetInstance()->Subscribe("PowerUpPickedUp", this);
 }
 void PowerUpSystem::Start() {}
+
+void PowerUpSystem::MagnetPowerUp(EntityID pPadID, EntityID pPowerUpID)
+{
+	TransformComponent* tPadTrans = GetComponent<TransformComponent>(pPadID);
+	TransformComponent* tPowerUpTrans = GetComponent<TransformComponent>(pPowerUpID);
+	VelocityComponent* tPowerUpVelocity = GetComponent<VelocityComponent>(pPowerUpID);
+
+	float tDirection = tPadTrans->mPosition.x - tPowerUpTrans->mPosition.x;
+
+	if (tDirection != 0)
+	{
+		tDirection /= abs(tDirection);
+
+		tPowerUpVelocity->mDirection = vec3(tPowerUpVelocity->mDirection + vec3(tDirection * 0.01f, 0, 0));
+		tPowerUpVelocity->mDirection;
+	}
+}
+
 void PowerUpSystem::Update(double pDeltaTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
+
+	EntityID tPadID = -1;
+	EntityID tPowerUpID = -1;
 
 	//Iterate through all entities
 	for (int i = 0; i < tMaxEnt; i++)
@@ -48,8 +70,25 @@ void PowerUpSystem::Update(double pDeltaTime)
 					RemovePower(i, j);
 				}
 			}
+
+			if (tPup->HasPowerUp(MagnetPUp))
+			{
+				tPowerUpID = i;
+			}
+			
+		}
+		if (tCompTable->HasComponent(i, LabelType | TransformType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Pad))
+			{
+				tPadID = i;
+			}
 		}
 
+	}
+	if (tPadID != -1 && tPowerUpID != -1)
+	{
+		MagnetPowerUp(tPadID, tPowerUpID);
 	}
 
 }
@@ -65,7 +104,7 @@ void PowerUpSystem::BallNetPowerUp(float pTime)
 	{
 		if (tCompTable->HasComponent(i, LabelType))
 		{
-			if (GetComponent<LabelComponent>(i)->mLabel==Label::Ball)
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				GetComponent<PowerUpComponent>(i)->timers[BallNetLoc] = pTime;
 			}
@@ -86,16 +125,32 @@ void PowerUpSystem::PiercingPowerUp(float pTime)
 	{
 		if (tCompTable->HasComponent(i, LabelType))
 		{
-			if (GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
-				GetComponent<PowerUpComponent>(i)->timers[Piercing] = pTime;
+				GetComponent<PowerUpComponent>(i)->timers[PiercingLoc] = pTime;
 			}
 		}
 	}
 
 	//test
 
+}
+void PowerUpSystem::MagnetPowerUp(float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
 
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			{
+				GetComponent<PowerUpComponent>(i)->timers[MagnetPUpLoc] = pTime;
+			}
+		}
+	}
 }
 void PowerUpSystem::OnEvent(Event* pEvent)
 {
@@ -132,6 +187,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		case Piercing:
 			PiercingPowerUp(duration);
 			break;
+		case MagnetPUp:
+			MagnetPowerUp(duration);
+			break;
 		}
 	}
 }
@@ -157,10 +215,16 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 				GetComponent<PowerUpComponent>(id)->RemovePowerUp(BallNet);
 			}
 			break;
-		case Piercing:
+		case PiercingLoc:
 			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(Piercing))
 			{
 				GetComponent<PowerUpComponent>(id)->RemovePowerUp(Piercing);
+			}
+			break;
+		case MagnetPUpLoc:
+			if (GetComponent<PowerUpComponent>(id)->HasPowerUp(MagnetPUp))
+			{
+				GetComponent<PowerUpComponent>(id)->RemovePowerUp(MagnetPUp);
 			}
 			break;
 	}

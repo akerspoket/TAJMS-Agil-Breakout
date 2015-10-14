@@ -466,19 +466,19 @@ void LevelManager::GenerateWorld(string pWorldName)
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
 	/////TEST ADDING SPEEDUP POWERUP////////
-	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
-	EventManager::Payload pupPayload;
-	int* entID = new int(tNewID);
-	//*entID = tNewID;
-	pupPayload["EntityID"] = entID;
-	short* mask = new short();
-	*mask = SpeedUp;
-	pupPayload["mask"] = mask;
-	float* duration = new float;
-	*duration = 2;
-	pupPayload["duration"] = duration;
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload;
+	//int* entID = new int(tNewID);
+	////*entID = tNewID;
+	//pupPayload["EntityID"] = entID;
+	//short* mask = new short();
+	//*mask = SpeedUp;
+	//pupPayload["mask"] = mask;
+	//float* duration = new float;
+	//*duration = 2;
+	//pupPayload["duration"] = duration;
 
-	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 	////END TEST/////////////////
 
 	//////////////////BLOCKS/////////////////////
@@ -551,21 +551,37 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
 	///////TEST ENDS//////////////////////////////////
 
-	/////TEST ADDING Piercing POWERUP////////
-	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
-	EventManager::Payload pupPayload2;
-	int* entID2 = new int(tNewID);
-	//*entID2 = tNewID;
-	pupPayload2["EntityID"] = entID2;
-	short* mask2 = new short();
-	*mask2 = Piercing;
-	pupPayload2["mask"] = mask2;
-	float* duration2 = new float();
-	*duration2 = 8;
-	pupPayload2["duration"] = duration2;
-	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
-	/////TEST ENDS//////////////////////////////////
+	///////TEST ADDING Piercing POWERUP////////
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload2;
+	//int* entID2 = new int(tNewID);
+	////*entID2 = tNewID;
+	//pupPayload2["EntityID"] = entID2;
+	//short* mask2 = new short();
+	//*mask2 = Piercing;
+	//pupPayload2["mask"] = mask2;
+	//float* duration2 = new float();
+	//*duration2 = 8;
+	//pupPayload2["duration"] = duration2;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
+	///////TEST ENDS//////////////////////////////////
 
+
+	//////////////////////////TEST ADDING Magnet POWERUP////////
+	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	EventManager::Payload pupPayload;
+	int* entID = new int(tNewID);
+	//*entID = tNewID;
+	pupPayload["EntityID"] = entID;
+	short* mask = new short();
+	*mask = MagnetPUp;
+	pupPayload["mask"] = mask;
+	float* duration = new float;
+	*duration = 5;
+	pupPayload["duration"] = duration;
+
+	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	////////////////////////////END TEST/////////////////
 
 
 	//////////////////TOP BOT WALL///////////////////
