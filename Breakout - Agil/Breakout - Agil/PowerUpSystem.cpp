@@ -5,6 +5,7 @@
 #include "StorageShelf.h"
 #include "VelocityComponent.h"
 #include "PowerUpComponent.h"
+#include "PowerUpContainComponent.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -62,8 +63,13 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 	if (pEvent->mID == "PowerUpPickedUp")
 	{
 		EntityID entID = *(EntityID*)pEvent->mPayload["EntityID"];
-		short mask = *(short*)pEvent->mPayload["mask"];
-  		float duration = *(float*)pEvent->mPayload["duration"];
+		EntityID pupID = *(EntityID*)pEvent->mPayload["PupEntityID"];
+
+		PowerUpContainComponenet* pupContain = GetComponent<PowerUpContainComponenet>(pupID);
+
+
+		short mask = pupContain->type;
+		float duration = pupContain->duration;
 
 		GetComponent<PowerUpComponent>(entID)->AddPowerUp(mask);
 		

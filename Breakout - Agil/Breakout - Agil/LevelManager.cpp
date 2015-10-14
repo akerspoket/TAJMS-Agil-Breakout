@@ -302,27 +302,27 @@ void LevelManager::Initialize()
 
 
 	///////////DEBUG POWERUP/////////
-	//EntityFactory::EntityBlueprint tPowerUpBlueprint;
-	//tMesh = new MeshComponent();
-	//tTrans = new TransformComponent();
-	//tVelocity = new VelocityComponent();
-	//tColl = new CollisionComponent();
-	//PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
-	//tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
-	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
-	//tTrans->mPosition = vec3(0, 0, 8);
-	//tVelocity->mDirection = vec3(0, -1, 0);
-	//tVelocity->mSpeed = 5;
-	//tPupContain->duration = 2;
-	//tPupContain->type = SpeedUp;
-	//tColl->Dim = vec2(0.5, 0.5);
-	//tColl->mType = Sphere;
-	//tPowerUpBlueprint[MeshType] = tMesh;
-	//tPowerUpBlueprint[TransformType] = tTrans;
-	//tPowerUpBlueprint[VelocityType] = tVelocity;
-	//tPowerUpBlueprint[PowerUpContainType] = tPupContain;
-	//tPowerUpBlueprint[CollisionType] = tColl;
-	//mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
+	EntityFactory::EntityBlueprint tPowerUpBlueprint;
+	tMesh = new MeshComponent();
+	tTrans = new TransformComponent();
+	tVelocity = new VelocityComponent();
+	tColl = new CollisionComponent();
+	PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
+	tTrans->mPosition = vec3(0, 0, 8);
+	tVelocity->mDirection = vec3(0, -1, 0);
+	tVelocity->mSpeed = 5;
+	tPupContain->duration = 2;
+	tPupContain->type = SpeedUp;
+	tColl->Dim = vec2(0.5, 0.5);
+	tColl->mType = Sphere;
+	tPowerUpBlueprint[MeshType] = tMesh;
+	tPowerUpBlueprint[TransformType] = tTrans;
+	tPowerUpBlueprint[VelocityType] = tVelocity;
+	tPowerUpBlueprint[PowerUpContainType] = tPupContain;
+	tPowerUpBlueprint[CollisionType] = tColl;
+	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
 
 
 
@@ -456,7 +456,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	float test = GetComponent<VelocityComponent>(tPupID)->mSpeed;
+
+
+
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	EntityID tPaddID = tNewID;
@@ -466,18 +468,18 @@ void LevelManager::GenerateWorld(string pWorldName)
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
 	/////TEST ADDING SPEEDUP POWERUP////////
-	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
-	unordered_map<string, void*> pupPayload;
-	EntityID* entID = new EntityID();
-	*entID = tNewID;
-	pupPayload["EntityID"] = entID;
-	short* mask = new short();
-	*mask = SpeedUp;
-	pupPayload["mask"] = mask;
-	float* duration = new float;
-	*duration = 2;
-	pupPayload["duration"] = duration;
-	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//unordered_map<string, void*> pupPayload;
+	//EntityID* entID = new EntityID();
+	//*entID = tNewID;
+	//pupPayload["EntityID"] = entID;
+	//short* mask = new short();
+	//*mask = SpeedUp;
+	//pupPayload["mask"] = mask;
+	//float* duration = new float;
+	//*duration = 2;
+	//pupPayload["duration"] = duration;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 	//////END TEST/////////////////
 
 	//////////////////BLOCKS/////////////////////

@@ -140,6 +140,9 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 	bool tCollide = tSquareDistance <= (pSphereColl->Dim.x * pSphereColl->Dim.x);
 
+	EntityID aabbID = pEntityID1;
+	EntityID sphereID = pEntityID2;
+
 	if (tCollide)
 	{
 		vec2 tNormDir = vec3toVec2(pSphereTrans->mPrevPosition - pAABBTrans->mPrevPosition);
@@ -153,92 +156,120 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 //#endif
 		//END DEBUG
 
-
-
-		if (abs(tNormDir.x) > abs(tNormDir.y))
+		//Pad picks up powerup
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpContainType)
+			&& ComponentTable::GetInstance()->HasComponent(aabbID, LabelType)
+			&& GetComponent<LabelComponent>(aabbID)->HasLabel(Pad))
 		{
-			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
+			unordered_map<string, void*> pupPayload;
+			EntityID* entID = new EntityID();
+			*entID = aabbID;
+			pupPayload["EntityID"] = entID;
+			EntityID* pupID = new EntityID();
+			*pupID = sphereID;
+			pupPayload["PupEntityID"] = pupID;
+			//short* mask = new short();
+			//*mask = SpeedUp;
+			//pupPayload["mask"] = mask;
+			//float* duration = new float;
+			//*duration = 2;
+			//pupPayload["duration"] = duration;
+			EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+
+			EntityManager::GetInstance()->RemoveEntity(sphereID);
+
+		}
+
+
+
+
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType)
+			&& GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
+		{
+			if (abs(tNormDir.x) > abs(tNormDir.y))
 			{
-				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-
-
-				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+				if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 				{
-					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
-				}
-				else
-
-					tVel->mDirection.x *= -1;
-
-				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
-				{
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
-					//tVel->mDirection.y = mMinAngle;
-					//tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
-					//tVel->mDirection.Normalize();
-				}
+					VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
 
 
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+					}
+					else
+						tVel->mDirection.x *= -1;
 
-				if (tNormDir.x > 0)
-				{
-					//save old position
-					float tOldX = pSphereTrans->mPosition.x;
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+						//tVel->mDirection.y = mMinAngle;
+						//tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
+						//tVel->mDirection.Normalize();
+					}
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
-				}
-				else
-				{
-					//save old position
-					float tOldX = pSphereTrans->mPosition.x;
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+					if (tNormDir.x > 0)
+					{
+						//save old position
+						float tOldX = pSphereTrans->mPosition.x;
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
+
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+					}
+					else
+					{
+						//save old position
+						float tOldX = pSphereTrans->mPosition.x;
+
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+					}
 				}
 			}
-		}
-		else
-		{
-			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
+			else
 			{
-				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-				if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+				if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 				{
-					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
-				}
-				else
-				{
-					tVel->mDirection.y *= -1;
-				}
+					VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+					}
+					else
+					{
+						tVel->mDirection.y *= -1;
+					}
 
-				if (tNormDir.y > 0)
-				{
-					//save old position
-					float tOldY = pSphereTrans->mPosition.y;
+					if (tNormDir.y > 0)
+					{
+						//save old position
+						float tOldY = pSphereTrans->mPosition.y;
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
-				}
-				else
-				{
-					//save old position
-					float tOldY = pSphereTrans->mPosition.y;
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+					}
+					else
+					{
+						//save old position
+						float tOldY = pSphereTrans->mPosition.y;
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+					}
 				}
 			}
 		}
@@ -254,30 +285,34 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		mEventManager->BroadcastEvent("Collision", payload);
 
 		//remove block
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType) &&
+			GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
 		{
-			LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
-
-			if (tLabel->HasLabel(Box))		//if AABB is label Box, we remove it
+			if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
 			{
-				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
-			}
-			else if (tLabel->HasLabel(BottomArea))		//if bottom area, we lose
-			{
-				//not sure if we need to send any specific data here
-				std::unordered_map<string, void*> tPayLoad;
-				if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Ball))
-					EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
-			}
-			else if (tLabel->HasLabel(GoalBlock))
-			{
-				//remove entity
+				LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
 
-				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+				if (tLabel->HasLabel(Box))		//if AABB is label Box, we remove it
+				{
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+				}
+				else if (tLabel->HasLabel(BottomArea))		//if bottom area, we lose
+				{
+					//not sure if we need to send any specific data here
+					std::unordered_map<string, void*> tPayLoad;
+					if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Ball))
+						EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
+				}
+				else if (tLabel->HasLabel(GoalBlock))
+				{
+					//remove entity
 
-				//send event
-				std::unordered_map<string, void*> tPayLoad;
-				EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+
+					//send event
+					std::unordered_map<string, void*> tPayLoad;
+					EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+				}
 			}
 		}
 	}
