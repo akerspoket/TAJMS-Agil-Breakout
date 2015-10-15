@@ -228,6 +228,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		case InvertDown:
 			InvertPowerDown(duration);
 			break;
+		case SlowMotion:
+
+			break;
 		}
 	}
 
@@ -254,6 +257,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 				break;
 			case MagnetPUp:
 				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupMagnet");
+				break;
+			case SlowMotion:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupSlomo");
 				break;
 			}
 		}
@@ -299,6 +305,12 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(InvertDown))
 		{
 			GetComponent<PowerUpComponent>(id)->RemovePowerUp(InvertDown);
+		}
+		break;
+	case SlowMotionLoc:
+		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(SlowMotion))
+		{
+			GetComponent<PowerUpComponent>(id)->RemovePowerUp(SlowMotion);
 		}
 		break;
 	}
