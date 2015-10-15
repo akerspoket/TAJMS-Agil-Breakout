@@ -222,19 +222,19 @@ void LevelManager::Initialize()
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
 	tTrans = new TransformComponent();
-
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
-
+	tLabel = new LabelComponent();
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(30, 0.2f);
-	
+	tLabel->AddLabel(Wall);
 
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
 	tWallBlueprint[SoundCollisionType] = tSoundColl;
 	//tWallBlueprint[MeshType] = tMesh;
+	tWallBlueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("HorWall", tWallBlueprint);
 
 	///////////////////SIDE WALL////////////////
@@ -244,15 +244,17 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
 	tMesh = new MeshComponent();
-
+	tLabel = new LabelComponent();
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(1.5f, 30.0f);
+	tLabel->AddLabel(Wall);
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/SideWall.obj");
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
 	tWall2Blueprint[SoundCollisionType] = tSoundColl;
 	tWall2Blueprint[MeshType] = tMesh;
+	tWall2Blueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
 	//////////////////////MenuButtonBlock///////////////
@@ -457,8 +459,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 3;
-	GetComponent<PowerUpContainComponenet>(tPupID)->type = MagnetPUp;
+	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 30;
+	GetComponent<PowerUpContainComponenet>(tPupID)->type = Piercing;
 
 
 

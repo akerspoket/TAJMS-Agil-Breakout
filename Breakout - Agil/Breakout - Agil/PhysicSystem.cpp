@@ -10,6 +10,7 @@
 #include "AttachedComponent.h"
 #include "LabelComponent.h"
 #include "GameState.h"
+#include "PowerUpComponent.h"
 
 #include <cmath> //needed for linux... come on!
 
@@ -182,7 +183,6 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 
 
-
 		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType)
 			&& GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
 		{
@@ -197,8 +197,10 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 					}
-					else
+					else if( !(ComponentTable::GetInstance()->HasComponent(sphereID , PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
+					{
 						tVel->mDirection.x *= -1;
+					}
 
 					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 					{
@@ -209,29 +211,32 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					}
 
 
-
-					if (tNormDir.x > 0)
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
 					{
-						//save old position
-						float tOldX = pSphereTrans->mPosition.x;
+						if (tNormDir.x > 0)
+						{
+							//save old position
+							float tOldX = pSphereTrans->mPosition.x;
 
-						//move the sphere to the edge of the box
-						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
+							//move the sphere to the edge of the box
+							pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
 
-						//move out with the difference from old and edge position out
-						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+							//move out with the difference from old and edge position out
+							pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+						}
+						else
+						{
+							//save old position
+							float tOldX = pSphereTrans->mPosition.x;
+
+							//move the sphere to the edge of the box
+							pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+
+							//move out with the difference from old and edge position out
+							pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+						}
 					}
-					else
-					{
-						//save old position
-						float tOldX = pSphereTrans->mPosition.x;
-
-						//move the sphere to the edge of the box
-						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
-
-						//move out with the difference from old and edge position out
-						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
-					}
+					
 				}
 			}
 			else
@@ -243,33 +248,37 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 					}
-					else
+					else if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
 					{
 						tVel->mDirection.y *= -1;
 					}
-
-					if (tNormDir.y > 0)
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
 					{
-						//save old position
-						float tOldY = pSphereTrans->mPosition.y;
+						if (tNormDir.y > 0)
+						{
+							//save old position
+							float tOldY = pSphereTrans->mPosition.y;
 
-						//move the sphere to the edge of the box
-						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+							//move the sphere to the edge of the box
+							pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
 
-						//move out with the difference from old and edge position out
-						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+							//move out with the difference from old and edge position out
+							pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+						}
+						else
+						{
+							//save old position
+							float tOldY = pSphereTrans->mPosition.y;
+
+							//move the sphere to the edge of the box
+							pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
+
+							//move out with the difference from old and edge position out
+							pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+						}
 					}
-					else
-					{
-						//save old position
-						float tOldY = pSphereTrans->mPosition.y;
 
-						//move the sphere to the edge of the box
-						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
-
-						//move out with the difference from old and edge position out
-						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
-					}
+					
 				}
 			}
 		}
