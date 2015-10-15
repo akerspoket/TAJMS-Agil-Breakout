@@ -67,8 +67,8 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 
 	if (rCollided)
 	{
-		//Special case if component is ball
-		if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Label::Ball))
+		//Special case if component is ball and collids with the pad
+		if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Label::Ball) && !ComponentTable::GetInstance()->HasComponent(pEntityID1, PowerUpContainType))
 		{
 			VelocityComponent* ballVel = GetComponent<VelocityComponent>(pEntityID2);
 			vec2 tPadSphereOffset = vec2(0, -5); //how large we want the sphere to be
