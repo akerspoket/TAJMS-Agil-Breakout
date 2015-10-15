@@ -60,7 +60,7 @@ void LevelManager::Initialize()
 	//TODO: TEST remove this when we load maps in a good way
 
 	/////////////PADDA///////////////
-
+	
 
 	TransformComponent* tTrans = new TransformComponent();
 	MeshComponent* tMesh = new MeshComponent();
@@ -120,7 +120,7 @@ void LevelManager::Initialize()
 			std::wstring widestr = std::wstring(mEntitiyVector[i].begin(), mEntitiyVector[i].end());
 			const wchar_t* widecstr = widestr.c_str();
 			tMesh->mMaterialID = tGraphicsInterFace->CreateTexture(mEntitiyVector[i]);///Här ska vi byta textur!!
-
+			
 
 
 
@@ -229,7 +229,7 @@ void LevelManager::Initialize()
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(30, 0.2f);
-
+	
 
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
@@ -261,7 +261,7 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
 
-
+	
 	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");//Will be changed later for each specific button
@@ -286,7 +286,7 @@ void LevelManager::Initialize()
 	tMenuPtrBlueprint[MeshType] = tMesh;
 	tLabel->AddLabel(MenuPointer);
 	tMenuPtrBlueprint[LabelType] = tLabel;
-
+	
 	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
 
 
@@ -467,7 +467,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tTrans->mPosition = vec3(0, -8, 8);
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
-
+	
 	/////TEST ADDING SPEEDUP POWERUP////////
 	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
 	//unordered_map<string, void*> pupPayload;
@@ -483,6 +483,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 	//////END TEST/////////////////
 
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	////END TEST/////////////////
+
 	//////////////////BLOCKS/////////////////////
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
@@ -493,7 +496,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	{
 		t_forLooPJ = mLevelTextVector[2].size();
 	}
-
+	
 	int* tScore = new int();
 
 
@@ -569,6 +572,53 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tAtt->attachedTo = tPaddID;
 	tAtt->relPos = vec3(0, 1.3, 0);
 
+	///////TEST ADDING Håven POWERUP////////
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload2;
+	//int* entID2 = new int(tNewID);
+	////*entID2 = tNewID;
+	//pupPayload2["EntityID"] = entID2;
+	//short* mask2 = new short();
+	//*mask2 = BallNet;
+	//pupPayload2["mask"] = mask2;
+	//float* duration2 = new float();
+	//*duration2 = 8;
+	//pupPayload2["duration"] = duration2;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
+	///////TEST ENDS//////////////////////////////////
+
+	///////TEST ADDING Piercing POWERUP////////
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload2;
+	//int* entID2 = new int(tNewID);
+	////*entID2 = tNewID;
+	//pupPayload2["EntityID"] = entID2;
+	//short* mask2 = new short();
+	//*mask2 = Piercing;
+	//pupPayload2["mask"] = mask2;
+	//float* duration2 = new float();
+	//*duration2 = 8;
+	//pupPayload2["duration"] = duration2;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload2);
+	///////TEST ENDS//////////////////////////////////
+
+
+	//////////////////////////TEST ADDING Magnet POWERUP////////
+	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	EventManager::Payload pupPayload;
+	int* entID = new int(tNewID);
+	//*entID = tNewID;
+	pupPayload["EntityID"] = entID;
+	short* mask = new short();
+	*mask = MagnetPUp;
+	pupPayload["mask"] = mask;
+	float* duration = new float;
+	*duration = 5;
+	pupPayload["duration"] = duration;
+
+	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	////////////////////////////END TEST/////////////////
+
 
 	//////////////////TOP BOT WALL///////////////////
 	tNewID = mEntityFactory->CreateEntity("HorWall");
@@ -591,7 +641,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	/////////////////BACKGROUND/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("BackgroundBlock");
-
+	
 
 }
 

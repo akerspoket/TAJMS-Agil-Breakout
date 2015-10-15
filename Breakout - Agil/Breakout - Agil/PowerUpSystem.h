@@ -21,5 +21,8 @@ public:
 private:
 	void RemovePower(EntityID id, short pMask);
 	void BallNetPowerUp(float pTime);
+	void PiercingPowerUp(float pTime);
+	void MagnetPowerUp(float pTime);
+	void PowerUpSystem::MagnetPowerUp(EntityID pPadID, EntityID pPowerUpID);
 };
 
