@@ -457,6 +457,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
+	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 3;
+	GetComponent<PowerUpContainComponenet>(tPupID)->type = MagnetPUp;
 
 
 
@@ -604,19 +606,19 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 
 	//////////////////////////TEST ADDING Magnet POWERUP////////
-	ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
-	EventManager::Payload pupPayload;
-	int* entID = new int(tNewID);
-	//*entID = tNewID;
-	pupPayload["EntityID"] = entID;
-	short* mask = new short();
-	*mask = MagnetPUp;
-	pupPayload["mask"] = mask;
-	float* duration = new float;
-	*duration = 5;
-	pupPayload["duration"] = duration;
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//EventManager::Payload pupPayload;
+	//int* entID = new int(tNewID);
+	////*entID = tNewID;
+	//pupPayload["EntityID"] = entID;
+	//short* mask = new short();
+	//*mask = MagnetPUp;
+	//pupPayload["mask"] = mask;
+	//float* duration = new float;
+	//*duration = 5;
+	//pupPayload["duration"] = duration;
 
-	EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 	////////////////////////////END TEST/////////////////
 
 
