@@ -505,7 +505,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	pupDurations.push_back(2); 
 	pupDurations.push_back(2);
 
-
+	std::default_random_engine generator;
 
 	float chanceOfPup = 20;
 	int max = 100 / chanceOfPup;
@@ -522,15 +522,20 @@ void LevelManager::GenerateWorld(string pWorldName)
 				tTrans->mPosition.y = t_forLoopI - i;
 				tTrans->mPosition.z = 8;
 
-				//see if block gets a pup
-				int hit = rand() % max;
+				//See if block gets a power up
+
+				std::uniform_int_distribution<int> distribution(0, max);
+				int hit = distribution(generator);
+
 				if (hit == 1)
 				{
 					//block got pup. Determine which pup
+					std::uniform_int_distribution<int> distribution2(0, possiblePups.size()-1);
 					int pupIndex = rand() % (possiblePups.size());
 					ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpContainType);
 					GetComponent<PowerUpContainComponenet>(tNewID)->type = possiblePups[pupIndex];
 					GetComponent<PowerUpContainComponenet>(tNewID)->duration = pupDurations[pupIndex];
+					GetComponent<MeshComponent>(tNewID)->mMaterialID = pupIndex+1;
 				}
 
 				//set value of the blocks. Should be read from file
