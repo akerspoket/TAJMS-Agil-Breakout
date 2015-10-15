@@ -10,6 +10,7 @@
 #include "AttachedComponent.h"
 #include "LabelComponent.h"
 #include "GameState.h"
+#include "PowerUpComponent.h"
 
 #include <cmath> //needed for linux... come on!
 
@@ -191,8 +192,10 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 					}
-					else
+					else if( !(ComponentTable::GetInstance()->HasComponent(sphereID , PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
+					{
 						tVel->mDirection.x *= -1;
+					}
 
 					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
 					{
@@ -203,7 +206,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					}
 
 
-
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
+					{
 					if (tNormDir.x > 0)
 					{
 						//save old position
@@ -227,6 +231,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
 					}
 				}
+					
+			}
 			}
 			else
 			{
@@ -237,11 +243,12 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 					}
-					else
+					else if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
 					{
 						tVel->mDirection.y *= -1;
 					}
-
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
+					{
 					if (tNormDir.y > 0)
 					{
 						//save old position
@@ -264,19 +271,22 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 						//move out with the difference from old and edge position out
 						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
 					}
+					}
+
+					
 				}
 			}
 
 
-			//Broadcast that there was a collision
-			unordered_map<string, void*> payload;
-			EntityID* id1 = new EntityID();
-			*id1 = pEntityID1;
-			payload["ID1"] = id1;
-			EntityID* id2 = new EntityID();
-			*id2 = pEntityID2;
-			payload["ID2"] = id2;
-			mEventManager->BroadcastEvent("Collision", payload);
+		//Broadcast that there was a collision
+		unordered_map<string, void*> payload;
+		EntityID* id1 = new EntityID();
+		*id1 = pEntityID1;
+		payload["ID1"] = id1;
+		EntityID* id2 = new EntityID();
+		*id2 = pEntityID2;
+		payload["ID2"] = id2;
+		mEventManager->BroadcastEvent("Collision", payload);
 		}
 		//remove block
 		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType) &&

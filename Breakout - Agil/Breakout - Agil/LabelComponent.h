@@ -9,6 +9,7 @@ enum Label
 	GoalBlock = 0x10,
 	BottomArea = 0x20,
 	MenuPointer = 0x40,
+	Wall = 0x80,
 };
 
 
