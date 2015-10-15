@@ -9,6 +9,8 @@
 #include "LabelComponent.h"
 #include "TransformComponent.h"
 #include "EntityFactory.h"
+#include "MeshComponent.h"
+#include "GraphicsInterface.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -215,6 +217,21 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 			GetComponent<PowerUpContainComponenet>(tNewID)->duration = tPupContain->duration;
 			GetComponent<PowerUpContainComponenet>(tNewID)->type = tPupContain->type;
 			GetComponent<TransformComponent>(tNewID)->mPosition = GetComponent<TransformComponent>(entID)->mPosition;
+			switch (tPupContain->type)
+			{
+			case SpeedUp:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupSpeedUp");
+				break;
+			case BallNet:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupBallNet");
+				break;
+			case Piercing:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupPiercing");
+				break;
+			case MagnetPUp:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupMagnet");
+				break;
+			}
 		}
 	}
 
