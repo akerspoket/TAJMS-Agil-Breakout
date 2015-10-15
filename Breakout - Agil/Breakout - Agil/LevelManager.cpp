@@ -459,8 +459,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 30;
-	GetComponent<PowerUpContainComponenet>(tPupID)->type = Piercing;
+	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 3;
+	GetComponent<PowerUpContainComponenet>(tPupID)->type = InvertDown;
 
 
 

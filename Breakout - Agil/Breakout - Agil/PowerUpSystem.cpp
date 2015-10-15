@@ -161,6 +161,27 @@ void PowerUpSystem::MagnetPowerUp(float pTime)
 		}
 	}
 }
+
+void PowerUpSystem::InvertPowerDown(float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Pad))
+			{
+				tCompTable->AddComponent(i, PowerUpType);
+				GetComponent<PowerUpComponent>(i)->timers[InvertDownLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(InvertDown);
+			}
+		}
+	}
+}
+
 void PowerUpSystem::OnEvent(Event* pEvent)
 {
 	EntityManager* tEntMan = tEntMan->GetInstance();
@@ -200,6 +221,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		case MagnetPUp:
 			MagnetPowerUp(duration);
 			break;
+		case InvertDown:
+			InvertPowerDown(duration);
+			break;
 		}
 	}
 }
@@ -235,6 +259,12 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(MagnetPUp))
 		{
 			GetComponent<PowerUpComponent>(id)->RemovePowerUp(MagnetPUp);
+		}
+		break;
+	case InvertDownLoc:
+		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(InvertDown))
+		{
+			GetComponent<PowerUpComponent>(id)->RemovePowerUp(InvertDown);
 		}
 		break;
 	}

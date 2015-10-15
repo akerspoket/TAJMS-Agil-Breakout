@@ -24,5 +24,6 @@ private:
 	void PiercingPowerUp(float pTime);
 	void MagnetPowerUp(float pTime);
 	void PowerUpSystem::MagnetPowerUp(EntityID pPadID, EntityID pPowerUpID);
+	void InvertPowerDown(float pTime);
 };
 

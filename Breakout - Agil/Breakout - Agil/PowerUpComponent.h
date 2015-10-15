@@ -8,7 +8,7 @@ enum PowerUpType
 	BallNet = 0x02,
 	Piercing = 0x04,
 	MagnetPUp = 0x08,
-	PUP5 = 0x10,
+	InvertDown = 0x10,
 };
 
 enum PowerUpTimerLocation
@@ -17,6 +17,7 @@ enum PowerUpTimerLocation
 	BallNetLoc,
 	PiercingLoc,
 	MagnetPUpLoc,
+	InvertDownLoc,
 	NumPowerUps,
 };
 
