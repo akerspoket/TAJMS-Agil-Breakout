@@ -512,7 +512,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	std::default_random_engine generator;
 
-	float chanceOfPup = 20;
+	float chanceOfPup = 100;
 	int max = 100 / chanceOfPup;
 
 	for (size_t i = 0; i < t_forLoopI; i++)
@@ -529,7 +529,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 				//See if block gets a power up
 
-				std::uniform_int_distribution<int> distribution(0, max);
+				std::uniform_int_distribution<int> distribution(1, max);
 				int hit = distribution(generator);
 
 				if (hit == 1)

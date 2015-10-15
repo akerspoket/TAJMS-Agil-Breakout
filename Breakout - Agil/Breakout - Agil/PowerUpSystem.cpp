@@ -8,6 +8,7 @@
 #include "PowerUpContainComponent.h"
 #include "LabelComponent.h"
 #include "TransformComponent.h"
+#include "EntityFactory.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -26,6 +27,7 @@ PowerUpSystem::~PowerUpSystem()
 void PowerUpSystem::Initialize()
 {
 	EventManager::GetInstance()->Subscribe("PowerUpPickedUp", this);
+	EventManager::GetInstance()->Subscribe("SpawnPowerUp", this);
 }
 void PowerUpSystem::Start() {}
 
@@ -78,7 +80,7 @@ void PowerUpSystem::Update(double pDeltaTime)
 			}
 
 
-			
+
 
 		}
 		if (tCompTable->HasComponent(i, LabelType | TransformType))
@@ -202,6 +204,21 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 			break;
 		}
 	}
+
+	if (pEvent->mID == "SpawnPowerUp")
+	{
+		EntityID entID = *(EntityID*)pEvent->mPayload["EntityID"];
+		if (ComponentTable::GetInstance()->HasComponent(entID, PowerUpContainType)) //Better safe than sorry..
+		{
+			PowerUpContainComponenet* tPupContain = GetComponent<PowerUpContainComponenet>(entID);
+			EntityID tNewID = EntityFactory::GetInstance()->CreateEntity("DEBUGPUP");
+			GetComponent<PowerUpContainComponenet>(tNewID)->duration = tPupContain->duration;
+			GetComponent<PowerUpContainComponenet>(tNewID)->type = tPupContain->type;
+			GetComponent<TransformComponent>(tNewID)->mPosition = GetComponent<TransformComponent>(entID)->mPosition;
+		}
+	}
+
+
 }
 
 void PowerUpSystem::RemovePower(EntityID id, short timerLocation)

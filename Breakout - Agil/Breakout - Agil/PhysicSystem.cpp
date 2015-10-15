@@ -294,7 +294,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 				if (tLabel->HasLabel(Box))		//if AABB is label Box, we remove it
 				{
-					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+
 					if (ComponentTable::GetInstance()->HasComponent(pEntityID1, PowerUpContainType))
 					{
 						unordered_map<string, void*> payload;
@@ -303,6 +303,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 						payload["EntityID"] = entID;
 						EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", payload);
 					}
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
 				}
 				else if (tLabel->HasLabel(BottomArea))		//if bottom area, we lose
 				{
