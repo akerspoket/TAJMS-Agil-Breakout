@@ -3,7 +3,13 @@ PowerUpPickedUp
 Payload:
 {
   "EntityID" -> EntityID
-  "mask" -> short
+  "PupEntityID -> EntityID
 }
 
 
+id:
+SpawnPowerUp
+Payload:
+{
+  "EntityID" ->EntityID
+}
