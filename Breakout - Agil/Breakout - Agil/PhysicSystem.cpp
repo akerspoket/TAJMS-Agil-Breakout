@@ -168,12 +168,6 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			EntityID* pupID = new EntityID();
 			*pupID = sphereID;
 			pupPayload["PupEntityID"] = pupID;
-			//short* mask = new short();
-			//*mask = SpeedUp;
-			//pupPayload["mask"] = mask;
-			//float* duration = new float;
-			//*duration = 2;
-			//pupPayload["duration"] = duration;
 			EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 
 			EntityManager::GetInstance()->RemoveEntity(sphereID);
@@ -182,7 +176,7 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 
 
-
+		//Ball collides with AABB
 		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType)
 			&& GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
 		{
@@ -272,18 +266,18 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					}
 				}
 			}
+
+
+			//Broadcast that there was a collision
+			unordered_map<string, void*> payload;
+			EntityID* id1 = new EntityID();
+			*id1 = pEntityID1;
+			payload["ID1"] = id1;
+			EntityID* id2 = new EntityID();
+			*id2 = pEntityID2;
+			payload["ID2"] = id2;
+			mEventManager->BroadcastEvent("Collision", payload);
 		}
-
-		//Broadcast that there was a collision
-		unordered_map<string, void*> payload;
-		EntityID* id1 = new EntityID();
-		*id1 = pEntityID1;
-		payload["ID1"] = id1;
-		EntityID* id2 = new EntityID();
-		*id2 = pEntityID2;
-		payload["ID2"] = id2;
-		mEventManager->BroadcastEvent("Collision", payload);
-
 		//remove block
 		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType) &&
 			GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
