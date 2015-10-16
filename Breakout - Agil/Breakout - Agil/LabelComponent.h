@@ -10,6 +10,7 @@ enum Label
 	BottomArea = 0x20,
 	MenuPointer = 0x40,
 	Wall = 0x80,
+	PowerUpDown = 0x100,
 };
 
 

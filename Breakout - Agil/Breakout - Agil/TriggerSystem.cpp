@@ -178,15 +178,27 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		//no balls active
 		if (mNumOfBallsActive < 1)
 		{
-			mDegenerateWorld = true;
-			EventManager::Payload tPayload;
-			EventManager::GetInstance()->BroadcastEvent("Lost", tPayload);
+			mNumOfLifesLeft--;
+			if (mNumOfLifesLeft == 0)
+			{
+				mDegenerateWorld = true;
+				EventManager::Payload tPayload;
+				EventManager::GetInstance()->BroadcastEvent("Lost", tPayload);
 
-			//DEBUG
+				//DEBUG
 #ifdef _DEBUG
-			cout << "You lost" << endl;
+				cout << "You lost" << endl;
 #endif
-			//END DEBUG
+				//END DEBUG
+			}
+			else
+			{
+				LevelManager::GetInstance()->PoopPowerUps(); //reste powerup
+				LevelManager::GetInstance()->ResetPad();
+				LevelManager::GetInstance()->ResetBall();
+				LevelManager::GetInstance()->PoopPowerUpContainers();
+
+			}
 		}
 	}
 	else if (pEventID == "CollideWithGoalBlock")
@@ -194,25 +206,16 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		mNumOfGoalBlocksActive--;
 		if (mNumOfGoalBlocksActive < 1)
 		{
-			mNumOfLifesLeft--;
-			if (mNumOfLifesLeft == 0)
-			{
-				mCreateNextLevel = true;
-				mDegenerateWorld = true;
 
-				//DEBUG
+			mCreateNextLevel = true;
+			mDegenerateWorld = true;
+
+			//DEBUG
 #ifdef _DEBUG
-				cout << "You won the level, loading next!" << endl;
+			cout << "You won the level, loading next!" << endl;
 #endif
-				//END DEBUG
-			}
-			else
-			{
-				//remove powerups
-				//remove powerup func
-				//LevelManager::GetInstance()->PopPowerups(); //reste powerup
-				//
-			}
+			//END DEBUG
+
 		}
 	}
 
