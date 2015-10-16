@@ -331,6 +331,20 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
 
 
+	///////////Cannon////////////
+	EntityFactory::EntityBlueprint tCannonBlueprint;
+	tMesh = new MeshComponent();
+	tLabel = new LabelComponent();
+	tTrans = new TransformComponent();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Cannon");
+	tLabel->AddLabel(Cannon);
+	tCannonBlueprint[MeshType] = tMesh;
+	tCannonBlueprint[LabelType] = tLabel;
+	tCannonBlueprint[TransformType] = tTrans;
+	mEntityFactory->RegisterEntityTemplate("Cannon", tCannonBlueprint);
+
+
 
 }
 void LevelManager::GenerateMainMenu()
@@ -561,6 +575,14 @@ void LevelManager::GenerateWorld(string pWorldName)
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
+	/////////////////CANNON//////////////////////
+	tNewID = mEntityFactory->CreateEntity("Cannon");
+	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
+	GetComponent<AttachedComponent>(tNewID)->attachedTo = tPaddID;
+	GetComponent<AttachedComponent>(tNewID)->relPos = vec3(0,1.7,0);
+
+
+
 	/////TEST ADDING SPEEDUP POWERUP////////
 	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
 	//unordered_map<string, void*> pupPayload;
