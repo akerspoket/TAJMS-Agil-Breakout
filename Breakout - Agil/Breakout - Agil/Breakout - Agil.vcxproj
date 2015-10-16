@@ -138,6 +138,7 @@
     <ClCompile Include="AttachSystem.cpp" />
     <ClCompile Include="ComponentTable.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="DirXParticle.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="ComponentTable.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="DirXParticle.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Event.h" />
