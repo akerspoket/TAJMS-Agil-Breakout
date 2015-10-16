@@ -134,13 +134,24 @@ float SquareDistToPoint(CollisionComponent* pColl1, TransformComponent* pTrans1,
 
 	return out;
 }
+bool PhysicSystem::ExplosiveCollisionCheck(CollisionComponent* pColSphere, TransformComponent* pTransSphere, CollisionComponent* pColAABB, TransformComponent* pTransAABB)
+{
+	float tSquareDistance = SquareDistToPoint(pColAABB, pTransAABB, pColSphere, pTransSphere);
+	bool tCollide = tSquareDistance <= (pColSphere->Dim.x * pColSphere->Dim.x);
 
+	if (tCollide)
+	{
+		return true;
+	}
+
+	return false;
+}
 void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, CollisionComponent* pAABBColl, TransformComponent* pAABBTrans, CollisionComponent* pSphereColl, TransformComponent* pSphereTrans)
 {
 	float tSquareDistance = SquareDistToPoint(pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
 
 	bool tCollide = tSquareDistance <= (pSphereColl->Dim.x * pSphereColl->Dim.x);
-
+	float  hejsan = (pSphereColl->Dim.x * pSphereColl->Dim.x);
 	EntityID aabbID = pEntityID1;
 	EntityID sphereID = pEntityID2;
 
@@ -328,6 +339,70 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				}
 			}
 		}
+		//short pupType = GetComponent<PowerUpComponent>(sphereID)->powerUps;
+
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(FireBall) 
+			&& !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall))
+		{
+			EntityManager* tEntManager = tEntManager->GetInstance();
+			ComponentTable* tCompTable = tCompTable->GetInstance();
+			int tMaxEnt = tEntManager->GetLastEntity();
+
+			//	for (int i = 0; i < tMaxEnt; i++)//
+			//{//
+			//CollisionComponent* tColl1 = GetComponent<CollisionComponent>(sphereID);
+			GetComponent<CollisionComponent>(sphereID)->Dim.x *= 10;
+			GetComponent<CollisionComponent>(sphereID)->Dim.y *= 10;
+			CollisionComponent* tColl1 = GetComponent<CollisionComponent>(sphereID);
+			TransformComponent* tTrans1 = GetComponent<TransformComponent>(sphereID);
+
+			//if (tCompTable->HasComponent(sphereID, CollisionType | TransformType | LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			//	{
+
+			for (int k = 0; k < tMaxEnt; k++)
+			{
+				if (GetComponent<LabelComponent>(k)->HasLabel(Box) || GetComponent<LabelComponent>(k)->HasLabel(GoalBlock))
+				{
+					CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
+					TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
+
+					//Handles everything about collision
+					
+					if (ExplosiveCollisionCheck(tColl1, tTrans1, tColl2, tTrans2))
+					{
+						if (GetComponent<LabelComponent>(k)->HasLabel(Box))		//if AABB is label Box, we remove it
+						{
+
+							if (ComponentTable::GetInstance()->HasComponent(k, PowerUpContainType))
+							{
+								unordered_map<string, void*> payload;
+								EntityID* entID = new EntityID();
+								*entID = k;
+								payload["EntityID"] = entID;
+								EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", payload);
+							}
+							EntityManager::GetInstance()->RemoveEntity(k);
+						}
+						else if (GetComponent<LabelComponent>(k)->HasLabel(GoalBlock))
+						{
+							//remove entity
+
+							EntityManager::GetInstance()->RemoveEntity(k);
+
+							//send event
+							std::unordered_map<string, void*> tPayLoad;
+							EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+						}
+					}
+				}
+			}
+			//}
+			//}//
+			//sätta tillbaks dimensions
+			GetComponent<CollisionComponent>(sphereID)->Dim.x /= 10;
+			GetComponent<CollisionComponent>(sphereID)->Dim.y /= 10;
+		}
+
 	}
 }
 
