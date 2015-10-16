@@ -10,6 +10,7 @@ enum PowerUpType
 	MagnetPUp = 0x08,
 	InvertDown = 0x10,
 	FireBall = 0x20,
+	SlowMotion = 0x40,
 };
 
 enum PowerUpTimerLocation
@@ -20,6 +21,7 @@ enum PowerUpTimerLocation
 	MagnetPUpLoc,
 	InvertDownLoc,
 	FireBallPUpLoc,
+	SlowMotionLoc,
 	NumPowerUps,
 };
 
