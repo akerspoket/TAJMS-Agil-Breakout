@@ -7,7 +7,7 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "GameState.h"
-
+#include "LabelComponent.h"
 
 RenderSystem::RenderSystem()
 {
@@ -30,6 +30,7 @@ void RenderSystem::Initialize()
 	mEventManager->Subscribe("DebugTest", this);
 	mEventManager->Subscribe("DrawScore", this);
 	mEventManager->Subscribe("DrawLife", this);
+	mEventManager->Subscribe("Collision", this);
 
 
 
@@ -87,7 +88,7 @@ void RenderSystem::Update(double pDeltaTime)
 	
 	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
-	mGraphicsInterface->EndDraw();
+		mGraphicsInterface->EndDraw();
 
 	
 }
@@ -106,6 +107,24 @@ void RenderSystem::OnEvent(Event* pEvent)
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
 	}
+	if (pEvent->mID == "Collision")
+	{
+		EntityID entID1 = *(EntityID*)pEvent->mPayload["ID1"];
+		if (GetComponent<LabelComponent>(entID1)->HasLabel(Box))
+		{
+			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
+			tPos.z -= 1;
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5, 0.2f);
+		}
+		EntityID entID2 = *(EntityID*)pEvent->mPayload["ID2"];
+		if (GetComponent<LabelComponent>(entID2)->HasLabel(Box))
+		{
+			vec3 tPos = GetComponent<TransformComponent>(entID2)->mPosition;
+			tPos.z -= 1;
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5, 0.2f);
+		}
+	}
+
 	if (pEvent->mID == "DrawLife")
 	{
 		mLifes = *(int*)pEvent->mPayload["life"];

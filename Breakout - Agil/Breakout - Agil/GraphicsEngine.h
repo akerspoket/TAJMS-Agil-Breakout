@@ -18,6 +18,7 @@
 #include "Math.h"
 #include "ObjLoader.h"
 #include <string>
+#include "DirXParticle.h"
 #ifdef DEBUG
 	#include <iostream>
 #endif // DEBUG
@@ -97,7 +98,7 @@ public:
 	void EndDraw();
 	int CreateNewText(int pMaxCharacters);
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
-
+	void CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime);
 private:
 
 	struct ConstantBufferType
@@ -138,6 +139,8 @@ private:
 	ObjLoader* mObjLoader;
 
 	vector<SentenceType> mSentences;
+
+	DirXParticle* mParticleSystem;
 };
 
 #endif

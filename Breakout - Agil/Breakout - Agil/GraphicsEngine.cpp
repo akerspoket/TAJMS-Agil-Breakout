@@ -128,6 +128,10 @@ void GraphicsEngine::InitD3D()
 
 	dev->CreateBlendState(&blendDesc, &mBlendState);
 
+	mParticleSystem = new DirXParticle();
+	mParticleSystem->Initialize(dev, devcon);
+
+
 }
 
 void GraphicsEngine::CleanD3D()
@@ -563,8 +567,19 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	devcon->Draw(mSentences[pSentenceID].numberOfIndices, 0);
+
+	mParticleSystem->UpdateEmitters(0.01f);
+	mParticleSystem->UpdateParticles();
+	mParticleSystem->DrawParticles(mBuffers[mWVPBufferID.bufferID]);
+
 	devcon->OMSetBlendState(0, 0, 0xffffffff);
 
+
+}
+
+void GraphicsEngine::CreateParticleEmitter(vec3 pPosition,vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime)
+{
+	mParticleSystem->AddNewEmitter(pPosition, pColor, pEmitterLifetime,pDensity, pParticleLifetime);
 }
 
 void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize)
