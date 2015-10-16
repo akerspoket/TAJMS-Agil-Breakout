@@ -101,7 +101,7 @@ void PowerUpSystem::Update(double pDeltaTime)
 }
 void PowerUpSystem::Pause() {}
 void PowerUpSystem::Stop() {}
-void PowerUpSystem::BallNetPowerUp(float pTime)
+void PowerUpSystem::ApplyBallNetPowerUp(float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -124,7 +124,7 @@ void PowerUpSystem::BallNetPowerUp(float pTime)
 
 
 }
-void PowerUpSystem::PiercingPowerUp(float pTime)
+void PowerUpSystem::ApplyPiercingPowerUp(float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -146,7 +146,7 @@ void PowerUpSystem::PiercingPowerUp(float pTime)
 	//test
 
 }
-void PowerUpSystem::MagnetPowerUp(float pTime)
+void PowerUpSystem::ApplyMagnetPowerUp(float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -166,7 +166,27 @@ void PowerUpSystem::MagnetPowerUp(float pTime)
 	}
 }
 
-void PowerUpSystem::InvertPowerDown(float pTime)
+void PowerUpSystem::ApplyInvertPowerDown(float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Pad))
+			{
+				tCompTable->AddComponent(i, PowerUpType);
+				GetComponent<PowerUpComponent>(i)->timers[InvertDownLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(InvertDown);
+			}
+		}
+	}
+}
+
+void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -217,19 +237,19 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 			break;
 		case BallNet:
 			///hitta bollen o lägga på en powercompennt förhåven på den.
-			BallNetPowerUp(duration);
+			ApplyBallNetPowerUp(duration);
 			break;
 		case Piercing:
-			PiercingPowerUp(duration);
+			ApplyPiercingPowerUp(duration);
 			break;
 		case MagnetPUp:
-			MagnetPowerUp(duration);
+			ApplyMagnetPowerUp(duration);
 			break;
 		case InvertDown:
-			InvertPowerDown(duration);
+			ApplyInvertPowerDown(duration);
 			break;
 		case SlowMotion:
-
+			ApplySlowMotionPowerUp(duration);
 			break;
 		}
 	}
