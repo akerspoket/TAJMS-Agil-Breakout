@@ -194,13 +194,13 @@ void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 
 	for (size_t i = 0; i < tMaxEnt; i++)
 	{
-		if (tCompTable->HasComponent(i, LabelType))
+		if (tCompTable->HasComponent(i, LabelType | VelocityType))
 		{
-			if (GetComponent<LabelComponent>(i)->HasLabel(Pad))
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				tCompTable->AddComponent(i, PowerUpType);
-				GetComponent<PowerUpComponent>(i)->timers[InvertDownLoc] = pTime;
-				GetComponent<PowerUpComponent>(i)->AddPowerUp(InvertDown);
+				GetComponent<PowerUpComponent>(i)->timers[SlowMotionLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(SlowMotion);
 			}
 		}
 	}
@@ -232,7 +232,6 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		switch (mask)
 		{
 		case SpeedUp:
-			GetComponent<VelocityComponent>(entID)->mSpeed *= 3;
 			GetComponent<PowerUpComponent>(entID)->timers[SpeedUpLoc] = duration;
 			break;
 		case BallNet:
