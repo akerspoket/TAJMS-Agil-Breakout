@@ -53,6 +53,7 @@ void TriggerSystem::Initialize()
 	//add levels here
 	mMapNames.push_back("Levels/Level1.txt");
 	mMapNames.push_back("Levels/Level2.txt");
+	mMapNames.push_back("Levels/Level3.txt");
 }
 
 void TriggerSystem::Start()
@@ -105,6 +106,7 @@ void TriggerSystem::Update(double pDeltaTime)
 			if (mMapNames.size() - 1 >= mCurrentLevel)
 			{
 				LevelManager::GetInstance()->GenerateWorld(mMapNames[mCurrentLevel]);
+				mNumOfLifesLeft = 3;
 			}
 			mCreateNextLevel = false;
 		}
@@ -192,14 +194,25 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		mNumOfGoalBlocksActive--;
 		if (mNumOfGoalBlocksActive < 1)
 		{
-			mCreateNextLevel = true;
-			mDegenerateWorld = true;
+			mNumOfLifesLeft--;
+			if (mNumOfLifesLeft == 0)
+			{
+				mCreateNextLevel = true;
+				mDegenerateWorld = true;
 
-			//DEBUG
+				//DEBUG
 #ifdef _DEBUG
-			cout << "You won the level, loading next!" << endl;
+				cout << "You won the level, loading next!" << endl;
 #endif
-			//END DEBUG
+				//END DEBUG
+			}
+			else
+			{
+				//remove powerups
+				//remove powerup func
+				//LevelManager::GetInstance()->PopPowerups(); //reste powerup
+				//
+			}
 		}
 	}
 

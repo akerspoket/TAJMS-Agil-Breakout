@@ -19,6 +19,7 @@ public:
 private:
 	int mNumOfBallsActive;
 	int mNumOfGoalBlocksActive;
+	int mNumOfLifesLeft;
 	bool mCreateNextLevel;
 	bool mDegenerateWorld;
 	int mGenerateMenu;
