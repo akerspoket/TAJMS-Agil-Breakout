@@ -18,7 +18,9 @@ struct VertexInputType
 struct VOut
 {
 	float4 position : SV_POSITION;
+	float3 originalPosition: ORIGINALPOS;
 	float2 texCoord : TEXCOORD;
+	float3 normal: NORMAL;
 };
 
 VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
@@ -28,9 +30,11 @@ VOut VShader( VertexInputType input,uint instanceID : SV_InstanceID)
 	output.texCoord = input.texCoord;
 	//input.position.y += input.position.y * sin(time);
 	input.position = mul(float4(input.position,1.0f), input.matris).xyz;
+	output.originalPosition = input.position;
 	//output.color = input.color * instances[instanceID].colorInstance;
 	output.position = mul(float4(input.position, 1.0f), worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
+	output.normal = input.normal;
 	return output;
 }

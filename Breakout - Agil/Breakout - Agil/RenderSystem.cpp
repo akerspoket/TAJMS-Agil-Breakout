@@ -7,7 +7,7 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "GameState.h"
-
+#include "LabelComponent.h"
 
 RenderSystem::RenderSystem()
 {
@@ -27,6 +27,7 @@ void RenderSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
 	mEventManager->Subscribe("DrawScore", this);
+	mEventManager->Subscribe("Collision", this);
 
 
 
@@ -101,4 +102,22 @@ void RenderSystem::OnEvent(Event* pEvent)
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
 	}
+	if (pEvent->mID == "Collision")
+	{
+		EntityID entID1 = *(EntityID*)pEvent->mPayload["ID1"];
+		if (GetComponent<LabelComponent>(entID1)->mLabel == Box)
+		{
+			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
+			tPos.z -= 1;
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5, 0.2f);
+		}
+		EntityID entID2 = *(EntityID*)pEvent->mPayload["ID2"];
+		if (GetComponent<LabelComponent>(entID2)->mLabel == Box)
+		{
+			vec3 tPos = GetComponent<TransformComponent>(entID2)->mPosition;
+			tPos.z -= 1;
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5, 0.2f);
+		}
+	}
+
 }
