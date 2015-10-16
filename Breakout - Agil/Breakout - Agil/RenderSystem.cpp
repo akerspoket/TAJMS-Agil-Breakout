@@ -11,10 +11,12 @@
 
 RenderSystem::RenderSystem()
 {
+	mLifes = 0;
 }
 
 RenderSystem::RenderSystem(string pName):System(pName)
 {
+	mLifes = 0;
 }
 
 
@@ -27,6 +29,7 @@ void RenderSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("DebugTest", this);
 	mEventManager->Subscribe("DrawScore", this);
+	mEventManager->Subscribe("DrawLife", this);
 
 
 
@@ -36,6 +39,7 @@ void RenderSystem::Initialize(SDL_Window* pWin)
 	mGraphicsInterface = GraphicsInterface::GetSingleton();
 	mGraphicsInterface->Initialize(90.0f, 600.0f, 800.0f, 0.1f, 100, -4.0f, pWin);
 	mTempTextId = mGraphicsInterface->CreateText(60);
+	mLifeTextID = mGraphicsInterface->CreateText(5);
 }
 
 
@@ -82,7 +86,8 @@ void RenderSystem::Update(double pDeltaTime)
 		}
 	
 	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
-		mGraphicsInterface->EndDraw();
+	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
+	mGraphicsInterface->EndDraw();
 
 	
 }
@@ -100,5 +105,9 @@ void RenderSystem::OnEvent(Event* pEvent)
 	if (pEvent->mID == "DrawScore")
 	{
 		mScore = *(int*)pEvent->mPayload["score"];
+	}
+	if (pEvent->mID == "DrawLife")
+	{
+		mLifes = *(int*)pEvent->mPayload["life"];
 	}
 }

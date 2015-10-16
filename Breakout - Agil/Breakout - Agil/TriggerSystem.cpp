@@ -107,6 +107,11 @@ void TriggerSystem::Update(double pDeltaTime)
 			{
 				LevelManager::GetInstance()->GenerateWorld(mMapNames[mCurrentLevel]);
 				mNumOfLifesLeft = 3;
+				EventManager::Payload tPayLoad;
+				int* life = new int();
+				*life = mNumOfLifesLeft;
+				tPayLoad["life"] = life;
+				EventManager::GetInstance()->BroadcastEvent("DrawLife", tPayLoad);
 			}
 			mCreateNextLevel = false;
 		}
@@ -200,6 +205,12 @@ void TriggerSystem::OnEvent(Event* pEvent)
 
 			}
 		}
+		//send event to change life
+		EventManager::Payload tPayLoad;
+		int* life = new int();
+		*life = mNumOfLifesLeft;
+		tPayLoad["life"] = life;
+		EventManager::GetInstance()->BroadcastEvent("DrawLife", tPayLoad);
 	}
 	else if (pEventID == "CollideWithGoalBlock")
 	{
