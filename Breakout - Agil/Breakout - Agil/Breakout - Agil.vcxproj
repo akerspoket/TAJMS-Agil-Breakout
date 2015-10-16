@@ -153,6 +153,7 @@
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="OGLGraphicsEngine.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="PowerUpSystem.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="ScoreSystem.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
@@ -190,6 +191,9 @@
     <ClInclude Include="OGLGraphicsEngine.h" />
     <ClInclude Include="PhysicComponent.h" />
     <ClInclude Include="PhysicSystem.h" />
+    <ClInclude Include="PowerUpComponent.h" />
+    <ClInclude Include="PowerUpContainComponent.h" />
+    <ClInclude Include="PowerUpSystem.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="ScoreSystem.h" />
     <ClInclude Include="ScoreValueComponent.h" />

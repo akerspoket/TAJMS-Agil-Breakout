@@ -6,15 +6,18 @@
 #include "ComponentTable.h"
 #include "UserCmdStruct.h"
 #include "GameState.h"
+#include "PowerUpComponent.h"
 
 using namespace std;
 
 InputSystem::InputSystem()
 {
+
 }
 
 InputSystem::InputSystem(string pName):System(pName)
 {
+
 }
 
 
@@ -25,7 +28,6 @@ InputSystem::~InputSystem()
 void InputSystem::Initialize()
 {
 	mEventManager = mEventManager->GetInstance();
-	//mEventManager->Subscribe("DebugTest", this);
 }
 
 void InputSystem::Start()
@@ -185,8 +187,14 @@ void InputSystem::MoveRight(EntityID pEntityID)
 
 	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
 
+	float tInversePowerDown = 1;
+	if (tCompTable->HasComponent(pEntityID, PowerUpType) && GetComponent<PowerUpComponent>(pEntityID)->HasPowerUp(InvertDown))
+	{
+		tInversePowerDown = -1;
+	}
+
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
-	tVel->mDirection = vec3(1.0f, 0.0f, 0.0f);
+	tVel->mDirection = vec3(1.0f, 0.0f, 0.0f)*tInversePowerDown;
 }
 
 void InputSystem::MoveLeft(EntityID pEntityID)
@@ -195,8 +203,13 @@ void InputSystem::MoveLeft(EntityID pEntityID)
 	
 	tCompTable->AddComponent(pEntityID, ComponentType::VelocityType);
 	
+	float tInversePowerDown = 1;
+	if (tCompTable->HasComponent(pEntityID, PowerUpType) && GetComponent<PowerUpComponent>(pEntityID)->HasPowerUp(InvertDown))
+	{
+		tInversePowerDown = -1;
+	}
 	VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID);
-	tVel->mDirection = vec3(-1.0f, 0.0f, 0.0f);
+	tVel->mDirection = vec3(-1.0f, 0.0f, 0.0f)*tInversePowerDown;
 }
 
 void InputSystem::StandStill(EntityID pEntityID)
@@ -353,7 +366,7 @@ void InputSystem::Update(double pDeltaTime)
 			{
 				LabelComponent* tLabel = GetComponent<LabelComponent>(i);
 
-				if (tLabel->mLabel == Label::Pad)
+				if (tLabel->HasLabel(Pad))
 				{
 					//find input we want to check for TODO:: maybe fix input into bit array?
 					PadInput(i);

@@ -78,7 +78,7 @@ void AttachSystem::OnEvent(Event* pEvent)
 			if (tCompTable->HasComponent(i, AttachedType | LabelType))
 			{
 
-				if (GetComponent<LabelComponent>(i)->mLabel==Label::MenuPointer)
+				if (GetComponent<LabelComponent>(i)->HasLabel(MenuPointer))
 				{
 					AttachedComponent* tAttachedComp = GetComponent<AttachedComponent>(i);
 					int tMenyButtonID;

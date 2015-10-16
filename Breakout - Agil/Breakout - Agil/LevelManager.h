@@ -17,6 +17,11 @@ public:
 	void GenerateMainMenu();
 	void GenerateDeathScreen();
 	void GeneratePauseScreen();
+	void PoopLabels();
+	void PoopPowerUps();
+	void ResetPad();
+	void ResetBall();
+	void PoopPowerUpContainers();
 private:
 	LevelManager();
 	~LevelManager();

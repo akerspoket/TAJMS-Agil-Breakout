@@ -53,6 +53,7 @@ void TriggerSystem::Initialize()
 	//add levels here
 	mMapNames.push_back("Levels/Level1.txt");
 	mMapNames.push_back("Levels/Level2.txt");
+	mMapNames.push_back("Levels/Level3.txt");
 }
 
 void TriggerSystem::Start()
@@ -105,6 +106,12 @@ void TriggerSystem::Update(double pDeltaTime)
 			if (mMapNames.size() - 1 >= mCurrentLevel)
 			{
 				LevelManager::GetInstance()->GenerateWorld(mMapNames[mCurrentLevel]);
+				mNumOfLifesLeft = 3;
+				EventManager::Payload tPayLoad;
+				int* life = new int();
+				*life = mNumOfLifesLeft;
+				tPayLoad["life"] = life;
+				EventManager::GetInstance()->BroadcastEvent("DrawLife", tPayLoad);
 			}
 			mCreateNextLevel = false;
 		}
@@ -117,13 +124,11 @@ void TriggerSystem::Update(double pDeltaTime)
 		{
 			if (tCompTable->HasComponent(i, LabelType))
 			{
-				Label tLabel = GetComponent<LabelComponent>(i)->mLabel;
-
-				if (tLabel == Label::Ball)
+				if(GetComponent<LabelComponent>(i)->HasLabel(Ball))
 				{
 					mNumOfBallsActive++;
 				}
-				else if (tLabel == Label::GoalBlock)
+				else if (GetComponent<LabelComponent>(i)->HasLabel(GoalBlock))
 				{
 					mNumOfGoalBlocksActive++;
 				}
@@ -178,22 +183,41 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		//no balls active
 		if (mNumOfBallsActive < 1)
 		{
-			mDegenerateWorld = true;
-			EventManager::Payload tPayload;
-			EventManager::GetInstance()->BroadcastEvent("Lost", tPayload);
+			mNumOfLifesLeft--;
+			if (mNumOfLifesLeft == 0)
+			{
+				mDegenerateWorld = true;
+				EventManager::Payload tPayload;
+				EventManager::GetInstance()->BroadcastEvent("Lost", tPayload);
 
-			//DEBUG
+				//DEBUG
 #ifdef _DEBUG
-			cout << "You lost" << endl;
+				cout << "You lost" << endl;
 #endif
-			//END DEBUG
+				//END DEBUG
+			}
+			else
+			{
+				LevelManager::GetInstance()->PoopPowerUps(); //reste powerup
+				LevelManager::GetInstance()->ResetPad();
+				LevelManager::GetInstance()->ResetBall();
+				LevelManager::GetInstance()->PoopPowerUpContainers();
+
+			}
 		}
+		//send event to change life
+		EventManager::Payload tPayLoad;
+		int* life = new int();
+		*life = mNumOfLifesLeft;
+		tPayLoad["life"] = life;
+		EventManager::GetInstance()->BroadcastEvent("DrawLife", tPayLoad);
 	}
 	else if (pEventID == "CollideWithGoalBlock")
 	{
 		mNumOfGoalBlocksActive--;
 		if (mNumOfGoalBlocksActive < 1)
 		{
+
 			mCreateNextLevel = true;
 			mDegenerateWorld = true;
 
@@ -202,6 +226,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 			cout << "You won the level, loading next!" << endl;
 #endif
 			//END DEBUG
+
 		}
 	}
 
@@ -210,7 +235,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = AttachedType | LabelType;
-			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				tCompTable->RemoveComponent(i, AttachedType);
 				tCompTable->AddComponent(i, VelocityType);
@@ -224,7 +249,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = LabelType;
-			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->mLabel == Label::Ball)
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				if (GetComponent<VelocityComponent>(i)->mSpeed == 12)
 				{

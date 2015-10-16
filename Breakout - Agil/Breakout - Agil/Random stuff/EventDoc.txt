@@ -1,0 +1,15 @@
+ID:
+PowerUpPickedUp
+Payload:
+{
+  "EntityID" -> EntityID
+  "PupEntityID -> EntityID
+}
+
+
+id:
+SpawnPowerUp
+Payload:
+{
+  "EntityID" ->EntityID
+}

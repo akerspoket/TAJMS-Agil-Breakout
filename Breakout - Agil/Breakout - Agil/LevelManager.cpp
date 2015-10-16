@@ -15,6 +15,10 @@
 #include "GraphicsInterface.h"
 #include <iostream>
 #include "ScoreValueComponent.h"
+#include "PowerUpComponent.h"
+#include "PowerUpContainComponent.h"
+#include <random>
+
 #include "MenyButtonComponent.h"
 #include "SoundEngine.h"
 using namespace std;
@@ -46,6 +50,7 @@ void LevelManager::AnalyzeText(string pTextToCheck)
 {
 
 }
+
 
 
 
@@ -85,7 +90,7 @@ void LevelManager::Initialize()
 		else if (mEntitiyVector[i].compare("xLabel") == 0)
 		{
 			i++;
-			tLabel->mLabel = Label::Pad;
+			tLabel->AddLabel(Pad);
 			tPadBlueprint[LabelType] = tLabel;
 			///////////Kolla vilken label det är i LabelComponent
 		}
@@ -147,7 +152,7 @@ void LevelManager::Initialize()
 	ScoreValueComponent* tScoreValue = new ScoreValueComponent();//lägga högst upp????????????????
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
-	tLabel->mLabel = Label::Box;
+	tLabel->AddLabel(Box);
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/BoxTexture2");///Här ska vi byta textur!!
@@ -174,7 +179,7 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 
 	//We set the label here since it never changes
-	tLabel->mLabel = Label::Ball;
+	tLabel->AddLabel(Ball);
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
@@ -203,7 +208,7 @@ void LevelManager::Initialize()
 	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.mp3", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(2.5, 0.5);
-	tLabel->mLabel = Label::GoalBlock;
+	tLabel->AddLabel(GoalBlock);
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
@@ -217,19 +222,19 @@ void LevelManager::Initialize()
 	EntityFactory::EntityBlueprint tWallBlueprint;
 
 	tTrans = new TransformComponent();
-
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
-
+	tLabel = new LabelComponent();
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
-	tColl->Dim = vec2(30,0.2f);
-
+	tColl->Dim = vec2(30, 0.2f);
+	tLabel->AddLabel(Wall);
 
 	tWallBlueprint[TransformType] = tTrans;
 	tWallBlueprint[CollisionType] = tColl;
 	tWallBlueprint[SoundCollisionType] = tSoundColl;
 	//tWallBlueprint[MeshType] = tMesh;
+	tWallBlueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("HorWall", tWallBlueprint);
 
 	///////////////////SIDE WALL////////////////
@@ -239,15 +244,17 @@ void LevelManager::Initialize()
 	tColl = new CollisionComponent();
 	tSoundColl = new SoundCollisionComponent();
 	tMesh = new MeshComponent();
-
+	tLabel = new LabelComponent();
 	SoundEngine::GetInstance()->LoadSoundToMemory("WallCollision.wav", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(1.5f, 30.0f);
+	tLabel->AddLabel(Wall);
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/SideWall.obj");
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
 	tWall2Blueprint[SoundCollisionType] = tSoundColl;
 	tWall2Blueprint[MeshType] = tMesh;
+	tWall2Blueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
 	//////////////////////MenuButtonBlock///////////////
@@ -279,7 +286,7 @@ void LevelManager::Initialize()
 	tAttachComp->relPos = vec3(-3, 0, 0);
 	tMenuPtrBlueprint[AttachedType] = tAttachComp;
 	tMenuPtrBlueprint[MeshType] = tMesh;
-	tLabel->mLabel = Label::MenuPointer;
+	tLabel->AddLabel(MenuPointer);
 	tMenuPtrBlueprint[LabelType] = tLabel;
 	
 	mEntityFactory->RegisterEntityTemplate("MenuPointer", tMenuPtrBlueprint);
@@ -291,10 +298,40 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Background.obj");
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");
-	tTrans->mPosition = vec3(0,0,10);
+	tTrans->mPosition = vec3(0, 0, 10);
 	tBackgroundBlueprint[MeshType] = tMesh;
 	tBackgroundBlueprint[TransformType] = tTrans;
 	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
+
+
+	///////////DEBUG POWERUP/////////
+	EntityFactory::EntityBlueprint tPowerUpBlueprint;
+	tMesh = new MeshComponent();
+	tTrans = new TransformComponent();
+	tVelocity = new VelocityComponent();
+	tColl = new CollisionComponent();
+	tLabel = new LabelComponent();
+	PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
+	tTrans->mPosition = vec3(0, 0, 8);
+	tVelocity->mDirection = vec3(0, -1, 0);
+	tVelocity->mSpeed = 5;
+	tPupContain->duration = 2;
+	tPupContain->type = SpeedUp;
+	tColl->Dim = vec2(0.5, 0.5);
+	tColl->mType = Sphere;
+	tLabel->AddLabel(PowerUpDown);
+	tPowerUpBlueprint[MeshType] = tMesh;
+	tPowerUpBlueprint[TransformType] = tTrans;
+	tPowerUpBlueprint[VelocityType] = tVelocity;
+	tPowerUpBlueprint[PowerUpContainType] = tPupContain;
+	tPowerUpBlueprint[CollisionType] = tColl;
+	tPowerUpBlueprint[LabelType] = tLabel;
+	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
+
+
+
 }
 void LevelManager::GenerateMainMenu()
 {
@@ -405,9 +442,117 @@ void LevelManager::GeneratePauseScreen()
 	tTrans = GetComponent<TransformComponent>(tNewID);
 	tTrans->mPosition = vec3(0, -4, 8);
 }
+
+
+void LevelManager::PoopLabels() //Silly method...put it in my bum now my bumholes numb and eats plums
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		GetComponent<LabelComponent>(i)->mLabel = None;
+	}
+}
+
+void LevelManager::PoopPowerUps()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		tCompTable->RemoveComponent(i, PowerUpType);
+
+		//reset powerups
+		GetComponent<PowerUpComponent>(i)->powerUps = 0;
+
+		//reset all timers
+		for (int k = 0; k < NumPowerUps; k++)
+		{
+			GetComponent<PowerUpComponent>(i)->timers[k] = 0;
+		}
+		
+	}
+}
+
+void LevelManager::PoopPowerUpContainers()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(PowerUpDown))
+		{
+			tEntManager->RemoveEntity(i);
+		}
+	}
+}
+
+void LevelManager::ResetPad()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Pad))
+		{
+			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+			tTrans->mPosition = vec3(0, -8, 8);
+			GetComponent<VelocityComponent>(i)->mSpeed = 10.0f;
+		}
+	}
+}
+
+void LevelManager::ResetBall()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+	int PadID = -1;
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Pad))
+		{
+			PadID = i;
+			i = tMaxEnt;
+		}
+	}
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
+		{
+			ComponentTable::GetInstance()->AddComponent(i, AttachedType);
+			AttachedComponent* tAtt = GetComponent<AttachedComponent>(i);
+			tAtt->attachedTo = PadID;
+			tAtt->relPos = vec3(0, 1.3, 0);
+			ComponentTable::GetInstance()->RemoveComponent(i, VelocityType);
+		}
+	}
+}
+
+
+
 void LevelManager::GenerateWorld(string pWorldName)
 {
-	
+
+	PoopLabels();
+
+	////////////////////DEBUG POWERUP//////////
+	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
+	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 3;
+	GetComponent<PowerUpContainComponenet>(tPupID)->type = InvertDown;
+
+
+
 	////////////////////PADDA//////////////////
 	EntityID tNewID = mEntityFactory->CreateEntity("Padda");
 	EntityID tPaddID = tNewID;
@@ -416,6 +561,25 @@ void LevelManager::GenerateWorld(string pWorldName)
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
+	/////TEST ADDING SPEEDUP POWERUP////////
+	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
+	//unordered_map<string, void*> pupPayload;
+	//EntityID* entID = new EntityID();
+	//*entID = tNewID;
+	//pupPayload["EntityID"] = entID;
+	//short* mask = new short();
+	//*mask = SpeedUp;
+	//pupPayload["mask"] = mask;
+	//float* duration = new float;
+	//*duration = 2;
+	//pupPayload["duration"] = duration;
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	//////END TEST/////////////////
+
+	//EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
+	////END TEST/////////////////
+
+	//////////////////BLOCKS/////////////////////
 	//Reading The level from textfile
 	vector<string> mLevelTextVector;
 	mLevelTextVector = TextFileReader::ReadTextFile(pWorldName);
@@ -428,6 +592,25 @@ void LevelManager::GenerateWorld(string pWorldName)
 	
 	int* tScore = new int();
 
+
+	vector<short> possiblePups;
+	possiblePups.push_back(SpeedUp);
+	//possiblePups.push_back(BallNet);
+	//possiblePups.push_back(Piercing);
+	//possiblePups.push_back(MagnetPUp);
+
+
+	vector<float> pupDurations;
+	pupDurations.push_back(2); 
+	pupDurations.push_back(2);
+	pupDurations.push_back(2);
+	pupDurations.push_back(2);
+
+	//Pup generation stuff
+	std::default_random_engine generator;
+	float chanceOfPup = 100;
+	int max = 100 / chanceOfPup;
+
 	for (size_t i = 0; i < t_forLoopI; i++)
 	{
 		for (size_t j = 0; j < t_forLooPJ; j++)
@@ -436,9 +619,24 @@ void LevelManager::GenerateWorld(string pWorldName)
 			{
 				tNewID = mEntityFactory->CreateEntity("Block");
 				tTrans = GetComponent<TransformComponent>(tNewID);
-				tTrans->mPosition.x = j - (float)t_forLooPJ/2;
+				tTrans->mPosition.x = j - (float)t_forLooPJ / 2;
 				tTrans->mPosition.y = t_forLoopI - i;
 				tTrans->mPosition.z = 8;
+
+				//See if block gets a power up
+				std::uniform_int_distribution<int> distribution(1, max);
+				int hit = distribution(generator);
+
+				if (hit == 1)
+				{
+					//block got pup. Determine which pup
+					std::uniform_int_distribution<int> distribution2(0, possiblePups.size()-1);
+					int pupIndex = rand() % (possiblePups.size());
+					ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpContainType);
+					GetComponent<PowerUpContainComponenet>(tNewID)->type = possiblePups[pupIndex];
+					GetComponent<PowerUpContainComponenet>(tNewID)->duration = pupDurations[pupIndex];
+				}
+
 				//set value of the blocks. Should be read from file
 				GetComponent<ScoreValueComponent>(tNewID)->value = 50;
 				//Max score is the sum of the score of each block
@@ -473,13 +671,13 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//////////////////TOP BOT WALL///////////////////
 	tNewID = mEntityFactory->CreateEntity("HorWall");
-	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0,t_forLoopI+1,8);
+	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, t_forLoopI + 1, 8);
 
 	tNewID = mEntityFactory->CreateEntity("HorWall");
 	GetComponent<TransformComponent>(tNewID)->mPosition = vec3(0, -10, 8);
 	ComponentTable::GetInstance()->AddComponent(tNewID, LabelType);
 	LabelComponent* tLabel = GetComponent<LabelComponent>(tNewID);
-	tLabel->mLabel = Label::BottomArea;
+	tLabel->AddLabel(BottomArea);
 
 	/////////////////SIDE WALLS/////////////////////////
 	tNewID = mEntityFactory->CreateEntity("VerWall");
@@ -510,7 +708,7 @@ void LevelManager::DegenerateMenu()
 		}
 		else if (tCompTable->HasComponent(i, LabelType))
 		{
-			if(GetComponent<LabelComponent>(i)->mLabel == Label::MenuPointer)
+			if (GetComponent<LabelComponent>(i)->HasLabel(MenuPointer))
 			{
 				tEntManager->RemoveEntity(i);
 			}

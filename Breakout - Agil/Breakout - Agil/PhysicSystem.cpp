@@ -10,6 +10,7 @@
 #include "AttachedComponent.h"
 #include "LabelComponent.h"
 #include "GameState.h"
+#include "PowerUpComponent.h"
 
 #include <cmath> //needed for linux... come on!
 
@@ -66,8 +67,8 @@ void PhysicSystem::SphereVsSphere(EntityID pEntityID1, EntityID pEntityID2, Coll
 
 	if (rCollided)
 	{
-		//Special case if component is ball
-		if (GetComponent<LabelComponent>(pEntityID2)->mLabel == Label::Ball)
+		//Special case if component is ball and collids with the pad
+		if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Label::Ball) && !ComponentTable::GetInstance()->HasComponent(pEntityID1, PowerUpContainType))
 		{
 			VelocityComponent* ballVel = GetComponent<VelocityComponent>(pEntityID2);
 			vec2 tPadSphereOffset = vec2(0, -5); //how large we want the sphere to be
@@ -140,6 +141,9 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 
 	bool tCollide = tSquareDistance <= (pSphereColl->Dim.x * pSphereColl->Dim.x);
 
+	EntityID aabbID = pEntityID1;
+	EntityID sphereID = pEntityID2;
+
 	if (tCollide)
 	{
 		vec2 tNormDir = vec3toVec2(pSphereTrans->mPrevPosition - pAABBTrans->mPrevPosition);
@@ -153,102 +157,126 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 //#endif
 		//END DEBUG
 
-
-
-		if (abs(tNormDir.x) > abs(tNormDir.y))
+		//Pad picks up powerup
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpContainType)
+			&& ComponentTable::GetInstance()->HasComponent(aabbID, LabelType)
+			&& GetComponent<LabelComponent>(aabbID)->HasLabel(Pad))
 		{
-			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
-			{
-				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
+			unordered_map<string, void*> pupPayload;
+			EntityID* entID = new EntityID();
+			*entID = aabbID;
+			pupPayload["EntityID"] = entID;
+			EntityID* pupID = new EntityID();
+			*pupID = sphereID;
+			pupPayload["PupEntityID"] = pupID;
+			EventManager::GetInstance()->BroadcastEvent("PowerUpPickedUp", pupPayload);
 
-
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
-				{
-					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
-				}
-				else
-
-				tVel->mDirection.x *= -1;
-
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
-				{
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
-					//tVel->mDirection.y = mMinAngle;
-					//tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
-					//tVel->mDirection.Normalize();
-				}
-
-
-
-				if (tNormDir.x > 0)
-				{
-					//save old position
-					float tOldX = pSphereTrans->mPosition.x;
-
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
-
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
-				}
-				else
-				{
-					//save old position
-					float tOldX = pSphereTrans->mPosition.x;
-
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
-
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
-				}
-
-
-
-
-
-
-			}
+			EntityManager::GetInstance()->RemoveEntity(sphereID);
 
 		}
-		else
+
+
+
+		//Ball collides with AABB
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType)
+			&& GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
 		{
-			if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
+			if (abs(tNormDir.x) > abs(tNormDir.y))
 			{
-				VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
-				if (GetComponent<LabelComponent>(pEntityID1)->mLabel == Label::Pad)
+				if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 				{
-					SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+					VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
+
+
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+					}
+					else if( !(ComponentTable::GetInstance()->HasComponent(sphereID , PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
+					{
+						tVel->mDirection.x *= -1;
+					}
+
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+						//tVel->mDirection.y = mMinAngle;
+						//tVel->mDirection.x = (tVel->mDirection.x > 0) - (tVel->mDirection.x < 0);
+						//tVel->mDirection.Normalize();
+					}
+
+
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
+					{
+					if (tNormDir.x > 0)
+					{
+						//save old position
+						float tOldX = pSphereTrans->mPosition.x;
+
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x + pAABBColl->Dim.x + pSphereColl->Dim.x;
+
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+					}
+					else
+					{
+						//save old position
+						float tOldX = pSphereTrans->mPosition.x;
+
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.x = pAABBTrans->mPosition.x - pAABBColl->Dim.x - pSphereColl->Dim.x;
+
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.x += pSphereTrans->mPosition.x - tOldX;
+					}
 				}
-				else
+					
+			}
+			}
+			else
+			{
+				if (ComponentTable::GetInstance()->HasComponent(pEntityID2, VelocityType))
 				{
-					tVel->mDirection.y *= -1;
-				}
+					VelocityComponent* tVel = GetComponent<VelocityComponent>(pEntityID2);
+					if (GetComponent<LabelComponent>(pEntityID1)->HasLabel(Pad))
+					{
+						SphereVsSphere(pEntityID1, pEntityID2, pAABBColl, pAABBTrans, pSphereColl, pSphereTrans);
+					}
+					else if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))	//if not powerupPierce and a wall
+					{
+						tVel->mDirection.y *= -1;
+					}
+					if (!(ComponentTable::GetInstance()->HasComponent(sphereID, PowerUpType) && GetComponent<PowerUpComponent>(sphereID)->HasPowerUp(Piercing) && !GetComponent<LabelComponent>(aabbID)->HasLabel(Wall)))
+					{
+					if (tNormDir.y > 0)
+					{
+						//save old position
+						float tOldY = pSphereTrans->mPosition.y;
 
-				if (tNormDir.y > 0)
-				{
-					//save old position
-					float tOldY = pSphereTrans->mPosition.y;
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y + pAABBColl->Dim.y + pSphereColl->Dim.x;
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+					}
+					else
+					{
+						//save old position
+						float tOldY = pSphereTrans->mPosition.y;
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
-				}
-				else
-				{
-					//save old position
-					float tOldY = pSphereTrans->mPosition.y;
+						//move the sphere to the edge of the box
+						pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
 
-					//move the sphere to the edge of the box
-					pSphereTrans->mPosition.y = pAABBTrans->mPosition.y - pAABBColl->Dim.y - pSphereColl->Dim.x;
+						//move out with the difference from old and edge position out
+						pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+					}
+					}
 
-					//move out with the difference from old and edge position out
-					pSphereTrans->mPosition.y += pSphereTrans->mPosition.y - tOldY;
+					
 				}
 			}
-		}
+
 
 		//Broadcast that there was a collision
 		unordered_map<string, void*> payload;
@@ -259,30 +287,45 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 		*id2 = pEntityID2;
 		payload["ID2"] = id2;
 		mEventManager->BroadcastEvent("Collision", payload);
-
+		}
 		//remove block
-		if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
+		if (ComponentTable::GetInstance()->HasComponent(sphereID, LabelType) &&
+			GetComponent<LabelComponent>(sphereID)->HasLabel(Ball))
 		{
-			LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
+			if (ComponentTable::GetInstance()->HasComponent(pEntityID1, LabelType))
+			{
+				LabelComponent* tLabel = GetComponent<LabelComponent>(pEntityID1);
 
-			if (tLabel->mLabel == Label::Box)		//if AABB is label Box, we remove it
-			{
-				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
-			}
-			else if (tLabel->mLabel == Label::BottomArea)		//if bottom area, we lose
-			{
-				//not sure if we need to send any specific data here
-				std::unordered_map<string, void*> tPayLoad;
-				EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
-			}
-			else if (tLabel->mLabel == Label::GoalBlock)
-			{
-				//remove entity
-				EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+				if (tLabel->HasLabel(Box))		//if AABB is label Box, we remove it
+				{
 
-				//send event
-				std::unordered_map<string, void*> tPayLoad;
-				EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+					if (ComponentTable::GetInstance()->HasComponent(pEntityID1, PowerUpContainType))
+					{
+						unordered_map<string, void*> payload;
+						EntityID* entID = new EntityID();
+						*entID = pEntityID1;
+						payload["EntityID"] = entID;
+						EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", payload);
+					}
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+				}
+				else if (tLabel->HasLabel(BottomArea))		//if bottom area, we lose
+				{
+					//not sure if we need to send any specific data here
+					std::unordered_map<string, void*> tPayLoad;
+					if (GetComponent<LabelComponent>(pEntityID2)->HasLabel(Ball))
+						EventManager::GetInstance()->BroadcastEvent("CollideWithBottom", tPayLoad);
+				}
+				else if (tLabel->HasLabel(GoalBlock))
+				{
+					//remove entity
+
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+
+					//send event
+					std::unordered_map<string, void*> tPayLoad;
+					EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+				}
 			}
 		}
 	}
