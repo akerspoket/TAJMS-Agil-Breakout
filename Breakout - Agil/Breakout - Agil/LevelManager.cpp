@@ -506,9 +506,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	vector<short> possiblePups;
 	possiblePups.push_back(SpeedUp);
-	possiblePups.push_back(BallNet);
-	possiblePups.push_back(Piercing);
-	possiblePups.push_back(MagnetPUp);
+	//possiblePups.push_back(BallNet);
+	//possiblePups.push_back(Piercing);
+	//possiblePups.push_back(MagnetPUp);
 
 
 	vector<float> pupDurations;

@@ -8,6 +8,7 @@
 #include "VelocityComponent.h"
 #include "TransformComponent.h"
 #include "LabelComponent.h"
+#include "PowerUpComponent.h"
 #include "GameState.h"
 
 VelocitySystem::VelocitySystem()
@@ -58,10 +59,20 @@ void VelocitySystem::Update(double pDeltaTime)
 				//Ensure that relevant components exist
 				if (tCompTable->HasComponent(i, VelocityType))
 				{
+					float speedFactor = 1;
+					if (ComponentTable::GetInstance()->HasComponent(i, PowerUpType)
+						&& GetComponent<PowerUpComponent>(i)->HasPowerUp(SpeedUp))
+						speedFactor *= 1.5;
+					float slomoSpeedFactor = GetComponent<TransformComponent>(i)->mPosition.y*-1;
+					if (ComponentTable::GetInstance()->HasComponent(i, PowerUpType) 
+						&& GetComponent<PowerUpComponent>(i)->HasPowerUp(SlowMotion)
+						&& GetComponent<TransformComponent>(i)->mPosition.y <= 0
+						&& GetComponent<VelocityComponent>(i)->mDirection.y <0)
+						speedFactor /= (slomoSpeedFactor*0.2)+1;
 
 					VelocityComponent* tVel = GetComponent<VelocityComponent>(i);
 					//Update position with velocity
-					tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime;
+					tTrans->mPosition += tVel->mDirection* tVel->mSpeed * (float)pDeltaTime * speedFactor;
 					if (GetComponent <LabelComponent>(i)->HasLabel(Ball))
 					{
 
