@@ -9,6 +9,8 @@ enum PowerUpType
 	Piercing = 0x04,
 	MagnetPUp = 0x08,
 	InvertDown = 0x10,
+
+	SlowMotion = 0x40,
 };
 
 enum PowerUpTimerLocation
@@ -18,6 +20,8 @@ enum PowerUpTimerLocation
 	PiercingLoc,
 	MagnetPUpLoc,
 	InvertDownLoc,
+
+	SlowMotionLoc,
 	NumPowerUps,
 };
 
