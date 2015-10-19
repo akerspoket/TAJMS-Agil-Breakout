@@ -11,7 +11,7 @@
 #include "LabelComponent.h"
 #include "GameState.h"
 #include "PowerUpComponent.h"
-
+#include "ScoreValueComponent.h"
 #include <cmath> //needed for linux... come on!
 
 
@@ -331,11 +331,12 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 				{
 					//remove entity
 
-					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
+	
 
 					//send event
 					std::unordered_map<string, void*> tPayLoad;
 					EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
 				}
 			}
 		}
@@ -347,7 +348,8 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			EntityManager* tEntManager = tEntManager->GetInstance();
 			ComponentTable* tCompTable = tCompTable->GetInstance();
 			int tMaxEnt = tEntManager->GetLastEntity();
-
+			bool tDidItCollide = false;
+			int tRemoveScore = 0;
 			//	for (int i = 0; i < tMaxEnt; i++)//
 			//{//
 			//CollisionComponent* tColl1 = GetComponent<CollisionComponent>(sphereID);
@@ -357,19 +359,19 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			TransformComponent* tTrans1 = GetComponent<TransformComponent>(sphereID);
 
 			//if (tCompTable->HasComponent(sphereID, CollisionType | TransformType | LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
-			//	{
+			//	{	
 
 			for (int k = 0; k < tMaxEnt; k++)
 			{
-				if (GetComponent<LabelComponent>(k)->HasLabel(Box) || GetComponent<LabelComponent>(k)->HasLabel(GoalBlock))
+				if (tCompTable->HasComponent(k, CollisionType | TransformType | LabelType) && (GetComponent<LabelComponent>(k)->HasLabel(Box) || GetComponent<LabelComponent>(k)->HasLabel(GoalBlock)))
 				{
 					CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
 					TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
 
 					//Handles everything about collision
-					
 					if (ExplosiveCollisionCheck(tColl1, tTrans1, tColl2, tTrans2))
 					{
+						tDidItCollide = false;
 						if (GetComponent<LabelComponent>(k)->HasLabel(Box))		//if AABB is label Box, we remove it
 						{
 
@@ -381,17 +383,23 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 								payload["EntityID"] = entID;
 								EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", payload);
 							}
+							//send event
+							//Broadcast that there was a collision
+							tRemoveScore += GetComponent<ScoreValueComponent>(k)->value;
+
 							EntityManager::GetInstance()->RemoveEntity(k);
 						}
 						else if (GetComponent<LabelComponent>(k)->HasLabel(GoalBlock))
 						{
 							//remove entity
 
-							EntityManager::GetInstance()->RemoveEntity(k);
+							
 
 							//send event
 							std::unordered_map<string, void*> tPayLoad;
 							EventManager::GetInstance()->BroadcastEvent("CollideWithGoalBlock", tPayLoad);
+
+							EntityManager::GetInstance()->RemoveEntity(k);
 						}
 					}
 				}
@@ -401,6 +409,19 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			//sätta tillbaks dimensions
 			GetComponent<CollisionComponent>(sphereID)->Dim.x /= 10;
 			GetComponent<CollisionComponent>(sphereID)->Dim.y /= 10;
+			//4123!!!
+			if (tRemoveScore != 0)
+			{
+				
+				unordered_map<string, void*> payload;
+				mEventManager->BroadcastEvent("FireBallSound", payload);
+				int* ScoreToRemove = new int();
+				*ScoreToRemove = tRemoveScore;
+				payload["ScoreToRemove"] = ScoreToRemove;
+				mEventManager->BroadcastEvent("RemoveScore", payload);
+				
+			}
+
 		}
 
 	}
