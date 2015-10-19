@@ -65,14 +65,14 @@ void EnemySystem::Update(double pDeltaTime)
 			}
 
 
-			if (pGoalBlockIDs.size() > 0)
+			if (pGoalBlockIDs.size() > 0 && mAviablePowerUps.size() > 0)
 			{
 				//random what ships shootin'
 				int random = rand() % 100;
 				int shipIDtoShoot = pGoalBlockIDs.size(); // max is everyone
 
-														  //if below 80, we use single ship
-				if (random < 60)
+														  //if below 80, we use single ship, id maxsize is all ships shootin
+				if (random < 80)
 				{
 					shipIDtoShoot = rand() % pGoalBlockIDs.size();
 				}
@@ -80,7 +80,7 @@ void EnemySystem::Update(double pDeltaTime)
 
 				for (int i = 0; i < pGoalBlockIDs.size(); i++)
 				{
-					if ((shipIDtoShoot == i || shipIDtoShoot == pGoalBlockIDs.size()) && mAviablePowerUps.size() > 0)
+					if ((shipIDtoShoot == i || shipIDtoShoot == pGoalBlockIDs.size()))
 					{
 						//random powerup
 						int powerUpIndex = rand() % mAviablePowerUps.size();
@@ -93,8 +93,17 @@ void EnemySystem::Update(double pDeltaTime)
 
 						EventManager::Payload tPayload;
 						EntityID* tID = new EntityID();
+						vec3* direction = new vec3();
+						float* speed = new float();
 						*tID = pGoalBlockIDs[i];
+						float xValue = rand() % 201;
+						xValue /= 100;
+						xValue -= 1;
+						*direction = vec3(xValue, -1, 0).Normalized();
+						*speed = 5;
 						tPayload["EntityID"] = tID;
+						tPayload["direction"] = direction;
+						tPayload["speed"] = speed;
 						EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", tPayload);
 
 						//remove component

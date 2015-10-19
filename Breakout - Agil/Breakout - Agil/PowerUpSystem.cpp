@@ -282,6 +282,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 			GetComponent<PowerUpContainComponenet>(tNewID)->duration = tPupContain->duration;
 			GetComponent<PowerUpContainComponenet>(tNewID)->type = tPupContain->type;
 			GetComponent<TransformComponent>(tNewID)->mPosition = GetComponent<TransformComponent>(entID)->mPosition;
+			GetComponent<VelocityComponent>(tNewID)->mDirection = *(vec3*)pEvent->mPayload["direction"];
+			GetComponent<VelocityComponent>(tNewID)->mSpeed = *(float*)pEvent->mPayload["speed"];
+
 			switch (tPupContain->type)
 			{
 			case SpeedUp:

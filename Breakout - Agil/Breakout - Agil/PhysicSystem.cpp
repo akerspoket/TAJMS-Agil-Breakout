@@ -303,8 +303,14 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 					{
 						unordered_map<string, void*> payload;
 						EntityID* entID = new EntityID();
+						vec3* direction = new vec3();
+						float* speed = new float();
 						*entID = pEntityID1;
+						*direction = vec3(0, -1, 0);
+						*speed = 5;
 						payload["EntityID"] = entID;
+						payload["direction"] = direction;
+						payload["speed"] = speed;
 						EventManager::GetInstance()->BroadcastEvent("SpawnPowerUp", payload);
 					}
 					EntityManager::GetInstance()->RemoveEntity(pEntityID1);
