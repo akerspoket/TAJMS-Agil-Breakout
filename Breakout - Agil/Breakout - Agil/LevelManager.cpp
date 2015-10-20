@@ -310,6 +310,7 @@ void LevelManager::Initialize()
 	tTrans = new TransformComponent();
 	tVelocity = new VelocityComponent();
 	tColl = new CollisionComponent();
+	tLabel = new LabelComponent();
 	PowerUpContainComponenet* tPupContain = new PowerUpContainComponenet();
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Boll.obj");
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");
@@ -320,11 +321,13 @@ void LevelManager::Initialize()
 	tPupContain->type = SpeedUp;
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = Sphere;
+	tLabel->AddLabel(PowerUpDown);
 	tPowerUpBlueprint[MeshType] = tMesh;
 	tPowerUpBlueprint[TransformType] = tTrans;
 	tPowerUpBlueprint[VelocityType] = tVelocity;
 	tPowerUpBlueprint[PowerUpContainType] = tPupContain;
 	tPowerUpBlueprint[CollisionType] = tColl;
+	tPowerUpBlueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
 
 
@@ -441,17 +444,103 @@ void LevelManager::GeneratePauseScreen()
 }
 
 
-void PoopLabels() //Silly method...put it in my bum now my bumholes numb and eats plums
+void LevelManager::PoopLabels() //Silly method...put it in my bum now my bumholes numb and eats plums
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
 	int tMaxEnt = tEntManager->GetLastEntity();
 
-	for (int i = 0; i > tMaxEnt; i++)
+	for (int i = 0; i < tMaxEnt; i++)
 	{
 		GetComponent<LabelComponent>(i)->mLabel = None;
 	}
 }
+
+void LevelManager::PoopPowerUps()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		tCompTable->RemoveComponent(i, PowerUpType);
+
+		//reset powerups
+		GetComponent<PowerUpComponent>(i)->powerUps = 0;
+
+		//reset all timers
+		for (int k = 0; k < NumPowerUps; k++)
+		{
+			GetComponent<PowerUpComponent>(i)->timers[k] = 0;
+		}
+		
+	}
+}
+
+void LevelManager::PoopPowerUpContainers()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (int i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(PowerUpDown))
+		{
+			tEntManager->RemoveEntity(i);
+		}
+	}
+}
+
+void LevelManager::ResetPad()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Pad))
+		{
+			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+			tTrans->mPosition = vec3(0, -8, 8);
+			GetComponent<VelocityComponent>(i)->mSpeed = 10.0f;
+		}
+	}
+}
+
+void LevelManager::ResetBall()
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+	int PadID = -1;
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Pad))
+		{
+			PadID = i;
+			i = tMaxEnt;
+		}
+	}
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
+		{
+			ComponentTable::GetInstance()->AddComponent(i, AttachedType);
+			AttachedComponent* tAtt = GetComponent<AttachedComponent>(i);
+			tAtt->attachedTo = PadID;
+			tAtt->relPos = vec3(0, 1.3, 0);
+			ComponentTable::GetInstance()->RemoveComponent(i, VelocityType);
+		}
+	}
+}
+
+
+
 void LevelManager::GenerateWorld(string pWorldName)
 {
 
@@ -506,9 +595,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	vector<short> possiblePups;
 	possiblePups.push_back(SpeedUp);
-	possiblePups.push_back(BallNet);
-	possiblePups.push_back(Piercing);
-	possiblePups.push_back(MagnetPUp);
+	//possiblePups.push_back(BallNet);
+	//possiblePups.push_back(Piercing);
+	//possiblePups.push_back(MagnetPUp);
 
 
 	vector<float> pupDurations;

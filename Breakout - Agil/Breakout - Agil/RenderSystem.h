@@ -19,6 +19,8 @@ public:
 private:
 	GraphicsInterface* mGraphicsInterface;
 	int mTempTextId;
+	int mLifeTextID;
 	int mScore; //stored twice. Nice
+	int mLifes; //stored twice as well, even niceer!
 };
 

@@ -20,6 +20,7 @@ public:
 
 private:
 	void RemovePower(EntityID id, short pMask);
+	void ApplySpeedPowerUp(float pTime);
 	void ApplyBallNetPowerUp(float pTime);
 	void ApplyPiercingPowerUp(float pTime);
 	void ApplyMagnetPowerUp(float pTime);

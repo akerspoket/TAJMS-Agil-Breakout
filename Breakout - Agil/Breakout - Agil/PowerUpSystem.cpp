@@ -101,6 +101,25 @@ void PowerUpSystem::Update(double pDeltaTime)
 }
 void PowerUpSystem::Pause() {}
 void PowerUpSystem::Stop() {}
+void PowerUpSystem::ApplySpeedPowerUp (float pTime)
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
+
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			{
+				tCompTable->AddComponent(i, PowerUpType);
+				GetComponent<PowerUpComponent>(i)->timers[SpeedUpLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(SpeedUp);
+			}
+		}
+	}
+}
 void PowerUpSystem::ApplyBallNetPowerUp(float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
@@ -194,13 +213,13 @@ void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 
 	for (size_t i = 0; i < tMaxEnt; i++)
 	{
-		if (tCompTable->HasComponent(i, LabelType))
+		if (tCompTable->HasComponent(i, LabelType | VelocityType))
 		{
-			if (GetComponent<LabelComponent>(i)->HasLabel(Pad))
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				tCompTable->AddComponent(i, PowerUpType);
-				GetComponent<PowerUpComponent>(i)->timers[InvertDownLoc] = pTime;
-				GetComponent<PowerUpComponent>(i)->AddPowerUp(InvertDown);
+				GetComponent<PowerUpComponent>(i)->timers[SlowMotionLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(SlowMotion);
 			}
 		}
 	}
@@ -250,8 +269,7 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		switch (mask)
 		{
 		case SpeedUp:
-			GetComponent<VelocityComponent>(entID)->mSpeed *= 3;
-			GetComponent<PowerUpComponent>(entID)->timers[SpeedUpLoc] = duration;
+			ApplySpeedPowerUp(duration);
 			break;
 		case BallNet:
 			///hitta bollen o lägga på en powercompennt förhåven på den.
@@ -322,7 +340,6 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 	case SpeedUpLoc:
 		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(SpeedUp))
 		{
-			GetComponent<VelocityComponent>(id)->mSpeed /= 3;
 			GetComponent<PowerUpComponent>(id)->RemovePowerUp(SpeedUp);
 		}
 		break;

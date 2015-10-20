@@ -147,3 +147,10 @@ void GraphicsInterface::DrawThisText(string pText, vec2 pPosition, float pSize, 
 {
 	mGraphicsEngine->DrawThisText(pText, pPosition, pSize, pSentenceID);
 }
+
+void GraphicsInterface::CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime)
+{
+#ifdef _WIN32
+	mGraphicsEngine->CreateParticleEmitter(pPosition, pColor, pEmitterLifetime, pDensity, pParticleLifetime);
+#endif
+}
