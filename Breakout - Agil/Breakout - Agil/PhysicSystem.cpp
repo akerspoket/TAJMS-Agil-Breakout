@@ -414,11 +414,16 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			{
 				
 				unordered_map<string, void*> payload;
+				EntityID* SphereID = new EntityID();
+				*SphereID = sphereID;
+				payload["SPHEREID"] = SphereID;
 				mEventManager->BroadcastEvent("FireBallSound", payload);
+				unordered_map<string, void*> payload1;
 				int* ScoreToRemove = new int();
 				*ScoreToRemove = tRemoveScore;
-				payload["ScoreToRemove"] = ScoreToRemove;
-				mEventManager->BroadcastEvent("RemoveScore", payload);
+				payload1["ScoreToRemove"] = ScoreToRemove;
+				mEventManager->BroadcastEvent("RemoveScore", payload1);
+				
 				
 			}
 

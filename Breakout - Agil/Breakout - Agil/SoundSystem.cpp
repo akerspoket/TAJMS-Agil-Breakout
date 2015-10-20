@@ -35,6 +35,7 @@ void SoundSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("Sound", this);
 	mEventManager->Subscribe("Collision", this);
+	//mEventManager->Subscribe("FireBallSound", this);
 	////LinuxSOundTest=)
 #ifdef LinuxSound
 	unsigned int tID;
@@ -102,4 +103,12 @@ void SoundSystem::OnEvent(Event * pEvent)
 			mEventManager->BroadcastEvent("Sound", tPayload);
 		}
 	}
+	//if (pEventID == "FireBallSound")
+	//{
+	//	unsigned int* tSoundIDptr = new unsigned int();
+	//	*tSoundIDptr = GetComponent<SoundCollisionComponent>(*(EntityID*)pEvent->mPayload["ID2"])->SoundID;
+	//	EventManager::Payload tPayload;
+	//	tPayload["SoundID"] = tSoundIDptr;
+	//	mEventManager->BroadcastEvent("Sound", tPayload);
+	//}
 }
