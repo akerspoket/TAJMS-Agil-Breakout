@@ -25,6 +25,8 @@ private:
 	void ApplyPiercingPowerUp(float pTime);
 	void ApplyMagnetPowerUp(float pTime);
 	void PowerUpSystem::MagnetPowerUp(EntityID pPadID, EntityID pPowerUpID);
+	void InvertPowerDown(float pTime);
+	void FireBallPowerUp(float pTime);
 	void ApplyInvertPowerDown(float pTime);
 	void ApplySlowMotionPowerUp(float pTime);
 };

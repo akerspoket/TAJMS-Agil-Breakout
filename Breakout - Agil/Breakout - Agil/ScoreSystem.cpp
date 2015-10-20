@@ -26,25 +26,26 @@ void ScoreSystem::Initialize()
 	mEventManager = mEventManager->GetInstance();
 	mEventManager->Subscribe("SetScore", this);
 	mEventManager->Subscribe("Collision", this);
+	mEventManager->Subscribe("RemoveScore", this);
 }
-void ScoreSystem::Start() 
+void ScoreSystem::Start()
 {
 
 }
-void ScoreSystem::Update(double pDeltaTime) 
+void ScoreSystem::Update(double pDeltaTime)
 {
 	//Draw the score
 
 }
-void ScoreSystem::Pause() 
+void ScoreSystem::Pause()
 {
 
 }
-void ScoreSystem::Stop() 
+void ScoreSystem::Stop()
 {
 
 }
-void ScoreSystem::OnEvent(Event* pEvent) 
+void ScoreSystem::OnEvent(Event* pEvent)
 {
 	EntityManager* tEntMan = tEntMan->GetInstance();
 	ComponentTable* tCompTable = tCompTable->GetInstance();
@@ -59,16 +60,16 @@ void ScoreSystem::OnEvent(Event* pEvent)
 	else if (pEvent->mID == "Collision")
 	{
 		int value = 0;
-		
-		
-		
+
+
+
 		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID1"], SoundCollisionType))
 		{
 			value += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID1"])->value;
 		}
 		if (ComponentTable::GetInstance()->HasComponent(*(EntityID*)pEvent->mPayload["ID2"], SoundCollisionType))
 		{
-			value  += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
+			value += GetComponent<ScoreValueComponent>(*(EntityID*)pEvent->mPayload["ID2"])->value;
 		}
 
 		if (tCompTable->HasComponent(*(EntityID*)pEvent->mPayload["ID2"], PowerUpType))
@@ -84,6 +85,11 @@ void ScoreSystem::OnEvent(Event* pEvent)
 		SendScore();
 
 		//cout << "Your score is:" << mScore << endl;
+	}
+	else if (pEvent->mID == "RemoveScore")
+	{
+		mScore -= *(int*)pEvent->mPayload["ScoreToRemove"];
+		SendScore();
 	}
 }
 

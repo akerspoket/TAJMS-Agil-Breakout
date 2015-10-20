@@ -224,7 +224,25 @@ void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 		}
 	}
 }
+void PowerUpSystem::FireBallPowerUp(float pTime) 
+{
+	EntityManager* tEntManager = tEntManager->GetInstance();
+	ComponentTable* tCompTable = tCompTable->GetInstance();
+	int tMaxEnt = tEntManager->GetLastEntity();
 
+	for (size_t i = 0; i < tMaxEnt; i++)
+	{
+		if (tCompTable->HasComponent(i, LabelType))
+		{
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			{
+				tCompTable->AddComponent(i, PowerUpType);
+				GetComponent<PowerUpComponent>(i)->timers[FireBallPUpLoc] = pTime;
+				GetComponent<PowerUpComponent>(i)->AddPowerUp(FireBall);
+			}
+		}
+	}
+}
 void PowerUpSystem::OnEvent(Event* pEvent)
 {
 	EntityManager* tEntMan = tEntMan->GetInstance();
@@ -269,6 +287,8 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 		case SlowMotion:
 			ApplySlowMotionPowerUp(duration);
 			break;
+		case FireBall:
+			FireBallPowerUp(duration);
 		}
 	}
 
@@ -298,6 +318,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 				break;
 			case MagnetPUp:
 				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupMagnet");
+				break;
+			case FireBall:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupFireBall");
 				break;
 			case SlowMotion:
 				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupSlomo");
@@ -345,6 +368,12 @@ void PowerUpSystem::RemovePower(EntityID id, short timerLocation)
 		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(InvertDown))
 		{
 			GetComponent<PowerUpComponent>(id)->RemovePowerUp(InvertDown);
+		}
+		break;
+	case FireBallPUpLoc:
+		if (GetComponent<PowerUpComponent>(id)->HasPowerUp(FireBall))
+		{
+			GetComponent<PowerUpComponent>(id)->RemovePowerUp(FireBall);
 		}
 		break;
 	case SlowMotionLoc:

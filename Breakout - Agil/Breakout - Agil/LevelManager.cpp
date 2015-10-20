@@ -317,7 +317,7 @@ void LevelManager::Initialize()
 	tTrans->mPosition = vec3(0, 0, 8);
 	tVelocity->mDirection = vec3(0, -1, 0);
 	tVelocity->mSpeed = 5;
-	tPupContain->duration = 2;
+	tPupContain->duration = 100;
 	tPupContain->type = SpeedUp;
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = Sphere;
@@ -548,8 +548,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	////////////////////DEBUG POWERUP//////////
 	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 3;
-	GetComponent<PowerUpContainComponenet>(tPupID)->type = InvertDown;
+	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 100;
+	GetComponent<PowerUpContainComponenet>(tPupID)->type = FireBall;
 
 
 
@@ -608,7 +608,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//Pup generation stuff
 	std::default_random_engine generator;
-	float chanceOfPup = 100;
+	float chanceOfPup = 0.000001f;
 	int max = 100 / chanceOfPup;
 
 	for (size_t i = 0; i < t_forLoopI; i++)
