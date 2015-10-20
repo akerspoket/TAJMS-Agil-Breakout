@@ -27,7 +27,22 @@ void EnemySystem::Initialize()
 
 	//DEBUG STUFF
 	mAviablePowerUps.push_back(Piercing);
-	mPowerUpTimes.push_back(5.0f);
+	mAviablePowerUps.push_back(SpeedUp);
+	mAviablePowerUps.push_back(BallNet);
+	mAviablePowerUps.push_back(Piercing);
+	mAviablePowerUps.push_back(MagnetPUp);
+	mAviablePowerUps.push_back(InvertDown);
+	mAviablePowerUps.push_back(FireBall);
+	mAviablePowerUps.push_back(SlowMotion);
+
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
 	
 }
 

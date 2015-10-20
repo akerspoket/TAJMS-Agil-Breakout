@@ -547,9 +547,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	PoopLabels();
 
 	////////////////////DEBUG POWERUP//////////
-	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 100;
-	GetComponent<PowerUpContainComponenet>(tPupID)->type = FireBall;
+	//EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
+	//GetComponent<PowerUpContainComponenet>(tPupID)->duration = 100;
+	//GetComponent<PowerUpContainComponenet>(tPupID)->type = FireBall;
 
 
 
@@ -595,16 +595,22 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	vector<short> possiblePups;
 	possiblePups.push_back(SpeedUp);
-	//possiblePups.push_back(BallNet);
-	//possiblePups.push_back(Piercing);
-	//possiblePups.push_back(MagnetPUp);
+	possiblePups.push_back(BallNet);
+	possiblePups.push_back(Piercing);
+	possiblePups.push_back(MagnetPUp);
+	possiblePups.push_back(InvertDown);
+	possiblePups.push_back(FireBall);
+	possiblePups.push_back(SlowMotion);
 
 
 	vector<float> pupDurations;
-	pupDurations.push_back(2); 
-	pupDurations.push_back(2);
-	pupDurations.push_back(2);
-	pupDurations.push_back(2);
+	pupDurations.push_back(3); 
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
 
 	//Pup generation stuff
 	std::default_random_engine generator;
