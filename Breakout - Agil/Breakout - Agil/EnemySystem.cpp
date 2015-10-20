@@ -82,6 +82,7 @@ void EnemySystem::Update(double pDeltaTime)
 				{
 					if ((shipIDtoShoot == i || shipIDtoShoot == pGoalBlockIDs.size()))
 					{
+	
 						//random powerup
 						int powerUpIndex = rand() % mAviablePowerUps.size();
 						int powerup = mAviablePowerUps[powerUpIndex];
