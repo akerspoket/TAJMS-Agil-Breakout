@@ -496,6 +496,10 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 30.0f, 0.02f), true);
 	}
+	else if (pMeshName == "Object/Cannon.obj")
+	{
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 6.0f, 1.0f), true);
+	}
 	else
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f), true);

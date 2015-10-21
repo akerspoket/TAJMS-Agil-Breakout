@@ -65,17 +65,16 @@ void ShipGunSystem::Update(double pDeltaTime)
 			vec2 u = ballDir * abs((ballHeightFromPad * (1 / cos(axisDirAngle))));//Direction vector * length of hypotenuse
 			vec2 ballIntersectPos = ballPos + u;
 
-
-			vec2 padEdges = vec2(padPos.x - padDims.x, padPos.x + padDims.x);
+			vec2 padEdges = vec2((padPos.x - padDims.x), (padPos.x + padDims.x));
 
 			//Check if intersect is on pad
-			if (ballIntersectPos.x > padPos.x - padDims.x && ballIntersectPos.x < padPos.x + padDims.x)
+			if (ballIntersectPos.x > padEdges.x && ballIntersectPos.x < padEdges.y)
 			{
 				//Fix cannon direction
 				mBallIntersectPos.y = ballIntersectPos.y;
 				//if (mBallIntersectPos.x > 
 				vec3 tCannonDirection = CalculateCannonDirection(ballIntersectPos, vec2(0, 0), padPos);
-				float angle = atan2(-1 * tCannonDirection.x, tCannonDirection.y) + 3.1415/2;
+				float angle = atan2(-1 * tCannonDirection.x, tCannonDirection.y);
 
 				if (angle > mCannonAngle)
 				{
@@ -116,7 +115,7 @@ void ShipGunSystem::Update(double pDeltaTime)
 				}
 
 
-				GetComponent<AttachedComponent>(tCannonID)->relPos.x = mCannonPos;
+				GetComponent<AttachedComponent>(tCannonID)->relPos.x = 1*mCannonPos;
 
 				//GetComponent<AttachedComponent>(tCannonID)->relPos.x = ballIntersectPos.x - padPos.x;
 

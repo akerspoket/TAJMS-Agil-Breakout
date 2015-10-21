@@ -336,7 +336,7 @@ void LevelManager::Initialize()
 	tMesh = new MeshComponent();
 	tLabel = new LabelComponent();
 	tTrans = new TransformComponent();
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Cannon.obj");
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Cannon");
 	tLabel->AddLabel(Cannon);
 	tCannonBlueprint[MeshType] = tMesh;
@@ -579,7 +579,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	tNewID = mEntityFactory->CreateEntity("Cannon");
 	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
 	GetComponent<AttachedComponent>(tNewID)->attachedTo = tPaddID;
-	GetComponent<AttachedComponent>(tNewID)->relPos = vec3(0,1.7,0);
+	GetComponent<AttachedComponent>(tNewID)->relPos = vec3(0,-0.1,0);
 
 
 
