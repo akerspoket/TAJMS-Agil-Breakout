@@ -16,7 +16,7 @@ ShipGunSystem::ShipGunSystem(string pName) :System(pName)
 {
 	mCannonAngle = 3.1415 / 2;
 	mCannonAngleFollowSpeed = 5;
-	mCannonFollowSpeed = 12;
+	mCannonFollowSpeed = 40;
 }
 ShipGunSystem::~ShipGunSystem() {}
 void ShipGunSystem::Initialize() {}
@@ -74,7 +74,7 @@ void ShipGunSystem::Update(double pDeltaTime)
 				mBallIntersectPos.y = ballIntersectPos.y;
 				//if (mBallIntersectPos.x > 
 				vec3 tCannonDirection = CalculateCannonDirection(ballIntersectPos, vec2(0, 0), padPos);
-				float angle = atan2(-1 * tCannonDirection.x, tCannonDirection.y);
+				float angle = atan2(-1 * tCannonDirection.x, tCannonDirection.y);// +3.1415 / 2;
 
 				if (angle > mCannonAngle)
 				{
