@@ -12,6 +12,7 @@
 #include "ScoreSystem.h"
 #include "GameState.h"
 #include "PowerUpSystem.h"
+#include "WaveSystem.h"
 
 Game1::Game1()
 {
@@ -34,6 +35,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	ScoreSystem* tScore = new ScoreSystem("ScoreSystem");
 	MenuSystem* tMenu = new MenuSystem("MenuSystem");
 	PowerUpSystem* tPowerUps = new PowerUpSystem("PowerUpSystem");
+	WaveSystem* tWave= new WaveSystem("WaveSystem");
 	
 	tRender->Initialize();
 	tRender->Initialize(pWin);
@@ -46,6 +48,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tScore->Initialize();
 	tMenu->Initialize();
 	tPowerUps->Initialize();
+	tWave->Initialize();
 
 	//set systems to game here
 	mSystems.push_back(tInput);
@@ -56,6 +59,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
 	mSystems.push_back(tPowerUps);
+	mSystems.push_back(tWave);
 	mSystems.push_back(tMenu);
 	mSystems.push_back(tRender);
 	

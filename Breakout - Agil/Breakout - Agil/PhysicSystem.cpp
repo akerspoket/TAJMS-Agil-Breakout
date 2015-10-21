@@ -22,6 +22,7 @@ PhysicSystem::PhysicSystem()
 
 PhysicSystem::PhysicSystem(string pName) :System(pName)
 {
+
 }
 
 PhysicSystem::~PhysicSystem()
@@ -365,6 +366,10 @@ void PhysicSystem::AABBvsSphere(EntityID pEntityID1, EntityID pEntityID2, Collis
 			{
 				if (tCompTable->HasComponent(k, CollisionType | TransformType | LabelType) && (GetComponent<LabelComponent>(k)->HasLabel(Box) || GetComponent<LabelComponent>(k)->HasLabel(GoalBlock)))
 				{
+					//if (GetComponent<LabelComponent>(k)->HasLabel(Box) && GetComponent<LabelComponent>(k)->HasLabel(Waveable))
+					//{
+					//	int hejsan = 0;
+					//}
 					CollisionComponent* tColl2 = GetComponent<CollisionComponent>(k);
 					TransformComponent* tTrans2 = GetComponent<TransformComponent>(k);
 

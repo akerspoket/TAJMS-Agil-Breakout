@@ -164,6 +164,7 @@
     <ClCompile Include="TextFileReader.cpp" />
     <ClCompile Include="TriggerSystem.cpp" />
     <ClCompile Include="VelocitySystem.cpp" />
+    <ClCompile Include="WaveSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttachedComponent.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="VelocityComponent.h" />
     <ClInclude Include="VelocityForceComponent.h" />
     <ClInclude Include="VelocitySystem.h" />
+    <ClInclude Include="WaveSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsEngine.h" />
