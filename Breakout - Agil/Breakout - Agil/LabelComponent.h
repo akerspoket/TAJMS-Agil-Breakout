@@ -12,6 +12,7 @@ enum Label
 	Wall = 0x80,
 	PowerUpDown = 0x100,
 	Waveable = 0x200,
+	Cannon = 0x400,
 };
 
 

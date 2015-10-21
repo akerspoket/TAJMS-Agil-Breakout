@@ -101,11 +101,15 @@ void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned in
 		InstanceBufferType tFinished;
 		XMMATRIX trans;
 		trans = XMMatrixTranslation(pTransformMatrices[i].mPosition.x, pTransformMatrices[i].mPosition.y, pTransformMatrices[i].mPosition.z);
-		XMVECTOR orientation;
-		orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w));
+		//XMVECTOR orientation;
+		//orientation = XMLoadFloat4(&XMFLOAT4(pTransformMatrices[i].mQuatRotation.x, pTransformMatrices[i].mQuatRotation.y, pTransformMatrices[i].mQuatRotation.z, pTransformMatrices[i].mQuatRotation.w));
 
-		XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
-		XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot*trans));
+		////orientation = XMLoadFloat4(&XMFLOAT4(1,0,0,1));
+
+		//XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
+		XMMATRIX rot2 = XMMatrixRotationZ(pTransformMatrices[i].mQuatRotation.x);
+
+		XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot2*trans));
 
 		tMatrixVector.push_back(tFinished); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
 	}

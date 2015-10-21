@@ -333,6 +333,20 @@ void LevelManager::Initialize()
 	mEntityFactory->RegisterEntityTemplate("DEBUGPUP", tPowerUpBlueprint);
 
 
+	///////////Cannon////////////
+	EntityFactory::EntityBlueprint tCannonBlueprint;
+	tMesh = new MeshComponent();
+	tLabel = new LabelComponent();
+	tTrans = new TransformComponent();
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Cannon.obj");
+	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Cannon");
+	tLabel->AddLabel(Cannon);
+	tCannonBlueprint[MeshType] = tMesh;
+	tCannonBlueprint[LabelType] = tLabel;
+	tCannonBlueprint[TransformType] = tTrans;
+	mEntityFactory->RegisterEntityTemplate("Cannon", tCannonBlueprint);
+
+
 
 }
 void LevelManager::GenerateMainMenu()
@@ -549,9 +563,9 @@ void LevelManager::GenerateWorld(string pWorldName)
 	PoopLabels();
 
 	////////////////////DEBUG POWERUP//////////
-	EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
-	GetComponent<PowerUpContainComponenet>(tPupID)->duration = 100;
-	GetComponent<PowerUpContainComponenet>(tPupID)->type = FireBall;
+	//EntityID tPupID = mEntityFactory->CreateEntity("DEBUGPUP");
+	//GetComponent<PowerUpContainComponenet>(tPupID)->duration = 100;
+	//GetComponent<PowerUpContainComponenet>(tPupID)->type = FireBall;
 
 
 
@@ -563,6 +577,15 @@ void LevelManager::GenerateWorld(string pWorldName)
 	int derp = GetComponent<LabelComponent>(tNewID)->mLabel;
 	GetComponent<VelocityComponent>(tNewID)->mSpeed = 10.0f;
 	
+	/////////////////CANNON//////////////////////
+	tNewID = mEntityFactory->CreateEntity("Cannon");
+	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
+	GetComponent<AttachedComponent>(tNewID)->attachedTo = tPaddID;
+	GetComponent<AttachedComponent>(tNewID)->relPos = vec3(0,2.5/2,0);
+	GetComponent<TransformComponent>(tNewID)->mQuatRotation.x = 1; // exit angle
+
+
+
 	/////TEST ADDING SPEEDUP POWERUP////////
 	//ComponentTable::GetInstance()->AddComponent(tNewID, PowerUpType);
 	//unordered_map<string, void*> pupPayload;
@@ -597,16 +620,22 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	vector<short> possiblePups;
 	possiblePups.push_back(SpeedUp);
-	//possiblePups.push_back(BallNet);
-	//possiblePups.push_back(Piercing);
-	//possiblePups.push_back(MagnetPUp);
+	possiblePups.push_back(BallNet);
+	possiblePups.push_back(Piercing);
+	possiblePups.push_back(MagnetPUp);
+	possiblePups.push_back(InvertDown);
+	possiblePups.push_back(FireBall);
+	possiblePups.push_back(SlowMotion);
 
 
 	vector<float> pupDurations;
-	pupDurations.push_back(2); 
-	pupDurations.push_back(2);
-	pupDurations.push_back(2);
-	pupDurations.push_back(2);
+	pupDurations.push_back(3); 
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
+	pupDurations.push_back(3);
 
 	//Pup generation stuff
 	std::default_random_engine generator;

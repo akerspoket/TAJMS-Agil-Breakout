@@ -153,6 +153,12 @@
     <ClCompile Include="DirXParticle.cpp">
       <Filter>Source Files\Graphic</Filter>
     </ClCompile>
+    <ClCompile Include="EnemySystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipGunSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="WaveSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -313,6 +319,12 @@
     </ClInclude>
     <ClInclude Include="DirXParticle.h">
       <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipGunSystem.h">
+      <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="WaveSystem.h">
       <Filter>Header Files</Filter>

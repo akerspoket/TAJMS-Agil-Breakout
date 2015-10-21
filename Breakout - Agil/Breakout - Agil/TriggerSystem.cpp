@@ -239,8 +239,8 @@ void TriggerSystem::OnEvent(Event* pEvent)
 			{
 				tCompTable->RemoveComponent(i, AttachedType);
 				tCompTable->AddComponent(i, VelocityType);
-				GetComponent<VelocityComponent>(i)->mDirection = vec3(1, 1, 0).Normalized();
-				GetComponent<VelocityComponent>(i)->mSpeed = 12;
+				GetComponent<VelocityComponent>(i)->mDirection = vec3(0.6, 1, 0).Normalized();
+				GetComponent<VelocityComponent>(i)->mSpeed = 8;
 			}
 		}
 	}
@@ -249,7 +249,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = LabelType;
-			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			if (tCompTable->HasComponent(i, pMask) &|& GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				if (GetComponent<VelocityComponent>(i)->mSpeed == 12)
 				{

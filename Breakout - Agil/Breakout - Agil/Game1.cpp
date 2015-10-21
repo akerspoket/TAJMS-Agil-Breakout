@@ -13,6 +13,8 @@
 #include "GameState.h"
 #include "PowerUpSystem.h"
 #include "WaveSystem.h"
+#include "ShipGunSystem.h"
+#include "EnemySystem.h"
 
 Game1::Game1()
 {
@@ -35,6 +37,8 @@ bool Game1::Initialize(SDL_Window* pWin)
 	ScoreSystem* tScore = new ScoreSystem("ScoreSystem");
 	MenuSystem* tMenu = new MenuSystem("MenuSystem");
 	PowerUpSystem* tPowerUps = new PowerUpSystem("PowerUpSystem");
+	ShipGunSystem* tGunSystem = new ShipGunSystem("ShipGunSystem");
+	EnemySystem* tEnemy = new EnemySystem("EnemySystem");
 	WaveSystem* tWave= new WaveSystem("WaveSystem");
 	
 	tRender->Initialize();
@@ -48,6 +52,8 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tScore->Initialize();
 	tMenu->Initialize();
 	tPowerUps->Initialize();
+	tEnemy->Initialize();
+	tGunSystem->Initialize();
 	tWave->Initialize();
 
 	//set systems to game here
@@ -55,12 +61,14 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tVel);
 	mSystems.push_back(tPhysics);
 	mSystems.push_back(tTrigger);
+	mSystems.push_back(tGunSystem);
 	mSystems.push_back(tAtt);
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
 	mSystems.push_back(tPowerUps);
 	mSystems.push_back(tWave);
 	mSystems.push_back(tMenu);
+	mSystems.push_back(tEnemy);
 	mSystems.push_back(tRender);
 	
 	GameStateClass::GetInstance()->SetGameState(GameState::MenuScreen);

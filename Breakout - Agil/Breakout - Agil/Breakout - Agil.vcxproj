@@ -138,6 +138,7 @@
     <ClCompile Include="AttachSystem.cpp" />
     <ClCompile Include="ComponentTable.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="EnemySystem.cpp" />
     <ClCompile Include="DirXParticle.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="PowerUpSystem.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="ScoreSystem.cpp" />
+    <ClCompile Include="ShipGunSystem.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="StorageShelf.cpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="ComponentTable.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="EnemySystem.h" />
     <ClInclude Include="DirXParticle.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="ScoreSystem.h" />
     <ClInclude Include="ScoreValueComponent.h" />
+    <ClInclude Include="ShipGunSystem.h" />
     <ClInclude Include="SoundCollisionComponent.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="SoundSystem.h" />
