@@ -580,6 +580,7 @@ void LevelManager::GenerateWorld(string pWorldName)
 	ComponentTable::GetInstance()->AddComponent(tNewID, AttachedType);
 	GetComponent<AttachedComponent>(tNewID)->attachedTo = tPaddID;
 	GetComponent<AttachedComponent>(tNewID)->relPos = vec3(0,2.5/2,0);
+	GetComponent<TransformComponent>(tNewID)->mQuatRotation.x = 1; // exit angle
 
 
 

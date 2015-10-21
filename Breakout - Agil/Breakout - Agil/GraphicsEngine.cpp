@@ -482,7 +482,7 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	}
 	else if (pMeshName == "Object/Boll.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.5f, 0.5f, 0.5f), true);
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(0.3f, 0.3f, 0.3f), true);
 	}
 	else if (pMeshName == "Object/Button.obj")
 	{
@@ -498,7 +498,7 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	}
 	else if (pMeshName == "Object/Cannon.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 9.0f, 1.0f), true);
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 5.0f, 1.0f), true);
 	}
 	else
 	{
