@@ -336,7 +336,7 @@ void LevelManager::Initialize()
 	tMesh = new MeshComponent();
 	tLabel = new LabelComponent();
 	tTrans = new TransformComponent();
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
+	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Cannon.obj");
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Cannon");
 	tLabel->AddLabel(Cannon);
 	tCannonBlueprint[MeshType] = tMesh;
