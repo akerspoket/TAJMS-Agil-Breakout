@@ -99,8 +99,9 @@ public:
 	void EndDraw();
 	int CreateNewText(int pMaxCharacters);
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
-	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity,vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize);
+	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity,vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID);
 	int ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity);
+	void DrawParticles();
 
 	void DrawBackground();
 private:

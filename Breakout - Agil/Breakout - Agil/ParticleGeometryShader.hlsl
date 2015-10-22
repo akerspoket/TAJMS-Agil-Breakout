@@ -6,6 +6,7 @@ struct GeoInputType
 	float blend : BLEND;
 	float LifeTime : LIFETIME;
 	float LifeLength : LIFELENGTH;
+	float TextureID : TEXID;
 };
 
 cbuffer MatrixBuffer : register(b0)
@@ -21,6 +22,7 @@ struct GOut
 	float3 color : COLOR0;
 	float blend : BLEND;
 	float2 texCoord : TEXCOORD;
+	float TextureID : TEXID;
 };
 
 [maxvertexcount(4)]
@@ -52,6 +54,7 @@ void main(point GeoInputType gin[1], uint primID : SV_PrimitiveID, inout Triangl
 		gout.color = gin[0].color;
 		gout.blend = gin[0].blend;
 		gout.texCoord = t[i];
+		gout.TextureID = gin[0].TextureID;
 		triStream.Append(gout);
 	}
 	

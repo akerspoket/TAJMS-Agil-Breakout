@@ -12,17 +12,17 @@ DirXParticle::~DirXParticle()
 {
 }
 
-int DirXParticle::AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity, vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize)
+int DirXParticle::AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity, vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID)
 {
 	for (size_t i = 0; i < mEmitters.size(); i++)
 	{
 		if (mEmitters[i].LifeTime < 0)
 		{
-			mEmitters[i] = Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize);
+			mEmitters[i] = Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize, pTextureID);
 			return i;
 		}
 	}
-	mEmitters.push_back(Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize));
+	mEmitters.push_back(Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize, pTextureID));
 	return mEmitters.size() - 1;
 }
 
