@@ -100,6 +100,7 @@ public:
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity,vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize);
 	int ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity);
+	void DrawParticles();
 private:
 
 	struct ConstantBufferType

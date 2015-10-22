@@ -121,7 +121,8 @@ void RenderSystem::Update(double pDeltaTime)
 	
 	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
-		mGraphicsInterface->EndDraw();
+	mGraphicsInterface->DrawParticles();
+	mGraphicsInterface->EndDraw();
 
 	
 }

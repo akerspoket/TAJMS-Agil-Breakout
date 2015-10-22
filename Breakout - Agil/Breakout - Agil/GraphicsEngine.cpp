@@ -387,8 +387,19 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 }
 void GraphicsEngine::EndDraw()
 {
-	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
 	
+
+	swapchain->Present(1, 0);
+	float color[] = { 0.0f,0.2f,0.4f,1.0f };
+	devcon->ClearRenderTargetView(backbuffer, color);
+	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
+
+}
+void GraphicsEngine::DrawParticles()
+{
+	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
+
 
 	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
@@ -399,15 +410,8 @@ void GraphicsEngine::EndDraw()
 	mParticleSystem->DrawParticles(mBuffers[mWVPBufferID.bufferID]);
 
 	devcon->OMSetBlendState(0, 0, 0xffffffff);
-
-	swapchain->Present(1, 0);
-	float color[] = { 0.0f,0.2f,0.4f,1.0f };
-	devcon->ClearRenderTargetView(backbuffer, color);
-	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
-
 }
-
 
 bool GraphicsEngine::CreateShader(ShaderType pType, void* oShaderHandle, LPCWSTR pShaderFileName, LPCSTR pEntryPoint, ID3D11InputLayout** oInputLayout, D3D11_INPUT_ELEMENT_DESC pInputDescription[], int pArraySize)
 {

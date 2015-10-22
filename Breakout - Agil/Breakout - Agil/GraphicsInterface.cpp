@@ -137,7 +137,12 @@ int GraphicsInterface::GetTextureID(TextureNames pName)
 	}
 	return 1;
 }
-
+void GraphicsInterface::DrawParticles()
+{
+#ifdef _WIN32
+	return mGraphicsEngine->DrawParticles();
+#endif
+}
 int GraphicsInterface::CreateText(int pMaxCharacters)
 {
 	int retValue = mGraphicsEngine->CreateNewText(pMaxCharacters);
@@ -161,3 +166,4 @@ int GraphicsInterface::UpdateEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVe
 	return mGraphicsEngine->ChangeEmitterPos(pEmitterID, pPosition, pVelocity);
 #endif
 }
+

@@ -38,6 +38,7 @@ public:
 	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos, SDL_Window* pWin);
 	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize);
 	int UpdateEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity);
+	void DrawParticles();
 	static GraphicsInterface* GetSingleton();
 private: 
 	GraphicsInterface();
