@@ -639,7 +639,8 @@ void LevelManager::GenerateWorld(string pWorldName)
 
 	//Pup generation stuff
 	std::default_random_engine generator;
-	float chanceOfPup = 0.000001f;
+	float chanceOfPup = 100.0f;
+	//float chanceOfPup = 0.000001f;
 	int max = 100 / chanceOfPup;
 
 	for (size_t i = 0; i < t_forLoopI; i++)
