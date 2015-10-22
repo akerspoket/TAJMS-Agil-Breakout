@@ -331,7 +331,7 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
 	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
 
-	mParticleTexID = CreateTexture(L"Textures/Particle4.dds");
+	mParticleTexID = CreateTexture(L"Textures/ParticleSampler.dds"); //particle4
 	//mParticleTexID = CreateTexture(L"Textures/VitPlupp.dds");
 	hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
@@ -664,9 +664,9 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 
 }
 
-int GraphicsEngine::CreateParticleEmitter(vec3 pPosition,vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize)
+int GraphicsEngine::CreateParticleEmitter(vec3 pPosition,vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID)
 {
-	return mParticleSystem->AddNewEmitter(pPosition, pColor, pEmitterLifetime,pDensity,pVelocity, pParticleLifetime, pSpeedMulti, pSpread, pStartSize);
+	return mParticleSystem->AddNewEmitter(pPosition, pColor, pEmitterLifetime,pDensity,pVelocity, pParticleLifetime, pSpeedMulti, pSpread, pStartSize, pTextureID);
 }
 
 void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize)

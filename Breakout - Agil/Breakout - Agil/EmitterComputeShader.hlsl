@@ -6,7 +6,7 @@ struct Emitter
 	float Density;
 	float3 Velocity;
 	float ParticleLifeTime;
-	float filler;
+	float TextureID;
 	float SpeedMulti;
 	float Spread;
 	float StartSize;
@@ -24,6 +24,7 @@ struct Particle
 	float Size;
 	float Blend;
 	float StartSize;
+	float TextureID;
 };
 
 cbuffer Emitters : register(b1)
@@ -57,6 +58,7 @@ void main( uint3 threadID : SV_DispatchThreadID )
 	{
 		if (EmitterInfo[i].LifeTime > 0)
 		{
+			NewParticle.TextureID = EmitterInfo[i].TextureID;
 			for (int j = 0; j < EmitterInfo[i].Density; j++)
 			{
 				output[0].Speed++;

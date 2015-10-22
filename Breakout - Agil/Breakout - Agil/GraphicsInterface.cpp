@@ -153,10 +153,10 @@ void GraphicsInterface::DrawThisText(string pText, vec2 pPosition, float pSize, 
 	mGraphicsEngine->DrawThisText(pText, pPosition, pSize, pSentenceID);
 }
 
-int GraphicsInterface::CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize)
+int GraphicsInterface::CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID)
 {
 #ifdef _WIN32
-	return mGraphicsEngine->CreateParticleEmitter(pPosition, pColor, pEmitterLifetime, pDensity,pVelocity, pParticleLifetime, pSpeedMulti, pSpread, pStartSize);
+	return mGraphicsEngine->CreateParticleEmitter(pPosition, pColor, pEmitterLifetime, pDensity,pVelocity, pParticleLifetime, pSpeedMulti, pSpread, pStartSize, pTextureID);
 #endif
 }
 

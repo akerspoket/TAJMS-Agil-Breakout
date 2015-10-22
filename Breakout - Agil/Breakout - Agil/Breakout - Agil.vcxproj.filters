@@ -475,6 +475,12 @@
     <Image Include="Textures\Particle4.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Textures\Sparks.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\ParticleSampler.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs">

@@ -11,6 +11,7 @@ struct VOut
 	float blend : BLEND;
 	float LifeTime : LIFETIME;
 	float LifeLength : LIFELENGTH;
+	float TextureID : TEXID;
 };
 
 struct Particle
@@ -24,6 +25,7 @@ struct Particle
 	float Size;
 	float Blend;
 	float StartSize;
+	float TextureID;
 };
 
 StructuredBuffer<Particle> particleBuffer: register(u0);
@@ -31,6 +33,7 @@ StructuredBuffer<Particle> particleBuffer: register(u0);
 VOut main( VertexInputType input,uint instanceID : SV_InstanceID)
 {
 	VOut output;
+	output.TextureID = particleBuffer[input.vertexID].TextureID;
 	output.color = particleBuffer[input.vertexID].Color;
 	output.position = float4(particleBuffer[input.vertexID].Position, 1.0f);
 	output.LifeTime = particleBuffer[input.vertexID].LifeTime;

@@ -148,14 +148,14 @@ void RenderSystem::OnEvent(Event* pEvent)
 		{
 			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
 			tPos.z -= 1;
-			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 4.2f, 1.0f, 0, 0.7f);
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 0.2f, 1.0f, 0, 0.7f,3);
 		}
 		EntityID entID2 = *(EntityID*)pEvent->mPayload["ID2"];
 		if (GetComponent<LabelComponent>(entID2)->HasLabel(Box))
 		{
 			vec3 tPos = GetComponent<TransformComponent>(entID2)->mPosition;
 			tPos.z -= 1;
-			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 4.2f, 1.0f, 0, 0.7f);
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 0.2f, 1.0f, 0, 0.7f,3);
 		}
 	}
 
