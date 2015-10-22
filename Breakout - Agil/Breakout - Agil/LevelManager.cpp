@@ -17,6 +17,7 @@
 #include "ScoreValueComponent.h"
 #include "PowerUpComponent.h"
 #include "PowerUpContainComponent.h"
+#include "EmitterComponent.h"
 #include <random>
 
 #include "MenyButtonComponent.h"
@@ -177,9 +178,22 @@ void LevelManager::Initialize()
 	tLabel = new LabelComponent();
 	tVelocity = new VelocityComponent();
 	tColl = new CollisionComponent();
+	EmitterComponent* tEmit = new EmitterComponent();
 
 	//We set the label here since it never changes
 	tLabel->AddLabel(Ball);
+	tEmit->Attached[0] = true;
+	int tEmitterID = tGraphicsInterFace->CreateParticleEmitter(vec3(-5000, 0, 0), vec3(1, 0, 0), 9000, 1,vec3(0,0,0), 0.6f, 0.2f, 0.2f, 1.0f);
+	tEmit->EmitterID[0] = tEmitterID;
+	tEmit->Timers[0] = 9000;
+	tEmit->Attached[1] = true;
+	tEmitterID = tGraphicsInterFace->CreateParticleEmitter(vec3(-5000, 0, 0), vec3(1, 1, 0), 9000, 1, vec3(0, 0, 0), 0.6f, 0.2f, 0.2f, 1.0f);
+	tEmit->EmitterID[1] = tEmitterID;
+	tEmit->Attached[2] = true;
+	tEmit->Timers[1] = 9000;
+	tEmit->Timers[2] = 9000;
+	tEmitterID = tGraphicsInterFace->CreateParticleEmitter(vec3(-5000, 0, 0), vec3(0, 1, 1), 9000, 1, vec3(0, 0, 0), 0.6f, 0.2f, 0.2f, 1.0f);
+	tEmit->EmitterID[2] = tEmitterID;
 
 	tColl->mType = CollisionGeo::Sphere;
 	tColl->Dim.x = 0.2f;
@@ -189,6 +203,7 @@ void LevelManager::Initialize()
 	tBallBlueprint[MeshType] = tMesh;
 	tBallBlueprint[LabelType] = tLabel;
 	tBallBlueprint[CollisionType] = tColl;
+	tBallBlueprint[EmitterType] = tEmit;
 
 	mEntityFactory->RegisterEntityTemplate("Ball", tBallBlueprint);
 

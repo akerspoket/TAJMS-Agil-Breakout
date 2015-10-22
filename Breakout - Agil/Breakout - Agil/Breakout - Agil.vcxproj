@@ -173,6 +173,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DirXParticle.h" />
+    <ClInclude Include="EmitterComponent.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Event.h" />
@@ -275,6 +276,7 @@
     <Image Include="Textures\Background.png" />
     <Image Include="Textures\BoxTexture2.png" />
     <Image Include="Textures\CanonBall.png" />
+    <Image Include="Textures\EmptyTransparent.png" />
     <Image Include="Textures\Exit.png" />
     <Image Include="Textures\ExitButtonTexture.png" />
     <Image Include="Textures\GoalTexture.png" />
@@ -285,6 +287,9 @@
     <Image Include="Textures\Letters.DDS" />
     <Image Include="Textures\MainMenuButtonTexture.png" />
     <Image Include="Textures\OptionsButtonTexture.png" />
+    <Image Include="Textures\Particle4.png" />
+    <Image Include="Textures\ParticleSpread.png" />
+    <Image Include="Textures\ParticleTextureScatter.png" />
     <Image Include="Textures\RestartLevelButtonTexture.png" />
     <Image Include="Textures\ResumeButtonTexture.png" />
     <Image Include="Textures\RightSideBeach.dds" />
@@ -295,6 +300,8 @@
     <Image Include="Textures\StartButtonTexture.dds" />
     <Image Include="Textures\StartButtonTexture.png" />
     <Image Include="Textures\TutorialButtonTexture.png" />
+    <Image Include="Textures\VitPlupp.dds" />
+    <Image Include="Textures\VitPlupp.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

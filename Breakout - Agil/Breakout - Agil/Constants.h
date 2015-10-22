@@ -24,6 +24,7 @@ enum ComponentType
 	MenyButtonType = 0x400,
 	PowerUpType = 0x800,
 	PowerUpContainType = 0x1000,
+	EmitterType = 0x2000,
 };
 
 // 0x01 ==   1 == "00000001"

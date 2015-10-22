@@ -311,6 +311,9 @@
     <ClInclude Include="DirXParticle.h">
       <Filter>Header Files\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="EmitterComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game1.h">
@@ -452,6 +455,24 @@
       <Filter>Resource Files\ButtonTextures</Filter>
     </Image>
     <Image Include="Textures\CanonBall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\ParticleSpread.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\ParticleTextureScatter.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\EmptyTransparent.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\VitPlupp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\VitPlupp.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Particle4.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

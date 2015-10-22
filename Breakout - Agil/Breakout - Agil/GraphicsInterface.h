@@ -36,7 +36,8 @@ public:
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 	void EndDraw(); //Call this at the end of drawing multiple objects
 	void Initialize(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos, SDL_Window* pWin);
-	void CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime);
+	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize);
+	int UpdateEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity);
 	static GraphicsInterface* GetSingleton();
 private: 
 	GraphicsInterface();
