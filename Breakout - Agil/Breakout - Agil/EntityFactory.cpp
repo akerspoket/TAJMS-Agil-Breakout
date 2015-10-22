@@ -15,6 +15,7 @@
 #include "MenyButtonComponent.h"
 #include "PowerUpComponent.h"
 #include "PowerUpContainComponent.h"
+#include "EmitterComponent.h"
 
 #include <string.h> //needed for linux
 
@@ -117,6 +118,10 @@ EntityID EntityFactory::CreateEntity(std::string pTemplateName)
 		else if (iter->first == ComponentType::PowerUpContainType)
 		{
 			memcpy(GetComponent<PowerUpContainComponenet>(tNewEntityID), iter->second, sizeof(PowerUpContainComponenet));
+		}
+		else if (iter->first == ComponentType::EmitterType)
+		{
+			memcpy(GetComponent<EmitterComponent>(tNewEntityID), iter->second, sizeof(EmitterComponent));
 		}
 
 
