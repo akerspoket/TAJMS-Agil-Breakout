@@ -7,6 +7,7 @@ GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
 	mObjLoader = new ObjLoader();
+	mHeightmapLoader = new HeightmapLoader();
 }
 
 
@@ -276,7 +277,20 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
 	SetActiveShader(PixelShader, mPixelShader);
 
+	vector<Vertex> tVertices = mHeightmapLoader->CreateHeightmapFromFile("Heightmap2.raw", 50, 50, 35, 47);
+	
+	ZeroMemory(&bd, sizeof(bd));
 
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(Vertex) * tVertices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	mBackgroundBufferID = CreateObjectBuffer(bd, tVertices.size());
+	PushToDevice(mObjectBuffers[mBackgroundBufferID].vertexDescription, tVertices.data(), bd.ByteWidth);
+
+	//Making the water plane
+	mWaterPlaneBufferID = CreateObject("Object/Background.obj");
+	mWaterPlaneTextureID = CreateTexture(L"Texture/WaterPlane.dds");
 }
 
 
@@ -321,6 +335,7 @@ void GraphicsEngine::EndDraw()
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
 }
 
 
@@ -456,14 +471,7 @@ int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescriptio
 
 }
 
-void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, int& pTextureID) //vet inte om detta stämmer
-{
-	if (pTextureName == "Placeholder")
-	{
-		pTextureGroup = 0;
-		pTextureID = 1;
-	}
-}
+
 
 int GraphicsEngine::CreateObject(string pMeshName)
 {
@@ -496,6 +504,7 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(3.0f, 30.0f, 0.02f), true);
 	}
+
 	else
 	{
 		tVertices = mObjLoader->LoadObj(pMeshName, vec3(1.0f, 1.0f, 1.0f), true);
@@ -590,5 +599,14 @@ void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize
 	PushToDevice(pText->vertexDescription, tTextVertices.data(), tTextVertices.size() * sizeof(TextVertex));
 	pText->numberOfIndices = tTextVertices.size();
 	
+}
+
+void GraphicsEngine::DrawBackground()
+{
+	vector<InstanceBufferType> tForTry;
+	InstanceBufferType tTemp;
+	XMStoreFloat4x4(&tTemp.translationMatrices, XMMatrixIdentity());
+	tForTry.push_back(tTemp);
+	DrawObjects(mBackgroundBufferID, tForTry, 4);
 }
 #endif

@@ -19,6 +19,7 @@
 #include "ObjLoader.h"
 #include <string>
 #include "DirXParticle.h"
+#include "HeightmapLoader.h"
 #ifdef DEBUG
 	#include <iostream>
 #endif // DEBUG
@@ -92,13 +93,14 @@ public:
 	void CleanD3D(void);         // close
 	void InitGraphics(float pFoVAngleY, float pHeight, float pWidth, float pNear, float pFar, float pZPos);
 	int CreateObject(string pMeshName);
-	void GetTextureID(const char* pTetureName, int& pTextureGroup, int& pTextureID);
+
 	void DrawObjects(int pMeshType, vector<InstanceBufferType> pInstanceBufferData, int pTextureBuffer);
 	int CreateTexture(const wchar_t *pFileName);
 	void EndDraw();
 	int CreateNewText(int pMaxCharacters);
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
 	void CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime);
+	void DrawBackground();
 private:
 
 	struct ConstantBufferType
@@ -115,6 +117,7 @@ private:
 	bool PushToDevice(ID3D11Buffer* pBuffer, void* pDataStart, unsigned int pSize);
 	int CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescription, unsigned int pNumberOfVertices);
 	void CreateText(SentenceType* pText, vec2 pPosition, float pSize);
+	
 	//Variables
 	ID3D11PixelShader* mPixelShader;
 	ID3D11PixelShader* mTextPixelShader;
@@ -141,6 +144,10 @@ private:
 	vector<SentenceType> mSentences;
 
 	DirXParticle* mParticleSystem;
+	HeightmapLoader* mHeightmapLoader;
+	int mBackgroundBufferID;
+	int mWaterPlaneBufferID;
+	int mWaterPlaneTextureID;
 };
 
 #endif

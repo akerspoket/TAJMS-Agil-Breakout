@@ -15,7 +15,7 @@ float4 PShader(PixelInputType input) : SV_TARGET
 	//return float4(0,1,1,1);
 	input.texCoord.y = 1-input.texCoord.y;
 	float3 lightPos = (0, 0, 0);
-	float3 dir = lightPos - input.originalPosition;
+	float3 dir = (0.1f,0.1f,-1.0f);
 	float distance = length(dir);
 	dir = normalize(dir);
 	float factor = clamp(dot(input.normal, dir),0.0f,1.0f);

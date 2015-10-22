@@ -146,6 +146,7 @@
     <ClCompile Include="Game1.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsInterface.cpp" />
+    <ClCompile Include="HeightmapLoader.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="LevelManager.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="glext.h" />
     <ClInclude Include="GraphicsInterface.h" />
     <ClInclude Include="GraphicsVirtual.h" />
+    <ClInclude Include="HeightmapLoader.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LabelComponent.h" />
     <ClInclude Include="LevelManager.h" />
