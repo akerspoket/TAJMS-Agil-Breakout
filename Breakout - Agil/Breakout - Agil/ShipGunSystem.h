@@ -27,5 +27,10 @@ private:
 
 	float mCannonAngle;
 	float mCannonAngleFollowSpeed;
+
+	float mFireForce;
+	float mFireForceRemaining;
+	float mFireForceDecay;
+	float mFireAngle;
 };
 
