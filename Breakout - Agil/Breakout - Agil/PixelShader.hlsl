@@ -19,7 +19,7 @@ float4 PShader(PixelInputType input) : SV_TARGET
 	float distance = length(dir);
 	dir = normalize(dir);
 	float factor = clamp(dot(input.normal, dir),0.0f,1.0f);
-	return ObjTexture.Sample(ObjSamplerState, input.texCoord)*factor;
+	return ObjTexture.Sample(ObjSamplerState, input.texCoord)*factor*1.5f;
 	
 	
 

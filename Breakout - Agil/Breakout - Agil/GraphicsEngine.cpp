@@ -357,10 +357,10 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	mBackgroundBufferID = CreateObjectBuffer(bd, tVertices.size());
 	PushToDevice(mObjectBuffers[mBackgroundBufferID].vertexDescription, tVertices.data(), bd.ByteWidth);
-
+	mBacgroundTextureID = CreateTexture(L"Textures/Sand.dds");
 	//Making the water plane
 	mWaterPlaneBufferID = CreateObject("Object/Background.obj");
-	mWaterPlaneTextureID = CreateTexture(L"Texture/WaterPlane.dds");
+	mWaterPlaneTextureID = CreateTexture(L"Textures/Water.dds");
 }
 
 
@@ -401,6 +401,8 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 }
 void GraphicsEngine::EndDraw()
 {
+	DrawBackground();
+
 	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
 	
 
@@ -635,6 +637,7 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 {
 	SetActiveShader(VertexShader, mTextVertexShader);
 	SetActiveShader(PixelShader, mTextPixelShader);
+	devcon->OMSetDepthStencilState(mDepthStateOff, 0);
 	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
 	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
@@ -662,7 +665,7 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 	devcon->Draw(mSentences[pSentenceID].numberOfIndices, 0);
 
 
-
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
 	devcon->OMSetBlendState(0, 0, 0xffffffff);
 
 
@@ -689,7 +692,17 @@ void GraphicsEngine::DrawBackground()
 	InstanceBufferType tTemp;
 	XMStoreFloat4x4(&tTemp.translationMatrices, XMMatrixIdentity());
 	tForTry.push_back(tTemp);
-	DrawObjects(mBackgroundBufferID, tForTry, 4);
+	DrawObjects(mBackgroundBufferID, tForTry, mBacgroundTextureID);
+
+	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
+
+	XMStoreFloat4x4(&tTemp.translationMatrices,XMMatrixTranspose( XMMatrixTranslation(0, 0, 8.2f)));
+	tForTry[0] = tTemp;
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
+	DrawObjects(mWaterPlaneBufferID, tForTry, mWaterPlaneTextureID);
+	devcon->OMSetBlendState(0, 0, 0xffffffff);
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
 }
 
 int GraphicsEngine::ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity)

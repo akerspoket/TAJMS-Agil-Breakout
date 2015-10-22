@@ -314,11 +314,11 @@
     <ClInclude Include="DirXParticle.h">
       <Filter>Header Files\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="HeightmapLoader.h">
       <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -463,22 +463,29 @@
     <Image Include="Textures\CanonBall.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Textures\EmptyTransparent.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Particle4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="Textures\ParticleSpread.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Textures\ParticleTextureScatter.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Textures\EmptyTransparent.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <Image Include="Textures\VitPlupp.dds" />
     <Image Include="Textures\VitPlupp.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Textures\VitPlupp.dds">
+    <Image Include="Textures\Water.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Textures\Particle4.png">
+    <Image Include="Textures\Water.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Sand.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

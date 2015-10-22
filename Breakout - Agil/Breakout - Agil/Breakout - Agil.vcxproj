@@ -296,6 +296,7 @@
     <Image Include="Textures\ResumeButtonTexture.png" />
     <Image Include="Textures\RightSideBeach.dds" />
     <Image Include="Textures\RightSideBeach.png" />
+    <Image Include="Textures\Sand.png" />
     <Image Include="Textures\ShipTexture.png" />
     <Image Include="Textures\ShipTextureGoal.png" />
     <Image Include="Textures\Start.png" />
@@ -304,6 +305,8 @@
     <Image Include="Textures\TutorialButtonTexture.png" />
     <Image Include="Textures\VitPlupp.dds" />
     <Image Include="Textures\VitPlupp.png" />
+    <Image Include="Textures\Water.dds" />
+    <Image Include="Textures\Water.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

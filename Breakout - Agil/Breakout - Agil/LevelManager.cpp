@@ -268,7 +268,7 @@ void LevelManager::Initialize()
 	tWall2Blueprint[TransformType] = tTrans;
 	tWall2Blueprint[CollisionType] = tColl;
 	tWall2Blueprint[SoundCollisionType] = tSoundColl;
-	tWall2Blueprint[MeshType] = tMesh;
+	//tWall2Blueprint[MeshType] = tMesh;
 	tWall2Blueprint[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("VerWall", tWall2Blueprint);
 
@@ -308,15 +308,15 @@ void LevelManager::Initialize()
 
 
 	//////Background
-	EntityFactory::EntityBlueprint tBackgroundBlueprint;
-	tMesh = new MeshComponent();
-	tTrans = new TransformComponent();
-	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Background.obj");
-	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");
-	tTrans->mPosition = vec3(0, 0, 10);
-	tBackgroundBlueprint[MeshType] = tMesh;
-	tBackgroundBlueprint[TransformType] = tTrans;
-	mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
+	//EntityFactory::EntityBlueprint tBackgroundBlueprint;
+	//tMesh = new MeshComponent();
+	//tTrans = new TransformComponent();
+	//tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Background.obj");
+	//tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");
+	//tTrans->mPosition = vec3(0, 0, 10);
+	//tBackgroundBlueprint[MeshType] = tMesh;
+	//tBackgroundBlueprint[TransformType] = tTrans;
+	//mEntityFactory->RegisterEntityTemplate("BackgroundBlock", tBackgroundBlueprint);
 
 
 	///////////DEBUG POWERUP/////////

@@ -152,6 +152,7 @@ private:
 	DirXParticle* mParticleSystem;
 	HeightmapLoader* mHeightmapLoader;
 	int mBackgroundBufferID;
+	int mBacgroundTextureID;
 	int mWaterPlaneBufferID;
 	int mWaterPlaneTextureID;
 };
