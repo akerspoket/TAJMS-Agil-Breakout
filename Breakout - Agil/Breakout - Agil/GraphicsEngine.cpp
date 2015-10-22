@@ -7,6 +7,7 @@ GraphicsEngine::GraphicsEngine()
 {
 	mWVPBufferID.reg = 0;
 	mObjLoader = new ObjLoader();
+	mHeightmapLoader = new HeightmapLoader();
 }
 
 
@@ -93,6 +94,55 @@ void GraphicsEngine::InitD3D()
 	res = dev->CreateDepthStencilView(mDepthBuffer, &descDSV, &mDepthView);
 	devcon->OMSetRenderTargets(1, &backbuffer, mDepthView);
 
+	D3D11_DEPTH_STENCIL_DESC t_DsDesc;
+
+	// Depth test parameters
+	t_DsDesc.DepthEnable = true;
+	t_DsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	t_DsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	// Stencil test parameters
+	t_DsDesc.StencilEnable = true;
+	t_DsDesc.StencilReadMask = 0xFF;
+	t_DsDesc.StencilWriteMask = 0xFF;
+
+	// Stencil operations if pixel is front-facing
+	t_DsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	t_DsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	t_DsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	t_DsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Stencil operations if pixel is back-facing
+	t_DsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	t_DsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	t_DsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	t_DsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create depth stencil state
+	HRESULT hr;
+	hr = dev->CreateDepthStencilState(&t_DsDesc, &mDepthStateOn);
+	if (FAILED(hr))
+	{
+		cout << "FelIDepthStateON Creation";
+		return;
+	}
+	t_DsDesc.DepthEnable = false;
+	t_DsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+	hr = dev->CreateDepthStencilState(&t_DsDesc, &mDepthStateOff);
+	if (FAILED(hr))
+	{
+		cout << "FelIDepthStateOff";
+		return;
+	}
+
+	t_DsDesc.DepthEnable = true;
+	t_DsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	t_DsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	hr = dev->CreateDepthStencilState(&t_DsDesc, &mDepthStateNoWrite);
+	if (FAILED(hr))
+		return;
 
 	// Set the viewport
 	D3D11_VIEWPORT viewport;
@@ -114,17 +164,37 @@ void GraphicsEngine::InitD3D()
 	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
 	ZeroMemory(&rtbd, sizeof(rtbd));
 
+	//rtbd.BlendEnable = true;
+	//rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA; //D3D11_BLEND_SRC_ALPHA
+	//rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA; //D3D11_BLEND_INV_SRC_ALPHA
+	//rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+	//rtbd.SrcBlendAlpha = D3D11_BLEND_ONE; //D3D11_BLEND_ONE
+	//rtbd.DestBlendAlpha = D3D11_BLEND_ZERO; //D3D11_BLEND_ZERO
+	//rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	//rtbd.RenderTargetWriteMask = 0x0f;
+	//blendDesc.AlphaToCoverageEnable = false;
+	//blendDesc.RenderTarget[0] = rtbd;
+
 	rtbd.BlendEnable = true;
-	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA; //D3D11_BLEND_SRC_ALPHA
+	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA; //D3D11_BLEND_INV_SRC_ALPHA //One
 	rtbd.BlendOp = D3D11_BLEND_OP_ADD;
-	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
-	rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE; //D3D11_BLEND_ONE
+	rtbd.DestBlendAlpha = D3D11_BLEND_ZERO; //D3D11_BLEND_ZERO
 	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	rtbd.RenderTargetWriteMask = 0x0f;
-
 	blendDesc.AlphaToCoverageEnable = false;
 	blendDesc.RenderTarget[0] = rtbd;
+
+	//AlphaToCoverageEnable = FALSE;
+	//BlendEnable[0] = TRUE;
+	//SrcBlend = SRC_ALPHA;
+	//DestBlend = ONE;
+	//BlendOp = ADD;
+	//SrcBlendAlpha = ZERO;
+	//DestBlendAlpha = ZERO;
+	//BlendOpAlpha = ADD;
+	//RenderTargetWriteMask[0] = 0x0F;
 
 	dev->CreateBlendState(&blendDesc, &mBlendState);
 
@@ -262,21 +332,35 @@ void GraphicsEngine::InitGraphics(float pFoVAngleY, float pHeight , float pWidth
 	texSamDesc.MinLOD = -3.402823466e+38F; // -FLT_MAX
 	texSamDesc.MaxLOD = 3.402823466e+38F; // FLT_MAX
 
-
+	mParticleTexID = CreateTexture(L"Textures/Particle4.dds");
+	//mParticleTexID = CreateTexture(L"Textures/VitPlupp.dds");
 	hr = dev->CreateSamplerState(&texSamDesc, &mCubesTexSamplerState);
 	if (FAILED(hr))
 	{
 		return;
 	}
 
+
 	//devcon->PSSetShaderResources(0, 1, &mCubesTexture);
 	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
 	SetActiveShader(PixelShader, mTextPixelShader);
-	devcon->PSSetSamplers(0, 1, &mCubesTexSamplerState);
 	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
 	SetActiveShader(PixelShader, mPixelShader);
 
+	vector<Vertex> tVertices = mHeightmapLoader->CreateHeightmapFromFile("Heightmap2.raw", 50, 50, 35, 47);
 
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(Vertex) * tVertices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	mBackgroundBufferID = CreateObjectBuffer(bd, tVertices.size());
+	PushToDevice(mObjectBuffers[mBackgroundBufferID].vertexDescription, tVertices.data(), bd.ByteWidth);
+	mBacgroundTextureID = CreateTexture(L"Textures/Sand.dds");
+	//Making the water plane
+	mWaterPlaneBufferID = CreateObject("Object/Background.obj");
+	mWaterPlaneTextureID = CreateTexture(L"Textures/Water.dds");
 }
 
 
@@ -317,10 +401,27 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 }
 void GraphicsEngine::EndDraw()
 {
+	DrawBackground();
+
+	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
+	
+
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
+
+	devcon->PSSetShaderResources(0, 1, &mTextureBuffers[mParticleTexID]);
+	mParticleSystem->UpdateEmitters(0.01f);
+	mParticleSystem->UpdateParticles();
+	mParticleSystem->DrawParticles(mBuffers[mWVPBufferID.bufferID]);
+
+	devcon->OMSetBlendState(0, 0, 0xffffffff);
+
 	swapchain->Present(1, 0);
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 	devcon->ClearDepthStencilView(mDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
+
 }
 
 
@@ -456,14 +557,7 @@ int GraphicsEngine::CreateObjectBuffer(D3D11_BUFFER_DESC pVertexBufferDescriptio
 
 }
 
-void GraphicsEngine::GetTextureID(const char* pTextureName, int& pTextureGroup, int& pTextureID) //vet inte om detta stämmer
-{
-	if (pTextureName == "Placeholder")
-	{
-		pTextureGroup = 0;
-		pTextureID = 1;
-	}
-}
+
 
 int GraphicsEngine::CreateObject(string pMeshName)
 {
@@ -546,6 +640,7 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 {
 	SetActiveShader(VertexShader, mTextVertexShader);
 	SetActiveShader(PixelShader, mTextPixelShader);
+	devcon->OMSetDepthStencilState(mDepthStateOff, 0);
 	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
 	devcon->PSSetShaderResources(0, 1, &mCubesTexture);
@@ -572,18 +667,16 @@ void GraphicsEngine::DrawThisText(string pText, vec2 pPosition, float pSize, int
 
 	devcon->Draw(mSentences[pSentenceID].numberOfIndices, 0);
 
-	mParticleSystem->UpdateEmitters(0.01f);
-	mParticleSystem->UpdateParticles();
-	mParticleSystem->DrawParticles(mBuffers[mWVPBufferID.bufferID]);
 
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
 	devcon->OMSetBlendState(0, 0, 0xffffffff);
 
 
 }
 
-void GraphicsEngine::CreateParticleEmitter(vec3 pPosition,vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime)
+int GraphicsEngine::CreateParticleEmitter(vec3 pPosition,vec3 pColor, float pEmitterLifetime, float pDensity, vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize)
 {
-	mParticleSystem->AddNewEmitter(pPosition, pColor, pEmitterLifetime,pDensity, pParticleLifetime);
+	return mParticleSystem->AddNewEmitter(pPosition, pColor, pEmitterLifetime,pDensity,pVelocity, pParticleLifetime, pSpeedMulti, pSpread, pStartSize);
 }
 
 void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize)
@@ -595,4 +688,29 @@ void GraphicsEngine::CreateText(SentenceType* pText, vec2 pPosition, float pSize
 	pText->numberOfIndices = tTextVertices.size();
 	
 }
+
+void GraphicsEngine::DrawBackground()
+{
+	vector<InstanceBufferType> tForTry;
+	InstanceBufferType tTemp;
+	XMStoreFloat4x4(&tTemp.translationMatrices, XMMatrixIdentity());
+	tForTry.push_back(tTemp);
+	DrawObjects(mBackgroundBufferID, tForTry, mBacgroundTextureID);
+
+	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
+
+	XMStoreFloat4x4(&tTemp.translationMatrices,XMMatrixTranspose( XMMatrixTranslation(0, 0, 8.2f)));
+	tForTry[0] = tTemp;
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
+	DrawObjects(mWaterPlaneBufferID, tForTry, mWaterPlaneTextureID);
+	devcon->OMSetBlendState(0, 0, 0xffffffff);
+	devcon->OMSetDepthStencilState(mDepthStateOn, 0);
+}
+
+int GraphicsEngine::ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity)
+{
+	return mParticleSystem->ChangeEmitterPos(pPosition, pEmitterID, pVelocity);
+}
+
 #endif

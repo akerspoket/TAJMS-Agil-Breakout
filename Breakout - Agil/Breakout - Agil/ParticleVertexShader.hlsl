@@ -23,6 +23,7 @@ struct Particle
 	float LifeLength;
 	float Size;
 	float Blend;
+	float StartSize;
 };
 
 StructuredBuffer<Particle> particleBuffer: register(u0);
