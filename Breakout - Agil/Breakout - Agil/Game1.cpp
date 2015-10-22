@@ -12,6 +12,7 @@
 #include "ScoreSystem.h"
 #include "GameState.h"
 #include "PowerUpSystem.h"
+#include "WaveSystem.h"
 #include "ShipGunSystem.h"
 #include "EnemySystem.h"
 
@@ -38,6 +39,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	PowerUpSystem* tPowerUps = new PowerUpSystem("PowerUpSystem");
 	ShipGunSystem* tGunSystem = new ShipGunSystem("ShipGunSystem");
 	EnemySystem* tEnemy = new EnemySystem("EnemySystem");
+	WaveSystem* tWave= new WaveSystem("WaveSystem");
 	
 	tRender->Initialize();
 	tRender->Initialize(pWin);
@@ -52,6 +54,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	tPowerUps->Initialize();
 	tEnemy->Initialize();
 	tGunSystem->Initialize();
+	tWave->Initialize();
 
 	//set systems to game here
 	mSystems.push_back(tInput);
@@ -63,6 +66,7 @@ bool Game1::Initialize(SDL_Window* pWin)
 	mSystems.push_back(tSound);
 	mSystems.push_back(tScore);
 	mSystems.push_back(tPowerUps);
+	mSystems.push_back(tWave);
 	mSystems.push_back(tMenu);
 	mSystems.push_back(tEnemy);
 	mSystems.push_back(tRender);

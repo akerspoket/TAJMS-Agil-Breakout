@@ -90,7 +90,7 @@ void LevelManager::Initialize()
 		else if (mEntitiyVector[i].compare("xLabel") == 0)
 		{
 			i++;
-			tLabel->AddLabel(Pad);
+			tLabel->AddLabel(Pad | Waveable);
 			tPadBlueprint[LabelType] = tLabel;
 			///////////Kolla vilken label det är i LabelComponent
 		}
@@ -152,7 +152,7 @@ void LevelManager::Initialize()
 	ScoreValueComponent* tScoreValue = new ScoreValueComponent();//lägga högst upp????????????????
 
 	SoundEngine::GetInstance()->LoadSoundToMemory("BlockCollision.wav", tSoundColl->SoundID);
-	tLabel->AddLabel(Box);
+	tLabel->AddLabel(Box | Waveable);
 	tColl->Dim = vec2(0.5, 0.5);
 	tColl->mType = AABB;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/BoxTexture2");///Här ska vi byta textur!!
@@ -208,7 +208,7 @@ void LevelManager::Initialize()
 	SoundEngine::GetInstance()->LoadSoundToMemory("GoalBlockCollision.mp3", tSoundColl->SoundID);
 	tColl->mType = CollisionGeo::AABB;
 	tColl->Dim = vec2(2.5, 0.5);
-	tLabel->AddLabel(GoalBlock);
+	tLabel->AddLabel(GoalBlock | Waveable);
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/ShipTextureGoal");///Här ska vi byta textur!!
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Ship.obj");
 	tGoalBlockBlueprint[TransformType] = tTrans;
@@ -262,13 +262,15 @@ void LevelManager::Initialize()
 
 	tTrans = new TransformComponent();
 	tMesh = new MeshComponent();
+	tLabel = new LabelComponent();
 
-	
+	tLabel->AddLabel(Waveable);
 	tMenuButtonBlock[MenyButtonType] = tMenButComp;
 	tMenuButtonBlock[TransformType] = tTrans;
 	tMesh->mMaterialID = tGraphicsInterFace->CreateTexture("Textures/Background");//Will be changed later for each specific button
 	tMesh->mMeshID = tGraphicsInterFace->CreateObject("Object/Button.obj");
 	tMenuButtonBlock[MeshType] = tMesh;
+	tMenuButtonBlock[LabelType] = tLabel;
 	mEntityFactory->RegisterEntityTemplate("MenuButtonBlock", tMenuButtonBlock);
 
 	/////MenuPointer

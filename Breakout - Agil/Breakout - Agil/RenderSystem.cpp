@@ -14,7 +14,7 @@ RenderSystem::RenderSystem()
 	mLifes = 0;
 }
 
-RenderSystem::RenderSystem(string pName):System(pName)
+RenderSystem::RenderSystem(string pName) :System(pName)
 {
 	mLifes = 0;
 }
@@ -31,7 +31,7 @@ void RenderSystem::Initialize()
 	mEventManager->Subscribe("DrawScore", this);
 	mEventManager->Subscribe("DrawLife", this);
 	mEventManager->Subscribe("Collision", this);
-
+	mEventManager->Subscribe("FireBallSound", this);
 
 
 }
@@ -59,38 +59,38 @@ void RenderSystem::Update(double pDeltaTime)
 	{
 	case MenuScreen:
 		tFlags = MeshType | TransformType;
-	break;
+		break;
 	case GameScreen:
 		tFlags = MeshType | TransformType;
-	break;
+		break;
 	case DeathScreen:
 		tFlags = MeshType | TransformType;
-	break;
+		break;
 	case PauseScreen:
 		tFlags = MeshType | TransformType;
-	break;
+		break;
 	default:
-	break;
+		break;
 	}
 
-		for (int i = 0; i < tMaxEnt; i++)
-		{
-		
-			if (tCompTable->HasComponent(i, tFlags))
-			{ //Teststuff
-				TransformComponent* tTrans = GetComponent<TransformComponent>(i);
-				MeshComponent* tMesh = GetComponent<MeshComponent>(i);
-				TransformComponent tTransFix = *tTrans;
+	for (int i = 0; i < tMaxEnt; i++)
+	{
 
-				mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, &tTransFix, 1); 
-			}
+		if (tCompTable->HasComponent(i, tFlags))
+		{ //Teststuff
+			TransformComponent* tTrans = GetComponent<TransformComponent>(i);
+			MeshComponent* tMesh = GetComponent<MeshComponent>(i);
+			TransformComponent tTransFix = *tTrans;
+
+			mGraphicsInterface->DrawInstancedObjects(tMesh->mMeshID, tMesh->mMaterialID, &tTransFix, 1);
 		}
-	
-	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
-	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
-		mGraphicsInterface->EndDraw();
+	}
 
-	
+	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0, 800 - 25), 25, mTempTextId);
+	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
+	mGraphicsInterface->EndDraw();
+
+
 }
 void RenderSystem::Pause()
 {
@@ -128,5 +128,17 @@ void RenderSystem::OnEvent(Event* pEvent)
 	if (pEvent->mID == "DrawLife")
 	{
 		mLifes = *(int*)pEvent->mPayload["life"];
+	}
+	if (pEvent->mID == "FireBallSound")
+	{
+
+		ComponentTable* tCompTable = tCompTable->GetInstance();
+		EntityID entID1 = *(EntityID*)pEvent->mPayload["SPHEREID"];
+		if (tCompTable->HasComponent(entID1, CollisionType | TransformType | LabelType) && GetComponent<LabelComponent>(entID1)->HasLabel(Ball))
+		{
+			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
+			tPos.z -= 1;
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 0.0f, 0.0f), 0.05f, 10, 0.4f);
+		}
 	}
 }
