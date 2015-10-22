@@ -402,7 +402,6 @@ void GraphicsEngine::DrawObjects(int pMeshType, vector<InstanceBufferType> pInst
 void GraphicsEngine::EndDraw()
 {
 	
-
 	swapchain->Present(1, 0);
 	float color[] = { 0.0f,0.2f,0.4f,1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
@@ -413,7 +412,6 @@ void GraphicsEngine::EndDraw()
 void GraphicsEngine::DrawParticles()
 {
 	DrawBackground();
-
 	devcon->OMSetDepthStencilState(mDepthStateNoWrite, 0);
 	
 

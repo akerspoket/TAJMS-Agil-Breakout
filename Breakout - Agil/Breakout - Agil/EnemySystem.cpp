@@ -34,13 +34,13 @@ void EnemySystem::Initialize()
 	mAviablePowerUps.push_back(FireBall);
 	mAviablePowerUps.push_back(SlowMotion);
 
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
-	mPowerUpTimes.push_back(100.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
+	mPowerUpTimes.push_back(3.0f);
 	
 }
 
@@ -127,7 +127,7 @@ void EnemySystem::Update(double pDeltaTime)
 					}
 				}
 
-				mCooldown = 0.3f;
+				mCooldown = 3.0f;
 			}
 		}
 		break;

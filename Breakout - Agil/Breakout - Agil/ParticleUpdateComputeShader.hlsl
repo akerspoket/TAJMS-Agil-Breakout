@@ -9,6 +9,7 @@ struct Particle
 	float Size;
 	float Blend;
 	float StartSize;
+	float TextureID;
 };
 
 

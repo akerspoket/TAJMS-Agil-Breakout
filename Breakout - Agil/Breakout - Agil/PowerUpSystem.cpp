@@ -184,7 +184,7 @@ void PowerUpSystem::ApplyPiercingPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[PiercingLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(Piercing);
 
-				AddEmitter(i, pTime, PiercingLoc, vec3(1, 1, 0), 1);
+				AddEmitter(i, pTime, PiercingLoc, vec3(1, 1, 0), 2);
 			}
 		}
 	}
@@ -361,6 +361,9 @@ void PowerUpSystem::OnEvent(Event* pEvent)
 				break;
 			case SlowMotion:
 				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/PupSlomo");
+				break;
+			case InvertDown:
+				GetComponent<MeshComponent>(tNewID)->mMaterialID = GraphicsInterface::GetSingleton()->CreateTexture("Textures/CanonBall");
 				break;
 			}
 		}
