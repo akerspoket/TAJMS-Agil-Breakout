@@ -46,8 +46,13 @@ void WaveSystem::Update(double pDeltaTime)
 			LabelComponent* tLabel = GetComponent<LabelComponent>(i);
 			if (tLabel->HasLabel(Waveable))
 			{
-				tTrans->mPosition.z = 8 + sin(tTrans->mPosition.y + mTimer)/6;
+				tTrans->mPosition.z = 8 + sin(tTrans->mPosition.y + mTimer)/8;
+				if (tLabel->HasLabel(GoalBlock)|| tLabel->HasLabel(Box))
+				{
+					tTrans->mQuatRotation.y = tTrans->mPosition.y * -0.01 + sin(tTrans->mPosition.y + mTimer)/6;
+				}
 			}
+			
 		}
 	}
 }

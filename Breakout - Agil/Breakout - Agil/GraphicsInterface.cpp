@@ -107,9 +107,9 @@ void GraphicsInterface::DrawInstancedObjects(unsigned int pMeshType, unsigned in
 		////orientation = XMLoadFloat4(&XMFLOAT4(1,0,0,1));
 
 		//XMMATRIX rot = XMMatrixRotationQuaternion(orientation);
+		XMMATRIX rot3 = XMMatrixRotationX(pTransformMatrices[i].mQuatRotation.y);
 		XMMATRIX rot2 = XMMatrixRotationZ(pTransformMatrices[i].mQuatRotation.x);
-
-		XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot2*trans));
+		XMStoreFloat4x4(&tFinished.translationMatrices, XMMatrixTranspose(rot2*rot3*trans));
 
 		tMatrixVector.push_back(tFinished); ////////FELFEL KANSKE 123hej trans kanske ska vara på höger sida
 	}

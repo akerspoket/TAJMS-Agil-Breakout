@@ -474,7 +474,7 @@ int GraphicsEngine::CreateObject(string pMeshName)
 	}
 	else if (pMeshName == "Object/Ship.obj")
 	{
-		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 1.0f), true);
+		tVertices = mObjLoader->LoadObj(pMeshName, vec3(5.0f, 4.0f, 3.0f), true);
 	}
 	else if (pMeshName == "Object/Chest.obj")
 	{
