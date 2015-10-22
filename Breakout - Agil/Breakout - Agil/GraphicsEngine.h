@@ -99,7 +99,9 @@ public:
 	void EndDraw();
 	int CreateNewText(int pMaxCharacters);
 	void DrawThisText(string pText, vec2 pPosition, float pSize, int pSentenceID);
-	void CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity, float pParticleLifetime);
+	int CreateParticleEmitter(vec3 pPosition, vec3 pColor, float pEmitterLifetime, float pDensity,vec3 pVelocity, float pParticleLifetime, float pSpeedMulti, float pSpread, float pStartSize);
+	int ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVelocity);
+
 	void DrawBackground();
 private:
 
@@ -126,11 +128,15 @@ private:
 	vector< ObjectBufferType> mObjectBuffers;
 	vector< ID3D11Buffer*> mBuffers;
 	
+	ID3D11DepthStencilState* mDepthStateOn;
+	ID3D11DepthStencilState* mDepthStateOff;
+	ID3D11DepthStencilState* mDepthStateNoWrite;
 	ID3D11BlendState* mBlendState;
 	MatrixBufferType tBufferInfo;
 	int mVertexBufferID;
 	int mIndexBufferID;
 	int mInstanceBufferID;
+	int mParticleTexID;
 
 	ConstantBufferType mWVPBufferID;
 	vector <InstanceBufferType> mInstanceBuffer;

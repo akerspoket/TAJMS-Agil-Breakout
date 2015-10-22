@@ -12,10 +12,35 @@ DirXParticle::~DirXParticle()
 {
 }
 
-void DirXParticle::AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity, float pParticleLifeTime)
+int DirXParticle::AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity, vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize)
 {
-	mEmitters.push_back( Emitter(pPosition, pColor, pLifeTime, pDensity, pParticleLifeTime));
+	for (size_t i = 0; i < mEmitters.size(); i++)
+	{
+		if (mEmitters[i].LifeTime < 0)
+		{
+			mEmitters[i] = Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize);
+			return i;
+		}
+	}
+	mEmitters.push_back(Emitter(pPosition, pColor, pLifeTime, pDensity, pVelocity, pParticleLifeTime, pSpeedMulti, pSpread, pStartSize));
+	return mEmitters.size() - 1;
 }
+
+int DirXParticle::ChangeEmitterPos(vec3 pPosition, int pEmitterID, vec3 pVelocity)
+{
+	if (mEmitters.size() - 1 >= pEmitterID)
+	{
+		mEmitters[pEmitterID].Position = pPosition;
+		mEmitters[pEmitterID].Velocity = pVelocity;
+		return pEmitterID;
+	}
+	else
+	{
+		return -1;
+	}
+
+}
+
 void DirXParticle::UpdateEmitters(float pDT)
 {
 	vector<vec4> randomDirections;
@@ -23,17 +48,12 @@ void DirXParticle::UpdateEmitters(float pDT)
 	for (int i = 0; i < mEmitters.size(); i++)
 	{
 		mEmitters[i].LifeTime -= pDT;
-		if (mEmitters[i].LifeTime <= 0.0f)
-		{
-			mEmitters.erase(mEmitters.begin() + i);
-			i--;
-		}
 	}
 	for (int i = 0; i < 20; i++)
 	{
 		float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/ 2.0f) - 1;
 		float y= static_cast <float> (rand()) / static_cast <float> (RAND_MAX / 2.0f) - 1;
-		float z = 0;// static_cast <float> (rand()) / static_cast <float> (RAND_MAX / 2.0f) - 1;
+		float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / 2.0f) - 1;
 		float w = 0;
 		randomDirections.push_back(vec4(x, y, z,w));
 		//randoma å pushbacka till mRandomVector
