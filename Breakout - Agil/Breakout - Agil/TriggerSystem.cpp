@@ -249,7 +249,7 @@ void TriggerSystem::OnEvent(Event* pEvent)
 		for (int i = 0; i < tMaxEnt; i++)
 		{
 			short pMask = LabelType;
-			if (tCompTable->HasComponent(i, pMask) &|& GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			if (tCompTable->HasComponent(i, pMask) && GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
 				if (GetComponent<VelocityComponent>(i)->mSpeed == 12)
 				{
