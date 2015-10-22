@@ -296,6 +296,7 @@
     <Image Include="Textures\MainMenuButtonTexture.png" />
     <Image Include="Textures\OptionsButtonTexture.png" />
     <Image Include="Textures\Particle4.png" />
+    <Image Include="Textures\ParticleSampler.png" />
     <Image Include="Textures\ParticleSpread.png" />
     <Image Include="Textures\ParticleTextureScatter.png" />
     <Image Include="Textures\RestartLevelButtonTexture.png" />
@@ -305,6 +306,7 @@
     <Image Include="Textures\Sand.png" />
     <Image Include="Textures\ShipTexture.png" />
     <Image Include="Textures\ShipTextureGoal.png" />
+    <Image Include="Textures\Sparks.png" />
     <Image Include="Textures\Start.png" />
     <Image Include="Textures\StartButtonTexture.dds" />
     <Image Include="Textures\StartButtonTexture.png" />

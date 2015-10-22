@@ -110,7 +110,7 @@ void AddEmitter(EntityID pID, float pTime, int pPowerUpLoc, vec3 color, int text
 	
 	if (tEmitter->Timers[pPowerUpLoc] == 0)
 	{
-		tEmitter->EmitterID[pPowerUpLoc] = GraphicsInterface::GetSingleton()->CreateParticleEmitter(vec3(-5000, 0, 0), color, pTime, 1, vec3(0, 0, 0), 0.6f, 0.2f, 0.2f, 1.0f);
+		tEmitter->EmitterID[pPowerUpLoc] = GraphicsInterface::GetSingleton()->CreateParticleEmitter(vec3(-5000, 0, 0), color, pTime, 1, vec3(0, 0, 0), 0.6f, 0.2f, 0.2f, 1.0f, textureID);
 	}
 	else
 	{
@@ -136,7 +136,7 @@ void PowerUpSystem::ApplySpeedPowerUp (float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[SpeedUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(SpeedUp);
 
-				AddEmitter(i, pTime, SpeedUpLoc,  vec3(1,1,1), 2);
+				AddEmitter(i, pTime, SpeedUpLoc,  vec3(1,1,1), 3);
 
 			}
 		}
@@ -159,7 +159,7 @@ void PowerUpSystem::ApplyBallNetPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[BallNetLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(BallNet);
 
-				AddEmitter(i, pTime, BallNetLoc, vec3(0.6, 0.6, 0.6), 2);
+				AddEmitter(i, pTime, BallNetLoc, vec3(0.6, 0.6, 0.6), 3);
 			}
 		}
 	}
@@ -184,7 +184,7 @@ void PowerUpSystem::ApplyPiercingPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[PiercingLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(Piercing);
 
-				AddEmitter(i, pTime, PiercingLoc, vec3(1, 1, 0), 2);
+				AddEmitter(i, pTime, PiercingLoc, vec3(1, 1, 0), 1);
 			}
 		}
 	}
@@ -208,7 +208,7 @@ void PowerUpSystem::ApplyMagnetPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[MagnetPUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(MagnetPUp);
 
-				AddEmitter(i, pTime, MagnetPUpLoc, vec3(1, 0.25, 0.25), 2);
+				AddEmitter(i, pTime, MagnetPUpLoc, vec3(1, 0.25, 0.25), 3);
 			}
 		}
 	}
@@ -232,7 +232,7 @@ void PowerUpSystem::ApplyInvertPowerDown(float pTime)
 			}
 			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
 			{
-				AddEmitter(i, pTime, InvertDownLoc, vec3(0.1, 0.1, 0.1), 2);
+				AddEmitter(i, pTime, InvertDownLoc, vec3(0.1, 0.1, 0.1), 3);
 			}
 		}
 	}
@@ -254,7 +254,7 @@ void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[SlowMotionLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(SlowMotion);
 
-				AddEmitter(i, pTime, SlowMotionLoc, vec3(148.0f/255.0f, 0.0f, 211.0f/255.0f), 2);
+				AddEmitter(i, pTime, SlowMotionLoc, vec3(148.0f/255.0f, 0.0f, 211.0f/255.0f), 0);
 			}
 		}
 	}
@@ -275,7 +275,7 @@ void PowerUpSystem::FireBallPowerUp(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[FireBallPUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(FireBall);
 
-				AddEmitter(i, pTime, FireBallPUpLoc, vec3(1.0f, 0.0f, 0.0f), 2);
+				AddEmitter(i, pTime, FireBallPUpLoc, vec3(1.0f, 0.0f, 0.0f), 3);
 			}
 		}
 	}

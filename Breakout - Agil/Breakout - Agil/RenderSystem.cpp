@@ -97,8 +97,8 @@ void RenderSystem::Update(double pDeltaTime)
 						tEmitter->EmitterID[i] = -1;
 						tEmitter->Timers[i] = 0;
 					}
-		}
-	
+				}
+
 				if (tCompTable->HasComponent(i, TransformType))
 				{
 					for (size_t k = 0; k < MAX_PARTICLE_EMITTER; k++)
@@ -121,6 +121,7 @@ void RenderSystem::Update(double pDeltaTime)
 	
 	mGraphicsInterface->DrawThisText(to_string(mScore), vec2(0,800-25),25,mTempTextId);
 	mGraphicsInterface->DrawThisText(to_string(mLifes), vec2(775, 800 - 25), 25, mLifeTextID);
+	mGraphicsInterface->DrawParticles();
 		mGraphicsInterface->EndDraw();
 
 	
@@ -147,14 +148,14 @@ void RenderSystem::OnEvent(Event* pEvent)
 		{
 			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
 			tPos.z -= 1;
-			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), .2f, 1.0f, 0, 0.7f);
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 0.2f, 1.0f, 0, 0.7f,3);
 		}
 		EntityID entID2 = *(EntityID*)pEvent->mPayload["ID2"];
 		if (GetComponent<LabelComponent>(entID2)->HasLabel(Box))
 		{
 			vec3 tPos = GetComponent<TransformComponent>(entID2)->mPosition;
 			tPos.z -= 1;
-			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), .2f, 1.0f, 0, 0.7f);
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 1.0f, 0.0f), 0.05f, 5,vec3(0,0,0), 0.2f, 1.0f, 0, 0.7f,3);
 		}
 	}
 
@@ -171,7 +172,7 @@ void RenderSystem::OnEvent(Event* pEvent)
 		{
 			vec3 tPos = GetComponent<TransformComponent>(entID1)->mPosition;
 			tPos.z -= 1;
-			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 0.0f, 0.0f), 0.05f, 10, vec3(0, 0, 0), 0.4f, 1.0f, 0, 0.7f);
+			mGraphicsInterface->CreateParticleEmitter(tPos, vec3(1.0f, 0.0f, 0.0f), 0.05f, 10, vec3(0, 0, 0), 0.4f, 1.0f, 0, 0.7f,3);
 		}
 	}
 }

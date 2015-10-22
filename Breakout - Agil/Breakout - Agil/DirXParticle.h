@@ -29,11 +29,12 @@ private:
 		float Density;
 		vec3 Velocity;
 		float ParticleLifeTime;
-		float filler;
+		float TextureID;
 		float SpeedMulti;
 		float Spread;
 		float Size;
-		Emitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity,vec3 pVelocity ,float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize)
+		
+		Emitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity,vec3 pVelocity ,float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID)
 		{
 			Position = pPosition;
 			Color = pColor;
@@ -41,7 +42,7 @@ private:
 			Density = pDensity;	
 			ParticleLifeTime = pParticleLifeTime;
 			Velocity = pVelocity;
-			filler = 0;
+			TextureID = pTextureID;
 			SpeedMulti = pSpeedMulti;
 			Spread = pSpread;
 			Size = pStartSize;
@@ -60,6 +61,7 @@ private:
 		float Size;
 		float Blend;
 		float StartSize;
+		float TextureID;
 	};
 	struct NumberOfEmittersType
 	{
@@ -82,7 +84,7 @@ public:
 	~DirXParticle();
 
 	void Initialize(ID3D11Device *pDev, ID3D11DeviceContext *pDevcon);
-	int AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity,vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize);
+	int AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity,vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize, float pTextureID);
 	void UpdateEmitters(float pDT);
 	int ChangeEmitterPos(vec3 pPosition, int pEmitterID, vec3 pVelocity);
 	void UpdateEmitterTime(int pEmitterID, float pPosition);
