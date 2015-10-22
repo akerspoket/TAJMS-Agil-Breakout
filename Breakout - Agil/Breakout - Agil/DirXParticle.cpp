@@ -233,3 +233,12 @@ void  DirXParticle::Initialize(ID3D11Device *pDev, ID3D11DeviceContext *pDevcon)
 	}
 
 }
+
+void DirXParticle::UpdateEmitterTime(int pEmitterID, float pPosition)
+{
+	if (mEmitters.size() - 1 >= pEmitterID)
+	{
+		mEmitters[pEmitterID].LifeTime = pPosition;
+	}
+
+}

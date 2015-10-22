@@ -85,6 +85,7 @@ public:
 	int AddNewEmitter(vec3 pPosition, vec3 pColor, float pLifeTime, float pDensity,vec3 pVelocity, float pParticleLifeTime, float pSpeedMulti, float pSpread, float pStartSize);
 	void UpdateEmitters(float pDT);
 	int ChangeEmitterPos(vec3 pPosition, int pEmitterID, vec3 pVelocity);
+	void UpdateEmitterTime(int pEmitterID, float pPosition);
 	void UpdateParticles();
 	void DrawParticles(ID3D11Buffer* pMatrixBuffer);
 private:

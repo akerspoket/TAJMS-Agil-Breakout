@@ -165,3 +165,10 @@ int GraphicsInterface::UpdateEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVe
 	return mGraphicsEngine->ChangeEmitterPos(pEmitterID, pPosition, pVelocity);
 #endif
 }
+
+void GraphicsInterface::UpdateEmitterTime(int pEmitterID, float pPosition)
+{
+#ifdef _WIN32
+	return mGraphicsEngine->UpdateEmitterTime(pEmitterID, pPosition);
+#endif
+}

@@ -410,7 +410,7 @@ void GraphicsEngine::EndDraw()
 	devcon->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
 
 	devcon->PSSetShaderResources(0, 1, &mTextureBuffers[mParticleTexID]);
-	mParticleSystem->UpdateEmitters(0.01f);
+	mParticleSystem->UpdateEmitters(0.017f);
 	mParticleSystem->UpdateParticles();
 	mParticleSystem->DrawParticles(mBuffers[mWVPBufferID.bufferID]);
 
@@ -713,4 +713,9 @@ int GraphicsEngine::ChangeEmitterPos(int pEmitterID, vec3 pPosition, vec3 pVeloc
 	return mParticleSystem->ChangeEmitterPos(pPosition, pEmitterID, pVelocity);
 }
 
+
+void GraphicsEngine::UpdateEmitterTime(int pEmitterID, float pPosition)
+{
+	mParticleSystem->UpdateEmitterTime(pEmitterID, pPosition);
+}
 #endif

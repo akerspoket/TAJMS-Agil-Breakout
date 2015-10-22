@@ -18,7 +18,7 @@ RWStructuredBuffer<Particle> inoutput : register (u0);
 [numthreads(500, 1, 1)]
 void main( uint3 threadID : SV_DispatchThreadID )
 {
-	inoutput[threadID.x].LifeTime += 0.01;
+	inoutput[threadID.x].LifeTime += 0.017f;
 	if (inoutput[threadID.x].LifeTime >= inoutput[threadID.x].LifeLength)
 	{
 		return;

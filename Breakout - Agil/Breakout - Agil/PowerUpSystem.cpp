@@ -11,6 +11,7 @@
 #include "EntityFactory.h"
 #include "MeshComponent.h"
 #include "GraphicsInterface.h"
+#include "EmitterComponent.h"
 
 PowerUpSystem::PowerUpSystem()
 {
@@ -101,6 +102,24 @@ void PowerUpSystem::Update(double pDeltaTime)
 }
 void PowerUpSystem::Pause() {}
 void PowerUpSystem::Stop() {}
+
+void AddEmitter(EntityID pID, float pTime, int pPowerUpLoc, vec3 color, int textureID)
+{
+	ComponentTable::GetInstance()->AddComponent(pID, EmitterType);
+	EmitterComponent* tEmitter = GetComponent<EmitterComponent>(pID);
+	
+	if (tEmitter->Timers[pPowerUpLoc] == 0)
+	{
+		tEmitter->EmitterID[pPowerUpLoc] = GraphicsInterface::GetSingleton()->CreateParticleEmitter(vec3(-5000, 0, 0), color, pTime, 1, vec3(0, 0, 0), 0.6f, 0.2f, 0.2f, 1.0f);
+	}
+	else
+	{
+		GraphicsInterface::GetSingleton()->UpdateEmitterTime(tEmitter->EmitterID[pPowerUpLoc], pTime);
+	}
+	tEmitter->Attached[pPowerUpLoc] = true;
+	tEmitter->Timers[pPowerUpLoc] = pTime;
+}
+
 void PowerUpSystem::ApplySpeedPowerUp (float pTime)
 {
 	EntityManager* tEntManager = tEntManager->GetInstance();
@@ -116,8 +135,12 @@ void PowerUpSystem::ApplySpeedPowerUp (float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[SpeedUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(SpeedUp);
+
+				AddEmitter(i, pTime, SpeedUpLoc,  vec3(1,1,1), 2);
+
 			}
 		}
+		
 	}
 }
 void PowerUpSystem::ApplyBallNetPowerUp(float pTime)
@@ -135,6 +158,8 @@ void PowerUpSystem::ApplyBallNetPowerUp(float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[BallNetLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(BallNet);
+
+				AddEmitter(i, pTime, BallNetLoc, vec3(0.6, 0.6, 0.6), 2);
 			}
 		}
 	}
@@ -158,6 +183,8 @@ void PowerUpSystem::ApplyPiercingPowerUp(float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[PiercingLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(Piercing);
+
+				AddEmitter(i, pTime, PiercingLoc, vec3(1, 1, 0), 2);
 			}
 		}
 	}
@@ -180,6 +207,8 @@ void PowerUpSystem::ApplyMagnetPowerUp(float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[MagnetPUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(MagnetPUp);
+
+				AddEmitter(i, pTime, MagnetPUpLoc, vec3(1, 0.25, 0.25), 2);
 			}
 		}
 	}
@@ -201,6 +230,10 @@ void PowerUpSystem::ApplyInvertPowerDown(float pTime)
 				GetComponent<PowerUpComponent>(i)->timers[InvertDownLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(InvertDown);
 			}
+			if (GetComponent<LabelComponent>(i)->HasLabel(Ball))
+			{
+				AddEmitter(i, pTime, InvertDownLoc, vec3(0.1, 0.1, 0.1), 2);
+			}
 		}
 	}
 }
@@ -220,6 +253,8 @@ void PowerUpSystem::ApplySlowMotionPowerUp(float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[SlowMotionLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(SlowMotion);
+
+				AddEmitter(i, pTime, SlowMotionLoc, vec3(148.0f/255.0f, 0.0f, 211.0f/255.0f), 2);
 			}
 		}
 	}
@@ -239,6 +274,8 @@ void PowerUpSystem::FireBallPowerUp(float pTime)
 				tCompTable->AddComponent(i, PowerUpType);
 				GetComponent<PowerUpComponent>(i)->timers[FireBallPUpLoc] = pTime;
 				GetComponent<PowerUpComponent>(i)->AddPowerUp(FireBall);
+
+				AddEmitter(i, pTime, FireBallPUpLoc, vec3(1.0f, 0.0f, 0.0f), 2);
 			}
 		}
 	}

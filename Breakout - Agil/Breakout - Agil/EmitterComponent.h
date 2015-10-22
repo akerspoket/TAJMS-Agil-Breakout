@@ -1,6 +1,6 @@
 #pragma once
 #include "Math.h"
-#define MAX_PARTICLE_EMITTER 5
+#define MAX_PARTICLE_EMITTER 7
 
 struct EmitterComponent
 {
