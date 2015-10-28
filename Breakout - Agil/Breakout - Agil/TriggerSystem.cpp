@@ -54,6 +54,7 @@ void TriggerSystem::Initialize()
 	mMapNames.push_back("Levels/Level1.txt");
 	mMapNames.push_back("Levels/Level2.txt");
 	mMapNames.push_back("Levels/Level3.txt");
+	mMapNames.push_back("Levels/Level4.txt");
 }
 
 void TriggerSystem::Start()
